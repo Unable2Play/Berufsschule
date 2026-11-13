@@ -572,6 +572,39 @@
     .review-item p { margin: .25rem 0 !important; }
     .review-item .ra { color: var(--success); }
     .review-item .ya { color: var(--danger); }
+    /* ---------- Java-Code ---------- */
+    .course-layout > * { min-width: 0; }
+    pre.code, .bug-code, pre.console, .code-cloze {
+      margin: .75rem 0; padding: .8rem 1rem; overflow-x: auto;
+      font: .88rem/1.6 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      color: #e6edf3; background: #0b0f14; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      tab-size: 4;
+    }
+    pre.code .cl { display: block; }
+    pre.code .ln, .bug-line .ln { display: inline-block; width: 2.2em; margin-right: .8em; color: #484f58; text-align: right; user-select: none; }
+    .tk-kw { color: #ff7b72; } .tk-type { color: #79c0ff; } .tk-str { color: #a5d6ff; }
+    .tk-com { color: #8b949e; font-style: italic; } .tk-num { color: #d2a8ff; }
+    pre.console { position: relative; padding-top: 1.8rem; background: #000; color: #d1d5db; }
+    pre.console::before { content: "Konsole"; position: absolute; top: .4rem; left: 1rem; font: 600 .7rem var(--font); letter-spacing: .05em; text-transform: uppercase; color: #6b7280; }
+    .code-cloze { white-space: pre; line-height: 2.5; }
+    .code-cloze .gap { min-width: 5.5rem; font-family: inherit; line-height: 1.5; min-height: 1.7rem; }
+    .bug-code { padding: .5rem 0; }
+    .bug-line { display: flex; min-width: 100%; width: max-content; padding: .1rem 1rem .1rem .4rem; font: inherit; color: inherit; text-align: left; white-space: pre; background: transparent; border: 0; border-left: 3px solid transparent; }
+    .bug-line:hover { background: rgba(255,255,255,.05); }
+    .bug-line[aria-pressed="true"] { background: rgba(234,179,8,.14); border-left-color: #eab308; }
+    .bug-line.ok  { background: rgba(63,185,80,.16); border-left-color: var(--success); }
+    .bug-line.bad { background: rgba(248,81,73,.16); border-left-color: var(--danger); }
+    .bug-notes { margin: .5rem 0 0; padding-left: 1.2rem; font-size: .92rem; }
+    .option code, .gl-item code, .box code, .lesson-section p code, table.data code, .assign-text code, .review-item code, .match-grid code, .fq-fb code {
+      font: .9em ui-monospace, SFMono-Regular, Consolas, monospace; padding: .05rem .35rem; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+    }
+    .option code.out { display: inline-block; max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; }
+    .options { grid-template-columns: minmax(0, 1fr); }
+    .option > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+    .var-box { display: inline-grid; gap: .25rem; min-width: 150px; margin: .25rem .5rem .25rem 0; padding: .6rem .8rem; text-align: center; background: var(--bg); border: 2px solid var(--accent); border-radius: var(--radius-sm); }
+    .var-box .vb-type { font: 700 .75rem ui-monospace, monospace; color: var(--accent-2); }
+    .var-box .vb-val { font: 700 1.3rem ui-monospace, monospace; }
+    .var-box .vb-name { font: .85rem ui-monospace, monospace; color: var(--text-muted); border-top: 1px dashed var(--border); padding-top: .25rem; }
     .range-row { display: grid; gap: .4rem; }
     #addr-out { white-space: normal; }
     .range-row input { width: 100%; accent-color: var(--accent); }
@@ -608,6 +641,7 @@
       .chip { padding: .3rem .55rem; font-size: .85rem; }
     }
     @media (max-width: 520px) {
+      pre.code, .bug-code, pre.console, .code-cloze { font-size: .8rem; padding: .7rem .75rem; }
       .io-row { grid-template-columns: 2.2rem 1fr; }
       .io-row select[data-k="b"] { grid-column: 2; }
       .io-head { display: none; }
@@ -1848,43 +1882,863 @@
                   </div>
                 </div>
 
-                <!-- Start / Einstellungen -->
-                <div id="fq-start" class="quiz fq-settings">
-                  <p class="quiz-q">Quiz einstellen</p>
+                <div class="final-quiz" id="fq-itt1"></div>
+              </div>
+            </article>
+
+            <!-- =====================================================
+                 KURS AP – PROGRAMMIERUNG (Java)
+                 ===================================================== -->
+
+            <!-- ============ AP 1: GRUNDBEGRIFFE ============ -->
+            <article class="module-panel" data-module="ap-grundlagen" role="tabpanel" hidden>
+              <h2>1. Grundbegriffe der Programmierung</h2>
+              <div id="module-ap-grundlagen" class="lesson">
+                <div class="lesson-head">
+                  <p class="lesson-intro">Bevor die erste Zeile Java geschrieben wird, geht es um die Grundlagen: Was ist Programmieren? Womit programmiert man? Wie wird aus Quellcode ein laufendes Programm? Und welche Arten der Programmierung gibt es?</p>
+                  <div class="box info" style="margin:0">
+                    <span class="box-title">☕ Hinweis zur Java-Version</span>
+                    Im Unterricht wird eine ältere Java-Version genutzt, weil das LEGO-Mindstorms-Projekt (leJOS) nur diese unterstützt. Alle Code-Beispiele auf dieser Seite sind so geschrieben, dass sie auch dort funktionieren (Java 7/8).
+                  </div>
+                  <div class="progress" data-progress="ap-grundlagen">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="ap-grundlagen">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="apg-s1">1 · Programmieren</button>
+                    <button type="button" data-scroll="apg-s2">2 · IDE</button>
+                    <button type="button" data-scroll="apg-s3">3 · Sprachen &amp; Java</button>
+                    <button type="button" data-scroll="apg-s4">4 · Compiler &amp; Bytecode</button>
+                    <button type="button" data-scroll="apg-s5">5 · Strukturiert</button>
+                    <button type="button" data-scroll="apg-s6">6 · Objektorientiert</button>
+                  </nav>
+                </div>
+
+                <section class="lesson-section" id="apg-s1">
+                  <h3><span class="sec-num">1</span> Programmieren – Fehler produzieren, bis was läuft</h3>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Programmieren</dt><dd>Einem Computer Schritt für Schritt in einer <strong>Programmiersprache</strong> beschreiben, wie er eine Aufgabe lösen soll. Die Lösungsidee nennt man <strong>Algorithmus</strong>.</dd></div>
+                    <div class="gl-item"><dt>Programm</dt><dd>Eine konkrete Folge von Anweisungen, die eine bestimmte Aufgabe erledigt, z. B. ein Taschenrechner oder die Steuerung eines Roboters.</dd></div>
+                    <div class="gl-item"><dt>Programmiersprache</dt><dd>Eine formale Sprache mit festen Regeln (<strong>Syntax</strong>), in der Programme geschrieben werden. Sie verbindet die menschliche Denkweise mit dem Maschinencode, den nur der Prozessor versteht.</dd></div>
+                  </dl>
+
+                  <div class="quiz open-task" data-note="apg-1-1">
+                    <p class="quiz-q">Aufgabe 1: Definiere in eigenen Worten, was „Programmieren“ bedeutet. Warum ist es in der heutigen Welt wichtig?</p>
+                    <textarea rows="3" placeholder="Deine Antwort … (wird nur in diesem Browser gespeichert)"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Programmieren heißt, ein Problem in eindeutige, kleine Schritte zu zerlegen und diese in einer Programmiersprache aufzuschreiben, sodass ein Computer sie ausführen kann. Es ist wichtig, weil fast alles um uns herum von Software gesteuert wird: Smartphones, Autos, Medizintechnik, Banken, Industrieanlagen. Programmieren ermöglicht Automatisierung und neue digitale Lösungen.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-1-2">
+                    <p class="quiz-q">Aufgabe 2: Welche Probleme lassen sich durch Programmierung lösen? Notiere zwei Beispiele.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Zum Beispiel: <strong>Wiederkehrende Aufgaben automatisieren</strong> (Notendurchschnitt berechnen, Rechnungen erstellen, Daten sortieren), <strong>Steuern und Regeln</strong> (ein Roboter weicht Hindernissen aus, eine Ampel schaltet), <strong>große Datenmengen auswerten</strong> (Wettervorhersage, Online-Shop-Empfehlungen) oder <strong>Kommunikation</strong> (Messenger, Webseiten).</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-1-3">
+                    <p class="quiz-q">Aufgabe 3: Beschreibe den Unterschied zwischen einem Programm und einer Programmiersprache. Warum brauchen wir Programmiersprachen?</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Die <strong>Programmiersprache</strong> ist das Werkzeug: Wortschatz und Regeln (wie Deutsch oder Englisch). Ein <strong>Programm</strong> ist das, was man damit schreibt: ein konkreter Text, der eine bestimmte Aufgabe löst (wie ein Brief). Wir brauchen Programmiersprachen, weil der Prozessor nur Maschinencode (Nullen und Einsen) versteht. Den könnten Menschen kaum lesen oder schreiben. Programmiersprachen sind für Menschen verständlich und werden anschließend übersetzt.</div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apg-s2">
+                  <h3><span class="sec-num">2</span> Die Entwicklungsumgebung (IDE)</h3>
+                  <p>Eine <strong>IDE</strong> (Integrated Development Environment, integrierte Entwicklungsumgebung) bündelt alle Werkzeuge zum Programmieren in einem Programm. Bekannte IDEs für Java: <strong>Eclipse</strong> (mit leJOS-Plugin für die Mindstorms), <strong>IntelliJ IDEA</strong>, <strong>NetBeans</strong>.</p>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Code-Editor</dt><dd>Mit Syntax-Hervorhebung (Farben), automatischer Einrückung und Autovervollständigung</dd></div>
+                    <div class="gl-item"><dt>Fehleranzeige</dt><dd>Markiert Syntaxfehler (z. B. fehlendes Semikolon) schon beim Tippen</dd></div>
+                    <div class="gl-item"><dt>Compiler &amp; Ausführen</dt><dd>Übersetzt und startet das Programm per Knopfdruck</dd></div>
+                    <div class="gl-item"><dt>Debugger</dt><dd>Führt das Programm Schritt für Schritt aus und zeigt die Werte der Variablen. So findet man Fehler.</dd></div>
+                    <div class="gl-item"><dt>Projektverwaltung</dt><dd>Organisiert viele Dateien, Klassen und Bibliotheken eines Projekts</dd></div>
+                  </dl>
+                  <div id="apg-quiz-ide"></div>
+
+                  <div class="quiz open-task" data-note="apg-2-1">
+                    <p class="quiz-q">Aufgabe 1: Was ist eine Entwicklungsumgebung (IDE)? Schreibe drei Funktionen auf, die eine IDE bietet.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Eine IDE ist ein Programm, das alle Werkzeuge zum Entwickeln von Software vereint. Funktionen: (1) Code-Editor mit Syntax-Hervorhebung und Autovervollständigung, (2) Compiler und Ausführen per Knopfdruck, (3) Debugger zur Fehlersuche. Weitere: Fehleranzeige beim Tippen, Projektverwaltung.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-2-2">
+                    <p class="quiz-q">Aufgabe 2: Warum ist eine Entwicklungsumgebung wichtig für effizientes Programmieren? Notiere zwei Gründe.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>(1) Fehler werden sofort beim Tippen angezeigt und lassen sich mit dem Debugger schnell finden. Das spart viel Zeit. (2) Autovervollständigung und Code-Vorlagen beschleunigen das Schreiben und vermeiden Tippfehler. Außerdem muss man nicht zwischen vielen einzelnen Programmen wechseln.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-2-3">
+                    <p class="quiz-q">Aufgabe 3: Beschreibe den Unterschied zwischen einem Texteditor und einer IDE. Was sind die Vorteile einer IDE?</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Ein <strong>Texteditor</strong> (z. B. Notepad) kann nur Text bearbeiten. Kompilieren und Ausführen muss man selbst über die Kommandozeile erledigen, und Fehler sieht man erst dann. Eine <strong>IDE</strong> „versteht“ die Programmiersprache: Sie färbt den Code ein, schlägt Befehle vor, zeigt Fehler sofort an, kompiliert und startet das Programm per Klick und bietet einen Debugger.</div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apg-s3">
+                  <h3><span class="sec-num">3</span> Programmiersprachen &amp; Java</h3>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Sprache</th><th>Typischer Einsatz</th></tr></thead>
+                      <tbody>
+                        <tr><td>Java</td><td>Unternehmenssoftware, Android-Apps, Server, Embedded (z. B. LEGO Mindstorms mit leJOS)</td></tr>
+                        <tr><td>Python</td><td>Datenanalyse, KI, Automatisierung, Skripte</td></tr>
+                        <tr><td>JavaScript</td><td>Interaktive Webseiten (wie diese Lernplattform!)</td></tr>
+                        <tr><td>C / C++</td><td>Betriebssysteme, Treiber, Spiele, Mikrocontroller</td></tr>
+                        <tr><td>C#</td><td>Windows-Anwendungen, Spiele (Unity)</td></tr>
+                        <tr><td>SQL</td><td>Abfragen in Datenbanken</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="box info">
+                    <span class="box-title">Warum Java lernen?</span>
+                    <ul>
+                      <li><strong>Plattformunabhängig:</strong> Dasselbe Programm läuft auf Windows, Linux, macOS und sogar auf dem EV3-Stein.</li>
+                      <li><strong>Weit verbreitet:</strong> Java wird in vielen Unternehmen und für Android genutzt, Java-Kenntnisse sind gefragt.</li>
+                      <li><strong>Lernfreundlich:</strong> Strenge Regeln (z. B. feste Datentypen) zeigen Fehler früh an.</li>
+                      <li><strong>Objektorientiert</strong>, mit einer großen Community und vielen Bibliotheken</li>
+                    </ul>
+                  </div>
+
+                  <div class="quiz open-task" data-note="apg-3-1">
+                    <p class="quiz-q">Aufgabe 1: Notiere drei Programmiersprachen außer Java und beschreibe kurz, wofür sie häufig genutzt werden.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden><strong>Python:</strong> Datenanalyse, KI, Automatisierung. <strong>JavaScript:</strong> interaktive Webseiten. <strong>C++:</strong> Spiele, Betriebssysteme, Programme, die sehr schnell sein müssen. Auch möglich: C# (Windows, Unity), SQL (Datenbanken), PHP (Webserver).</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-3-2">
+                    <p class="quiz-q">Aufgabe 2: Warum ist es sinnvoll, Java als Programmiersprache zu lernen? Finde zwei Argumente.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>(1) Java ist <strong>plattformunabhängig</strong>: einmal schreiben, überall ausführen. (2) Java ist in der Wirtschaft <strong>weit verbreitet</strong> (Unternehmenssoftware, Android), das ist gut für den Job. Außerdem: Die strenge Typisierung hilft Anfängern, Fehler früh zu erkennen, und das Gelernte (Variablen, Schleifen, OOP) lässt sich leicht auf andere Sprachen übertragen.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-3-3">
+                    <p class="quiz-q">Aufgabe 3: Ist Java eine „kompilierte“ oder „interpretierte“ Sprache? Erkläre, was das bedeutet.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden><strong>Beides.</strong> Der Java-Compiler (<code>javac</code>) übersetzt den Quellcode zuerst in <strong>Bytecode</strong>. Diesen Bytecode führt dann die <strong>Java Virtual Machine (JVM)</strong> aus: Sie interpretiert ihn bzw. übersetzt häufig genutzte Teile während der Laufzeit in Maschinencode (JIT-Compiler). Kompiliert heißt: vorher komplett übersetzt. Interpretiert heißt: während der Ausführung Schritt für Schritt übersetzt.</div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apg-s4">
+                  <h3><span class="sec-num">4</span> Compiler, Interpreter &amp; Bytecode</h3>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Compiler („einer voraus“)</dt><dd>Übersetzt das <strong>gesamte</strong> Programm <strong>vor</strong> der Ausführung. Fehler werden schon beim Übersetzen gemeldet. Typisch für C, C++ und Java (javac).</dd></div>
+                    <div class="gl-item"><dt>Interpreter („einer live“)</dt><dd>Übersetzt und führt das Programm <strong>Anweisung für Anweisung während</strong> der Ausführung aus. Typisch für Python und JavaScript.</dd></div>
+                    <div class="gl-item"><dt>Bytecode</dt><dd>Zwischencode, den der Java-Compiler erzeugt (<code>.class</code>-Datei). Er ist noch kein Maschinencode, sondern wird von der JVM ausgeführt.</dd></div>
+                    <div class="gl-item"><dt>JVM (Java Virtual Machine)</dt><dd>Führt den Bytecode aus. Für jedes Betriebssystem und Gerät gibt es eine eigene JVM, deshalb ist Java <strong>plattformunabhängig</strong>: „Write once, run anywhere“.</dd></div>
+                  </dl>
+                  <p>Wie wird aus Java-Code ein laufendes Programm? Bringe die Stationen in die richtige Reihenfolge.</p>
+                  <div id="apg-quiz-pipe"></div>
+                  <p>Compiler oder Interpreter? Ordne die Eigenschaften zu.</p>
+                  <div id="apg-quiz-ci"></div>
+                  <div id="apg-quiz-java"></div>
+
+                  <div class="quiz open-task" data-note="apg-4-1">
+                    <p class="quiz-q">Aufgabe 1: Erkläre den Unterschied zwischen Compiler und Interpreter. Schreibe ein Beispiel, wann Java den Compiler benötigt.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Ein <strong>Compiler</strong> übersetzt das ganze Programm vor dem Start in eine andere Sprache (bei Java: Bytecode) und meldet dabei alle Syntaxfehler. Ein <strong>Interpreter</strong> übersetzt und führt das Programm Zeile für Zeile während der Laufzeit aus. Beispiel: Nach jeder Änderung an <code>HelloWorld.java</code> muss der Compiler (<code>javac</code>) daraus eine neue <code>HelloWorld.class</code> erzeugen, bevor das Programm gestartet werden kann. Die IDE macht das automatisch beim Speichern bzw. Starten.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-4-2">
+                    <p class="quiz-q">Aufgabe 2: Warum wird Java oft als „plattformunabhängig“ beschrieben? Fasse die Antwort in einem Satz zusammen.</p>
+                    <textarea rows="2" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Weil der Compiler plattformneutralen Bytecode erzeugt, der auf jedem Gerät mit einer passenden Java Virtual Machine (Windows, Linux, macOS, EV3-Stein …) ohne Änderung ausgeführt werden kann.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-4-3">
+                    <p class="quiz-q">Aufgabe 3: Was versteht man unter „Bytecode“ in Java? Wie hängt er mit dem Compiler zusammen?</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Bytecode ist ein maschinennaher <strong>Zwischencode</strong>. Der Java-Compiler <code>javac</code> erzeugt ihn aus dem Quellcode (<code>.java</code>) und speichert ihn in <code>.class</code>-Dateien. Er ist nicht für einen bestimmten Prozessor gemacht, sondern für die Java Virtual Machine, die ihn auf dem jeweiligen Gerät ausführt.</div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apg-s5">
+                  <h3><span class="sec-num">5</span> Strukturierte Programmierung – Sequenzen, Schleifen, Verzweigungen</h3>
+                  <p>Bei der <strong>strukturierten Programmierung</strong> wird ein Programm nur aus drei Grundbausteinen zusammengesetzt. Wilde Sprünge („goto“) sind verboten. So bleibt der Ablauf übersichtlich und nachvollziehbar.</p>
+                  <div class="two-col">
+                    <div>
+                      <div class="box info" style="margin-bottom:0"><span class="box-title">Sequenz</span>Anweisungen werden der Reihe nach ausgeführt.</div>
+                      <pre class="code">
+System.out.println("Motor an");
+System.out.println("Fahre 1 Meter");
+System.out.println("Motor aus");</pre>
+                    </div>
+                    <div>
+                      <div class="box info" style="margin-bottom:0"><span class="box-title">Verzweigung (if / else)</span>Je nach Bedingung wird ein anderer Weg genommen.</div>
+                      <pre class="code">
+if (abstand &lt; 20) {
+    System.out.println("Hindernis! Bremsen.");
+} else {
+    System.out.println("Weg frei.");
+}</pre>
+                    </div>
+                    <div>
+                      <div class="box info" style="margin-bottom:0"><span class="box-title">Schleife (for / while)</span>Anweisungen werden wiederholt.</div>
+                      <pre class="code">
+for (int runde = 1; runde &lt;= 3; runde++) {
+    System.out.println("Runde " + runde);
+}</pre>
+                    </div>
+                  </div>
+                  <div id="apg-quiz-struct"></div>
+
+                  <div class="quiz open-task" data-note="apg-5-1">
+                    <p class="quiz-q">Aufgabe 1: Beschreibe, was „strukturierte Programmierung“ bedeutet. Nenne ein Beispiel, wo sie sinnvoll angewendet werden kann.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Strukturierte Programmierung bedeutet, dass ein Programm nur aus den drei Kontrollstrukturen <strong>Sequenz, Verzweigung und Schleife</strong> aufgebaut wird, ohne unkontrollierte Sprünge (goto). Das Problem wird in überschaubare Teilschritte zerlegt. Beispiel: ein Programm, das Noten einliest (Schleife), den Durchschnitt berechnet (Sequenz) und je nach Ergebnis „bestanden“ oder „nicht bestanden“ ausgibt (Verzweigung).</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-5-2">
+                    <p class="quiz-q">Aufgabe 2: Warum ist strukturierte Programmierung besonders wichtig für Anfänger? Finde zwei Gründe.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>(1) Der Programmablauf ist von oben nach unten lesbar und leicht nachzuvollziehen, so findet man Fehler schneller. (2) Man lernt, Probleme in kleine, logische Schritte zu zerlegen, und die drei Grundbausteine gibt es in jeder Programmiersprache. Sie sind die Basis für alles Weitere, auch für die OOP.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-5-3">
+                    <p class="quiz-q">Aufgabe 3: Entspricht die strukturierte Programmierung unserer Wahrnehmung der Realität? Begründe deine Antwort.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Nur bedingt. Abläufe und Rezepte (erst A, dann B, wenn …, wiederhole …) beschreibt sie gut. Wir nehmen die Welt aber vor allem als <strong>Objekte</strong> wahr, also als Dinge mit Eigenschaften und Fähigkeiten (ein Auto hat eine Farbe und kann fahren). In der strukturierten Programmierung sind Daten und Abläufe dagegen getrennt. Genau hier setzt die objektorientierte Programmierung an.</div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apg-s6">
+                  <h3><span class="sec-num">6</span> Objektorientierte Programmierung – Klassen, Objekte und ererbte Superkräfte</h3>
+                  <p>Die <strong>objektorientierte Programmierung (OOP)</strong> bildet die Wirklichkeit mit <strong>Objekten</strong> nach. Jedes Objekt bündelt seine Daten (<strong>Attribute</strong>) und sein Verhalten (<strong>Methoden</strong>). Eine <strong>Klasse</strong> ist der Bauplan, nach dem beliebig viele Objekte erzeugt werden können.</p>
+                  <pre class="code">
+public class Roboter {
+    // Attribute (Eigenschaften)
+    String name;
+    int geschwindigkeit;
+
+    // Methode (Verhalten)
+    void fahreVorwaerts() {
+        System.out.println(name + " fährt mit " + geschwindigkeit + " %");
+    }
+}
+
+// Ein Objekt nach dem Bauplan erzeugen (z. B. in der main-Methode):
+Roboter robbi = new Roboter();
+robbi.name = "Robbi";
+robbi.geschwindigkeit = 50;
+robbi.fahreVorwaerts();   // Ausgabe: Robbi fährt mit 50 %</pre>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Klasse</dt><dd>Bauplan bzw. Vorlage, z. B. <code>Roboter</code>. In Java immer großgeschrieben.</dd></div>
+                    <div class="gl-item"><dt>Objekt</dt><dd>Ein konkretes Exemplar einer Klasse mit eigenen Werten, z. B. der Roboter „Robbi“ von Gruppe B</dd></div>
+                    <div class="gl-item"><dt>Vererbung („ererbte Superkräfte“)</dt><dd>Eine neue Klasse übernimmt alles von einer bestehenden und kann Neues ergänzen. Ein <code>Greifroboter</code> kann alles, was ein <code>Roboter</code> kann, und zusätzlich greifen.</dd></div>
+                    <div class="gl-item"><dt>Kapselung</dt><dd>Die Daten eines Objekts werden vor direktem Zugriff von außen geschützt und nur über Methoden verändert.</dd></div>
+                  </dl>
+                  <div id="apg-quiz-oop"></div>
+
+                  <div class="quiz open-task" data-note="apg-6-1">
+                    <p class="quiz-q">Aufgabe 1: Worin unterscheidet sich die objektorientierte Programmierung von der strukturierten Programmierung?</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Bei der <strong>strukturierten</strong> Programmierung steht der <strong>Ablauf</strong> im Mittelpunkt, Daten und Funktionen sind getrennt. Bei der <strong>objektorientierten</strong> Programmierung stehen <strong>Objekte</strong> im Mittelpunkt: Sie fassen Daten (Attribute) und die dazugehörigen Funktionen (Methoden) zusammen und arbeiten miteinander. Klassen dienen als Baupläne, Eigenschaften können vererbt werden.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-6-2">
+                    <p class="quiz-q">Aufgabe 2: Welche Programmiersprachen können zur objektorientierten Programmierung verwendet werden? Nenne 3.</p>
+                    <textarea rows="2" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Java, C#, C++, Python, Kotlin, Swift, PHP oder JavaScript, also die meisten modernen Sprachen.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apg-6-3">
+                    <p class="quiz-q">Aufgabe 3: Nenne mindestens 2 Vorteile der objektorientierten gegenüber der strukturierten Programmierung.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>(1) <strong>Wiederverwendbarkeit:</strong> Klassen können mehrfach genutzt und durch Vererbung erweitert werden. (2) <strong>Bessere Struktur und Wartbarkeit</strong> bei großen Programmen: Jedes Objekt ist für seinen Bereich zuständig, Änderungen bleiben lokal. Außerdem: realitätsnahe Modellierung, Schutz der Daten durch Kapselung und bessere Arbeitsteilung im Team.</div>
+                  </div>
+                </section>
+              </div>
+            </article>
+
+            <!-- ============ AP 2: HELLO WORLD ============ -->
+            <article class="module-panel" data-module="ap-hello" role="tabpanel" hidden>
+              <h2>2. Hello World &amp; Konsolenausgabe</h2>
+              <div id="module-ap-hello" class="lesson">
+                <div class="lesson-head">
+                  <p class="lesson-intro">Das wohl berühmteste Programm der Welt ist <strong>Hello World</strong>. Egal in welcher Programmiersprache, es dient als Einstieg und schreibt eine Nachricht auf die Konsole.</p>
+                  <div class="progress" data-progress="ap-hello">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="ap-hello">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="aph-s1">1 · Aufbau</button>
+                    <button type="button" data-scroll="aph-s2">2 · Kommentare</button>
+                    <button type="button" data-scroll="aph-s3">3 · Konsolenausgabe</button>
+                    <button type="button" data-scroll="aph-s4">4 · Escape-Sequenzen</button>
+                  </nav>
+                </div>
+
+                <section class="lesson-section" id="aph-s1">
+                  <h3><span class="sec-num">1</span> Aufbau eines Java-Programms</h3>
+                  <p>In Java existiert nichts ohne <strong>Klassen</strong>, auch lauffähige Programme stecken in einer Klasse. Damit eine Klasse ausführbar wird, bekommt sie die <strong>main-Methode</strong>.</p>
+                  <pre class="code" data-lines>
+public class HelloWorld {
+
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}</pre>
+                  <pre class="console">Hello World</pre>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt><code>class</code></dt><dd>Leitet eine Klassendefinition ein. Klassennamen werden in Java immer großgeschrieben. Die Datei muss genauso heißen wie die Klasse (<code>HelloWorld.java</code>).</dd></div>
+                    <div class="gl-item"><dt><code>public static void main(String[] args)</code></dt><dd>Die main-Methode macht eine Java-Klasse ausführbar. Hier startet das Programm.</dd></div>
+                    <div class="gl-item"><dt><code>System.out.println()</code></dt><dd>Gibt etwas auf der Konsole aus</dd></div>
+                    <div class="gl-item"><dt><code>{ }</code></dt><dd>Markieren Codeblöcke, hier die Klasse und die main-Methode</dd></div>
+                  </dl>
+                  <div class="box merke">
+                    <span class="box-title">🔥 Die drei wichtigsten Regeln</span>
+                    <ul>
+                      <li><strong>Anweisungen:</strong> Jede Anweisung endet mit einem Semikolon <code>;</code></li>
+                      <li><strong>Klammern:</strong> Jede geöffnete Klammer muss auch wieder geschlossen werden.</li>
+                      <li><strong>Case Sensitivity:</strong> Java unterscheidet Groß- und Kleinschreibung. <code>System</code> ist nicht <code>system</code>! Regel: Alles außer Klassen beginnt mit einem Kleinbuchstaben.</li>
+                    </ul>
+                  </div>
+                  <div id="aph-quiz-main"></div>
+                  <div id="aph-quiz-bug"></div>
+                </section>
+
+                <section class="lesson-section" id="aph-s2">
+                  <h3><span class="sec-num">2</span> Kommentare</h3>
+                  <p>Kommentare dokumentieren den Code. Der Compiler ignoriert sie, sie werden also nicht ausgeführt.</p>
+                  <pre class="code">
+// Diese Zeile dient als Kommentar (einzeilig)
+
+/*
+ Dieser ganze Block
+ dient als Kommentar (mehrzeilig).
+*/</pre>
+                  <div id="aph-quiz-comment"></div>
+                </section>
+
+                <section class="lesson-section" id="aph-s3">
+                  <h3><span class="sec-num">3</span> Konsolenausgabe</h3>
+                  <div class="two-col">
+                    <div class="box info"><span class="box-title">Mit Zeilenumbruch</span><code>System.out.println( );</code><br>Nach der Ausgabe geht es in einer neuen Zeile weiter.</div>
+                    <div class="box info"><span class="box-title">Ohne Zeilenumbruch</span><code>System.out.print( );</code><br>Die nächste Ausgabe wird direkt in dieselbe Zeile geschrieben.</div>
+                  </div>
+                  <div class="box merke">
+                    <ul>
+                      <li>Zwischen die runden Klammern kommt der Inhalt, der ausgegeben werden soll.</li>
+                      <li>Ausgegeben werden können feste Werte (<strong>Literale</strong>) oder Variablen.</li>
+                      <li><strong>Text</strong> muss in doppelten Anführungszeichen stehen: <code>"Hallo"</code></li>
+                      <li>Einzelne Elemente werden mit <code>+</code> verbunden: <code>"Alter: " + 17</code></li>
+                    </ul>
+                  </div>
+                  <div id="aph-quiz-print"></div>
+                  <div id="aph-quiz-concat"></div>
+                </section>
+
+                <section class="lesson-section" id="aph-s4">
+                  <h3><span class="sec-num">4</span> Escape-Sequenzen</h3>
+                  <p>Zur Formatierung der Ausgabe gibt es Sonderzeichen, die mit einem Backslash <code>\</code> beginnen. <strong>Aufgabe:</strong> Ordne jeder Escape-Sequenz ihre Bedeutung zu.</p>
+                  <div id="aph-quiz-escape"></div>
+                  <pre class="code">System.out.println("Name:\tLena\nAlter:\t17");
+System.out.println("Sie sagte: \"Hallo!\"");
+System.out.println("Pfad: C:\\Java");</pre>
+                  <pre class="console">Name:   Lena
+Alter:  17
+Sie sagte: "Hallo!"
+Pfad: C:\Java</pre>
+                  <div id="aph-quiz-esc-out"></div>
+                </section>
+              </div>
+            </article>
+
+            <!-- ============ AP 3: VARIABLEN ============ -->
+            <article class="module-panel" data-module="ap-variablen" role="tabpanel" hidden>
+              <h2>3. Variablen &amp; Datentypen</h2>
+              <div id="module-ap-variablen" class="lesson">
+                <div class="lesson-head">
+                  <p class="lesson-intro">Ein Programm muss sich Werte merken: ein Alter, einen Namen, ein Messergebnis. Dafür gibt es <strong>Variablen</strong>. Eine Variable ist wie ein <strong>beschrifteter Behälter</strong>, und in Java muss man immer genau sagen, welche Art von Wert hineinpasst (<strong>Datentyp</strong>).</p>
+                  <div class="progress" data-progress="ap-variablen">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="ap-variablen">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="apv-s1">1 · Variablen</button>
+                    <button type="button" data-scroll="apv-s2">2 · Namensregeln</button>
+                    <button type="button" data-scroll="apv-s3">3 · Datentypen</button>
+                    <button type="button" data-scroll="apv-s4">4 · Steckbrief-Beispiel</button>
+                  </nav>
+                </div>
+
+                <section class="lesson-section" id="apv-s1">
+                  <h3><span class="sec-num">1</span> Variablen in drei Schritten</h3>
                   <div>
-                    <p class="quiz-hint">Themen</p>
-                    <div class="fq-topics" id="fq-topics"></div>
+                    <div class="var-box"><span class="vb-type">int</span><span class="vb-val">17</span><span class="vb-name">alter</span></div>
+                    <div class="var-box"><span class="vb-type">double</span><span class="vb-val">1.72</span><span class="vb-name">groesse</span></div>
+                    <div class="var-box"><span class="vb-type">String</span><span class="vb-val">"Lena"</span><span class="vb-name">name</span></div>
                   </div>
-                  <label class="calc" style="align-items:center">
-                    <span class="muted" style="font-size:.85rem">Anzahl der Fragen</span>
-                    <select id="fq-count" class="fq-select">
-                      <option value="10">10 Fragen (Kurztest)</option>
-                      <option value="20" selected>20 Fragen</option>
-                      <option value="30">30 Fragen</option>
-                      <option value="999">Alle Fragen</option>
-                    </select>
-                  </label>
-                  <p class="muted" id="fq-best" style="margin:0;font-size:.9rem"></p>
-                  <div class="feedback" id="fq-start-fb"></div>
-                  <div class="quiz-actions" style="margin-top:0"><button type="button" class="btn btn-primary" id="fq-go">Quiz starten</button></div>
+                  <p class="muted" style="font-size:.85rem;margin-top:.5rem">Jeder Behälter hat einen <strong>Datentyp</strong> (was passt hinein?), einen <strong>Wert</strong> (aktueller Inhalt) und einen <strong>Namen</strong> (Etikett, Bezeichner).</p>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Schritt</th><th>Bedeutung</th><th>Beispiel</th></tr></thead>
+                      <tbody>
+                        <tr><td>1. Deklarieren</td><td>Behälter anlegen: Datentyp und Name festlegen</td><td><code>int alter;</code></td></tr>
+                        <tr><td>2. Initialisieren</td><td>Den ersten Wert hineinlegen</td><td><code>alter = 17;</code></td></tr>
+                        <tr><td>3. Verwenden</td><td>Wert auslesen oder überschreiben</td><td><code>System.out.println(alter);</code></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="box merke">
+                    <ul>
+                      <li>Das <code>=</code> heißt <strong>nicht „ist gleich“</strong>, sondern „<strong>bekommt den Wert</strong>“ (Zuweisung).</li>
+                      <li>Die Zuweisung erfolgt immer <strong>von rechts nach links</strong>: Die Variable, die den Wert bekommt, steht links.</li>
+                      <li>Deklaration und Initialisierung gehen auch in einer Zeile: <code>int alter = 17;</code></li>
+                      <li>Mehrere Variablen gleichen Typs: <code>int noteTest1 = 3, noteTest2 = 2;</code></li>
+                      <li>Eine Variable muss einen Wert haben, <strong>bevor</strong> sie verwendet wird, sonst meldet der Compiler einen Fehler.</li>
+                    </ul>
+                  </div>
+                  <div id="apv-quiz-steps"></div>
+                </section>
+
+                <section class="lesson-section" id="apv-s2">
+                  <h3><span class="sec-num">2</span> Regeln für Variablennamen</h3>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Regel</th><th>richtig</th><th>falsch</th></tr></thead>
+                      <tbody>
+                        <tr><td>beginnt mit einem Kleinbuchstaben</td><td><code>alter</code></td><td><code>Alter</code></td></tr>
+                        <tr><td>keine Ziffer am Anfang</td><td><code>klasse10</code></td><td><code>10klasse</code></td></tr>
+                        <tr><td>keine Leerzeichen, Sonderzeichen oder Umlaute</td><td><code>groesse</code></td><td><code>größe</code>, <code>koerper groesse</code></td></tr>
+                        <tr><td>keine Schlüsselwörter</td><td><code>klasse</code></td><td><code>class</code>, <code>void</code>, <code>static</code></td></tr>
+                        <tr><td>mehrere Wörter: camelCase</td><td><code>hatFuehrerschein</code></td><td><code>hatfuehrerschein</code></td></tr>
+                        <tr><td>aussagekräftig</td><td><code>alter</code></td><td><code>a</code>, <code>x1</code></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="box info">
+                    <span class="box-title">Achtung: Compilerfehler oder nur Konvention?</span>
+                    Technisch erlaubt Java Bezeichner, die mit einem Buchstaben, <code>_</code> oder <code>$</code> beginnen. Ziffern am Anfang, Leerzeichen und Schlüsselwörter führen zu einem <strong>Compilerfehler</strong>. <code>Alter</code>, <code>_wert</code> oder sogar <code>größe</code> funktionieren dagegen, verstoßen aber gegen die <strong>Konvention</strong>. Das fällt erst beim Lesen des Codes auf, also trotzdem vermeiden!
+                  </div>
+                  <div id="apv-quiz-names"></div>
+                </section>
+
+                <section class="lesson-section" id="apv-s3">
+                  <h3><span class="sec-num">3</span> Primitive Datentypen &amp; String</h3>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Datentyp</th><th>Art</th><th>Größe</th><th>Wertebereich (ca.)</th><th>Beispiel</th></tr></thead>
+                      <tbody>
+                        <tr><td><code>byte</code></td><td>ganze Zahl</td><td>8 Bit</td><td>−128 bis 127</td><td><code>byte b = 100;</code></td></tr>
+                        <tr><td><code>short</code></td><td>ganze Zahl</td><td>16 Bit</td><td>−32.768 bis 32.767</td><td><code>short s = 2000;</code></td></tr>
+                        <tr><td><code>int</code></td><td>ganze Zahl</td><td>32 Bit</td><td>ca. ±2,1 Milliarden</td><td><code>int alter = 17;</code></td></tr>
+                        <tr><td><code>long</code></td><td>ganze Zahl</td><td>64 Bit</td><td>ca. ±9,2 Trillionen (9,2 · 10<sup>18</sup>)</td><td><code>long n = 8200000000L;</code></td></tr>
+                        <tr><td><code>float</code></td><td>Kommazahl</td><td>32 Bit</td><td>ca. ±3,4 · 10<sup>38</sup>, ca. 7 Stellen genau</td><td><code>float f = 9.99f;</code></td></tr>
+                        <tr><td><code>double</code></td><td>Kommazahl</td><td>64 Bit</td><td>ca. ±1,8 · 10<sup>308</sup>, ca. 15–16 Stellen genau</td><td><code>double d = 1.72;</code></td></tr>
+                        <tr><td><code>boolean</code></td><td>Wahrheitswert</td><td>–</td><td>nur <code>true</code> oder <code>false</code></td><td><code>boolean ok = true;</code></td></tr>
+                        <tr><td><code>char</code></td><td>einzelnes Zeichen</td><td>16 Bit</td><td>ein Unicode-Zeichen (0 bis 65.535)</td><td><code>char c = 'B';</code></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="box merke">
+                    <span class="box-title">🔥 Schreibregeln</span>
+                    <ul>
+                      <li>Der Dezimaltrenner bei Kommazahlen ist ein <strong>Punkt</strong>: <code>1.72</code> statt <code>1,72</code></li>
+                      <li>Beim Datentyp <code>float</code> muss hinter dem Wert ein <code>f</code> stehen: <code>9.99f</code></li>
+                      <li>Bei <code>long</code> (Werte außerhalb des int-Bereichs) muss ein <code>L</code> stehen: <code>8200000000L</code>. Ein kleines <code>l</code> geht auch, sieht aber aus wie eine 1.</li>
+                      <li><code>char</code>-Werte stehen in <strong>einfachen</strong> Anführungszeichen: <code>'B'</code></li>
+                      <li><code>boolean</code>: nur <code>true</code> oder <code>false</code>, klein und ohne Anführungszeichen</li>
+                    </ul>
+                  </div>
+                  <div class="box info">
+                    <span class="box-title">String für Text</span>
+                    <code>String</code> ist kein primitiver Datentyp wie <code>int</code> oder <code>double</code>, sondern eine <strong>Klasse</strong>. Deshalb wird er <strong>großgeschrieben</strong>. Ein String speichert eine Zeichenkette (Text) in <strong>doppelten</strong> Anführungszeichen: <code>String name = "Lena";</code>
+                  </div>
+                  <p><strong>Welcher Datentyp passt?</strong> Der Datentyp richtet sich danach, was der Wert bedeutet und wie genau er gespeichert werden muss.</p>
+                  <div id="apv-quiz-types"></div>
+                  <div id="apv-quiz-byte"></div>
+                  <div id="apv-quiz-bug"></div>
+                </section>
+
+                <section class="lesson-section" id="apv-s4">
+                  <h3><span class="sec-num">4</span> Beispiel: Steckbrief einer Auszubildenden</h3>
+                  <p>Ergänze die fehlenden Datentypen. Achtung, zwei Begriffe sind falsch geschrieben!</p>
+                  <div id="apv-quiz-steckbrief"></div>
+                  <p>So sieht das fertige Programm mit Ausgabe aus:</p>
+                  <pre class="code">
+package beispiel;
+
+public class Steckbrief {
+
+    public static void main(String[] args) {
+        String name = "Lena";                // Text
+        int alter = 17;                      // ganze Jahre
+        double groesse = 1.72;               // Meter, Kommazahl
+        char gruppe = 'B';                   // ein Buchstabe
+        boolean hatFuehrerschein = false;    // ja oder nein
+
+        System.out.println("Name:         " + name);
+        System.out.println("Alter:        " + alter);
+        System.out.println("Größe:        " + groesse);
+        System.out.println("Gruppe:       " + gruppe);
+        System.out.println("Führerschein: " + hatFuehrerschein);
+    }
+}</pre>
+                  <pre class="console">Name:         Lena
+Alter:        17
+Größe:        1.72
+Gruppe:       B
+Führerschein: false</pre>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Variable</dt><dd>benannter Speicherplatz für einen Wert</dd></div>
+                    <div class="gl-item"><dt>Datentyp</dt><dd>legt fest, welche Art von Wert in die Variable passt</dd></div>
+                    <div class="gl-item"><dt>Bezeichner</dt><dd>der Name einer Variable</dd></div>
+                    <div class="gl-item"><dt>deklarieren</dt><dd>eine Variable anlegen (Datentyp + Name)</dd></div>
+                    <div class="gl-item"><dt>initialisieren</dt><dd>einer Variable den ersten Wert geben</dd></div>
+                    <div class="gl-item"><dt>Zuweisung</dt><dd>einer Variable mit <code>=</code> einen Wert geben</dd></div>
+                  </dl>
+                </section>
+              </div>
+            </article>
+
+            <!-- ============ AP 4: OPERATOREN ============ -->
+            <article class="module-panel" data-module="ap-operatoren" role="tabpanel" hidden>
+              <h2>4. Operatoren, Konstanten &amp; Typumwandlung</h2>
+              <div id="module-ap-operatoren" class="lesson">
+                <div class="lesson-head">
+                  <p class="lesson-intro">Mit <strong>Operatoren</strong> werden Variablen verknüpft: gerechnet, verglichen, Text verbunden. Dabei muss man vor allem bei den Ergebnisvariablen auf die richtigen Datentypen achten. Sonst passieren Dinge wie die berüchtigte <strong>Ganzzahldivision</strong>.</p>
+                  <div class="progress" data-progress="ap-operatoren">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="ap-operatoren">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="apo-s1">1 · Rechnen</button>
+                    <button type="button" data-scroll="apo-s2">2 · Vergleichen</button>
+                    <button type="button" data-scroll="apo-s3">3 · Text verbinden</button>
+                    <button type="button" data-scroll="apo-s4">4 · Konstanten &amp; Literale</button>
+                    <button type="button" data-scroll="apo-s5">5 · Typumwandlung</button>
+                  </nav>
                 </div>
 
-                <!-- Laufendes Quiz -->
-                <div id="fq-run" class="quiz" hidden>
-                  <div class="fq-head"><span id="fq-pos"></span><span class="fq-topic" id="fq-topic"></span></div>
-                  <div class="progress-bar fq-bar"><span id="fq-bar"></span></div>
-                  <p class="quiz-q fq-q" id="fq-q"></p>
-                  <p class="quiz-hint" id="fq-hint"></p>
-                  <div id="fq-body"></div>
-                  <div class="feedback" id="fq-fb" aria-live="polite"></div>
-                  <div class="quiz-actions">
-                    <button type="button" class="btn btn-primary" data-fq="next">Antwort prüfen</button>
-                    <button type="button" class="btn" data-fq="abort">Abbrechen</button>
+                <section class="lesson-section" id="apo-s1">
+                  <h3><span class="sec-num">1</span> Arithmetische Operatoren</h3>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Operator</th><th>Bedeutung</th><th>Beispiel</th><th>Ergebnis</th></tr></thead>
+                      <tbody>
+                        <tr><td><code>+</code></td><td>Addition</td><td><code>7 + 2</code></td><td>9</td></tr>
+                        <tr><td><code>-</code></td><td>Subtraktion</td><td><code>7 - 2</code></td><td>5</td></tr>
+                        <tr><td><code>*</code></td><td>Multiplikation</td><td><code>7 * 2</code></td><td>14</td></tr>
+                        <tr><td><code>/</code></td><td>Division (bei zwei int: Ganzzahldivision!)</td><td><code>7 / 2</code></td><td>3</td></tr>
+                        <tr><td><code>%</code></td><td>Modulo: Rest einer Ganzzahldivision</td><td><code>7 % 2</code></td><td>1</td></tr>
+                        <tr><td><code>++</code></td><td>Inkrement: um 1 erhöhen (wie <code>x += 1</code>)</td><td><code>x++</code></td><td>x + 1</td></tr>
+                        <tr><td><code>--</code></td><td>Dekrement: um 1 verringern (wie <code>x -= 1</code>)</td><td><code>x--</code></td><td>x − 1</td></tr>
+                        <tr><td><code>+=  -=  *=  /=</code></td><td>Rechnen und zuweisen in einem: <code>x += 5</code> bedeutet <code>x = x + 5</code></td><td><code>x *= 2</code></td><td>x · 2</td></tr>
+                      </tbody>
+                    </table>
                   </div>
+                  <div class="box merke"><span class="box-title">🔥 Merke</span>Es gilt <strong>Punkt vor Strich</strong>, Klammern werden zuerst berechnet. Die Division ist <code>/</code> (Slash), nicht <code>\</code> (Backslash).</div>
+                  <div id="apo-quiz-div"></div>
+                  <div id="apo-quiz-mod"></div>
+                  <div id="apo-quiz-prio"></div>
+                  <div id="apo-quiz-inc"></div>
+                </section>
+
+                <section class="lesson-section" id="apo-s2">
+                  <h3><span class="sec-num">2</span> Vergleichsoperatoren</h3>
+                  <p>Vergleiche liefern immer einen Wahrheitswert (<code>boolean</code>): <code>true</code> oder <code>false</code>.</p>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Operator</th><th>Bedeutung</th><th>Beispiel (a = 5)</th><th>Ergebnis</th></tr></thead>
+                      <tbody>
+                        <tr><td><code>&gt;</code></td><td>größer als</td><td><code>a &gt; 3</code></td><td>true</td></tr>
+                        <tr><td><code>&gt;=</code></td><td>größer oder gleich</td><td><code>a &gt;= 5</code></td><td>true</td></tr>
+                        <tr><td><code>&lt;</code></td><td>kleiner als</td><td><code>a &lt; 5</code></td><td>false</td></tr>
+                        <tr><td><code>&lt;=</code></td><td>kleiner oder gleich</td><td><code>a &lt;= 4</code></td><td>false</td></tr>
+                        <tr><td><code>==</code></td><td>gleich</td><td><code>a == 5</code></td><td>true</td></tr>
+                        <tr><td><code>!=</code></td><td>ungleich</td><td><code>a != 5</code></td><td>false</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="box merke">
+                    <span class="box-title">🔥 Typische Fehler</span>
+                    <ul>
+                      <li>Ein einzelnes <code>=</code> ist eine <strong>Zuweisung</strong> und kein Vergleich. Vergleichen geht nur mit <code>==</code>.</li>
+                      <li>Zeichenketten werden inhaltlich mit <code>variable.equals(wert)</code> verglichen, nicht mit <code>==</code>: <code>name.equals("Lena")</code></li>
+                    </ul>
+                  </div>
+                  <div id="apo-quiz-cmp"></div>
+                  <div id="apo-quiz-equals"></div>
+                </section>
+
+                <section class="lesson-section" id="apo-s3">
+                  <h3><span class="sec-num">3</span> Zeichenketten verbinden</h3>
+                  <p>Bei Zeichenketten bedeutet <code>+</code> <strong>anhängen</strong> (Verkettung) und nicht addieren. Java rechnet von <strong>links nach rechts</strong>: Sobald ein String beteiligt ist, wird alles Weitere angehängt.</p>
+                  <pre class="code">
+System.out.println(2 + 3 + " Äpfel");     // erst 2 + 3 = 5, dann anhängen
+System.out.println("Äpfel: " + 2 + 3);    // "Äpfel: 2", dann "3" anhängen
+System.out.println("Äpfel: " + (2 + 3));  // Klammer zuerst</pre>
+                  <pre class="console">5 Äpfel
+Äpfel: 23
+Äpfel: 5</pre>
+                  <div id="apo-quiz-concat"></div>
+                </section>
+
+                <section class="lesson-section" id="apo-s4">
+                  <h3><span class="sec-num">4</span> Konstanten &amp; Literale</h3>
+                  <p><strong>Konstanten</strong> kann nur <strong>einmal</strong> ein Wert zugewiesen werden. Sie werden mit dem Schlüsselwort <code>final</code> eingeleitet, ihr Bezeichner besteht nur aus <strong>Großbuchstaben</strong> (Wörter mit <code>_</code> getrennt). Meist werden sie direkt bei der Deklaration initialisiert.</p>
+                  <pre class="code">
+final double MWST_SATZ = 0.19;
+final int MAX_SPIELER = 4;
+// MWST_SATZ = 0.07;   → Compilerfehler: Konstante kann nicht geändert werden</pre>
+                  <p>Ein <strong>Literal</strong> ist ein fester Wert direkt im Code, eine „unbenannte Konstante“. Der Compiler vergibt automatisch den Datentyp:</p>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Literal</th><th>Beispiel</th><th>Datentyp</th></tr></thead>
+                      <tbody>
+                        <tr><td>ganze Zahl</td><td><code>42</code></td><td><code>int</code></td></tr>
+                        <tr><td>Kommazahl</td><td><code>3.1415</code></td><td><code>double</code></td></tr>
+                        <tr><td>Zeichenkette</td><td><code>"Hallo"</code></td><td><code>String</code></td></tr>
+                        <tr><td>Zeichen</td><td><code>'A'</code></td><td><code>char</code></td></tr>
+                        <tr><td>Wahrheitswert</td><td><code>true</code></td><td><code>boolean</code></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <pre class="code">double circleArea = 3.1415 * radius * radius;   // 3.1415 ist ein double-Literal</pre>
+                  <div id="apo-quiz-final"></div>
+                </section>
+
+                <section class="lesson-section" id="apo-s5">
+                  <h3><span class="sec-num">5</span> Umwandlung von Datentypen (Cast)</h3>
+                  <p>Der Datentyp des Ergebnisses wird durch den <strong>größten beteiligten Datentyp</strong> bestimmt. Teilt man zwei <code>int</code>-Werte, ist das Ergebnis wieder ein <code>int</code>, die Nachkommastellen werden <strong>abgeschnitten</strong>. Das gilt auch dann, wenn man das Ergebnis danach in einer <code>double</code>-Variable speichert. Dann wird nur noch <code>.0</code> angehängt.</p>
+                  <pre class="code">
+int number1 = 7;
+int number2 = 2;
+double result;
+
+result = number1 / number2;            // 3.0  ✗ Ganzzahldivision
+result = number1 / (double) number2;   // 3.5  ✓ Cast vor der Division</pre>
+                  <div class="box info">
+                    <span class="box-title">Cast: Datentyp in runden Klammern voranstellen</span>
+                    <ul>
+                      <li><strong>Automatisch</strong> (ohne Cast) geht es nur vom „kleineren“ zum „größeren“ Typ: <code>int → long → float → double</code>, z. B. <code>double d = 5;</code></li>
+                      <li><strong>Vom größeren zum kleineren</strong> Typ braucht man einen Cast. Dabei gehen Informationen verloren: <code>(int) 3.99</code> ergibt <strong>3</strong>. Es wird abgeschnitten, nicht gerundet!</li>
+                    </ul>
+                  </div>
+                  <div id="apo-quiz-cast"></div>
+                  <div id="apo-quiz-cast2"></div>
+                </section>
+              </div>
+            </article>
+
+            <!-- ============ AP 5: NOTENBERECHNUNG ============ -->
+            <article class="module-panel" data-module="ap-noten" role="tabpanel" hidden>
+              <h2>5. Programmierübung: Notendurchschnitt berechnen</h2>
+              <div id="module-ap-noten" class="lesson">
+                <div class="lesson-head">
+                  <p class="lesson-intro">Ein Java-Programm soll anhand der Noten in einem Fach den Durchschnitt und die Zeugnisnote ermitteln. Schulaufgaben (SA) zählen doppelt, Tests (Stegreifaufgaben, Kurzarbeiten …) einfach. Dafür gibt es schon folgendes Codegerüst:</p>
+                  <div class="progress" data-progress="ap-noten">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="ap-noten">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="apn-s1">1 · Fehler finden</button>
+                    <button type="button" data-scroll="apn-s2">2 · Runden</button>
+                    <button type="button" data-scroll="apn-s3">3 · Zeugnisnote</button>
+                    <button type="button" data-scroll="apn-s4">4 · Scanner</button>
+                    <button type="button" data-scroll="apn-s5">5 · Vertiefung</button>
+                  </nav>
                 </div>
 
-                <!-- Ergebnis -->
-                <div id="fq-result" hidden></div>
+                <section class="lesson-section" id="apn-s1">
+                  <h3><span class="sec-num">1</span> Warum stimmt der Durchschnitt nicht?</h3>
+                  <pre class="code" data-lines>
+public class Notenberechnung {
+    public static void main(String[] args) {
+        //Noteninformationen wurden wie folgt eingelesen
+        int noteTest1 = 3, noteTest2 = 2;
+        int noteSA1 = 4, noteSA2 = 2;
+        int anzahl = 6;
+
+        int summeTest = noteTest1 + noteTest2;
+        int summeSA = noteSA1 + noteSA2;
+
+        double durchschnitt = (summeTest + summeSA*2)/anzahl;
+        System.out.println("Ihr Notendurchschnitt beträgt: " + durchschnitt);
+    }
+}</pre>
+                  <p class="muted" style="font-size:.9rem">Zur Kontrolle: <code>anzahl = 6</code>, weil 2 Tests einfach und 2 Schulaufgaben doppelt zählen (2 + 2 · 2 = 6). Korrekt wäre (5 + 6 · 2) ÷ 6 = 17 ÷ 6 ≈ 2,83.</p>
+                  <div id="apn-quiz-out"></div>
+                  <div id="apn-quiz-why"></div>
+                  <div id="apn-quiz-fix"></div>
+                  <div class="quiz open-task" data-note="apn-1">
+                    <p class="quiz-q">Aufgabe 1: Erkläre kurz, warum das Programm keinen korrekten Notendurchschnitt liefert, und korrigiere es. Die Zeilen 4 bis 9 dürfen nicht verändert werden.</p>
+                    <textarea rows="3" placeholder="Deine Antwort … (wird nur in diesem Browser gespeichert)"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="sample" hidden>
+                      <div class="box merke" style="margin-bottom:0">In Zeile 11 sind alle beteiligten Werte vom Typ <code>int</code>. Java führt deshalb eine <strong>Ganzzahldivision</strong> durch: 17 / 6 = 2, der Rest wird abgeschnitten. Erst danach wird die 2 in <code>double</code> umgewandelt, das ergibt 2.0. Lösung: Vor der Division einen Operanden in <code>double</code> umwandeln (Cast).</div>
+                      <pre class="code">double durchschnitt = (summeTest + summeSA * 2) / (double) anzahl;   // 2.8333333333333335</pre>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apn-s2">
+                  <h3><span class="sec-num">2</span> Auf zwei Nachkommastellen runden</h3>
+                  <p>Die Ausgabe mit 16 Nachkommastellen (<code>2.8333333333333335</code>) ist nicht sinnvoll. Mit <code>Math.round()</code> wird auf eine <strong>ganze Zahl</strong> gerundet. Der Trick für zwei Nachkommastellen: erst mit 100 multiplizieren, runden, dann durch <code>100.0</code> teilen.</p>
+                  <pre class="code">
+double gerundet = Math.round(durchschnitt * 100) / 100.0;
+// 2.8333… * 100 = 283.33…  →  Math.round → 283  →  283 / 100.0 = 2.83</pre>
+                  <div class="box merke"><span class="box-title">🔥 Achtung</span>Durch <code>100.0</code> teilen, nicht durch <code>100</code>! <code>Math.round()</code> liefert eine ganze Zahl (<code>long</code>). Mit <code>/ 100</code> gäbe es wieder eine Ganzzahldivision, und das Ergebnis wäre 2.</div>
+                  <div id="apn-quiz-round"></div>
+                  <div class="quiz open-task" data-note="apn-2">
+                    <p class="quiz-q">Aufgabe 2: Passe dein Programm so an, dass der Notendurchschnitt auf zwei Nachkommastellen gerundet und in einer eigenen Variable gespeichert wird.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="sample" hidden>
+                      <pre class="code">
+double durchschnitt = (summeTest + summeSA * 2) / (double) anzahl;
+double gerundet = Math.round(durchschnitt * 100) / 100.0;
+System.out.println("Ihr Notendurchschnitt beträgt: " + gerundet);   // 2.83</pre>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apn-s3">
+                  <h3><span class="sec-num">3</span> Die Zeugnisnote</h3>
+                  <p>Bei einem Schnitt von <strong>x,50</strong> wird die <strong>bessere</strong> Note gegeben: 2,50 ergibt die Zeugnisnote 2, 2,51 ergibt die 3.</p>
+                  <div id="apn-quiz-grade"></div>
+                  <div class="quiz open-task" data-note="apn-3">
+                    <p class="quiz-q">Aufgabe 3: Ergänze dein Programm um die Ausgabe der Zeugnisnote.</p>
+                    <textarea rows="4" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="sample" hidden>
+                      <div class="box merke" style="margin-bottom:0"><strong>Lösung 1 – mit Verzweigungen</strong> (gut lesbar, Verzweigungen kommen im Unterricht noch ausführlich):</div>
+                      <pre class="code">
+int zeugnisnote;
+if (gerundet &lt;= 1.5) {
+    zeugnisnote = 1;
+} else if (gerundet &lt;= 2.5) {
+    zeugnisnote = 2;
+} else if (gerundet &lt;= 3.5) {
+    zeugnisnote = 3;
+} else if (gerundet &lt;= 4.5) {
+    zeugnisnote = 4;
+} else if (gerundet &lt;= 5.5) {
+    zeugnisnote = 5;
+} else {
+    zeugnisnote = 6;
+}
+System.out.println("Ihre Zeugnisnote: " + zeugnisnote);</pre>
+                      <div class="box merke" style="margin-bottom:0"><strong>Lösung 2 – mit einem Trick:</strong> 0,5 abziehen und dann immer <strong>aufrunden</strong> (<code>Math.ceil</code>). 2,50 − 0,5 = 2,00 ergibt 2. 2,51 − 0,5 = 2,01 ergibt 3.</div>
+                      <pre class="code">int zeugnisnote = (int) Math.ceil(gerundet - 0.5);</pre>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apn-s4">
+                  <h3><span class="sec-num">4</span> Benutzereingaben mit dem Scanner</h3>
+                  <p>Für Eingaben über die Tastatur gibt es die Klasse <code>Scanner</code>:</p>
+                  <pre class="code" data-lines>
+import java.util.Scanner; // Ganz oben im Java-File, VOR der Klasse
+
+public class Benutzereingaben {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in); // Erstellt ein Scanner-Objekt
+
+        System.out.println("Bitte geben Sie Ihren Namen ein:");
+        String name = scanner.nextLine(); // Liest eine ganze Zeile Text
+        System.out.println("Hallo, " + name + "!");
+
+        System.out.println("Bitte geben Sie Ihr Alter ein:");
+        int alter = scanner.nextInt(); // Liest eine ganze Zahl
+        System.out.println("Sie sind " + alter + " Jahre alt.");
+
+        scanner.close(); // Wichtig: Scanner am Ende schließen!
+    }
+}</pre>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt><code>import java.util.Scanner;</code></dt><dd>Macht die Scanner-Klasse bekannt. Die Zeile steht ganz oben, vor der Klasse.</dd></div>
+                    <div class="gl-item"><dt><code>new Scanner(System.in)</code></dt><dd>Erzeugt ein Scanner-<strong>Objekt</strong>, das von der Tastatur (<code>System.in</code>) liest</dd></div>
+                    <div class="gl-item"><dt><code>nextLine()</code> / <code>nextInt()</code> / <code>nextDouble()</code></dt><dd>Lesen eine ganze Zeile Text, eine ganze Zahl oder eine Kommazahl. Das Programm wartet, bis Enter gedrückt wird.</dd></div>
+                    <div class="gl-item"><dt><code>scanner.close()</code></dt><dd>Schließt den Scanner am Ende wieder</dd></div>
+                  </dl>
+                  <div class="box info"><span class="box-title">Tipp</span><code>nextDouble()</code> richtet sich nach der Spracheinstellung des Computers. Auf deutschen Systemen muss man Kommazahlen deshalb oft mit <strong>Komma</strong> eingeben (<code>2,5</code>), nicht mit Punkt.</div>
+                  <div id="apn-quiz-scanner"></div>
+                  <div class="quiz open-task" data-note="apn-4a">
+                    <p class="quiz-q">Vertiefung 1a: Erkläre kurz, wie die Benutzereingabe mithilfe des Scanners funktioniert.</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>Zuerst wird die Klasse mit <code>import java.util.Scanner;</code> eingebunden. Dann erzeugt man mit <code>new Scanner(System.in)</code> ein Scanner-Objekt, das von der Tastatur liest. Mit Methoden wie <code>nextLine()</code> (Text), <code>nextInt()</code> (ganze Zahl) oder <code>nextDouble()</code> (Kommazahl) wartet das Programm auf die Eingabe und liefert sie nach Enter als Wert zurück, der in einer Variable gespeichert wird. Am Ende wird der Scanner mit <code>close()</code> geschlossen.</div>
+                  </div>
+                  <div class="quiz open-task" data-note="apn-4b">
+                    <p class="quiz-q">Vertiefung 1b: Passe das Programm so an, dass zuerst das Alter und dann der Name eingegeben wird. Warum kommt es dabei zu einem Problem? Wie lässt es sich beheben?</p>
+                    <textarea rows="3" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="sample" hidden>
+                      <div class="box merke" style="margin-bottom:0"><strong>Problem:</strong> <code>nextInt()</code> liest nur die Zahl. Der Zeilenumbruch (Enter) bleibt im Eingabepuffer. Das folgende <code>nextLine()</code> liest sofort diesen Rest, also eine <strong>leere Zeile</strong>, und der Name kann gar nicht eingegeben werden. <strong>Lösung:</strong> Nach <code>nextInt()</code> einmal <code>scanner.nextLine()</code> aufrufen, um den Rest der Zeile zu verwerfen.</div>
+                      <pre class="code">
+System.out.println("Bitte geben Sie Ihr Alter ein:");
+int alter = scanner.nextInt();
+scanner.nextLine();   // Rest der Zeile (Enter) verwerfen
+
+System.out.println("Bitte geben Sie Ihren Namen ein:");
+String name = scanner.nextLine();</pre>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="lesson-section" id="apn-s5">
+                  <h3><span class="sec-num">5</span> Vertiefung: beliebig viele Noten eingeben</h3>
+                  <p>Das Programm soll so erweitert werden, dass der Benutzer beim Start eingibt, <strong>wie viele</strong> einfach gewichtete Noten (z. B. Tests) erfasst werden sollen, und diese dann eingibt.</p>
+                  <div class="quiz open-task" data-note="apn-5">
+                    <p class="quiz-q">Vertiefung 2: Passe das Notenberechnungsprogramm an.</p>
+                    <textarea rows="4" placeholder="Deine Antwort …"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="sample" hidden>
+                      <div class="box merke" style="margin-bottom:0">Mögliche Lösung. Die <code>for</code>-Schleife wiederholt die Eingabe so oft wie gewünscht. Schleifen kommen im Unterricht noch ausführlich dran.</div>
+                      <pre class="code">
+import java.util.Scanner;
+
+public class Notenberechnung {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Wie viele Noten möchten Sie eingeben?");
+        int anzahl = scanner.nextInt();
+
+        int summe = 0;
+        for (int i = 1; i &lt;= anzahl; i++) {
+            System.out.print("Note " + i + ": ");
+            int note = scanner.nextInt();
+            summe = summe + note;
+        }
+
+        double durchschnitt = summe / (double) anzahl;
+        double gerundet = Math.round(durchschnitt * 100) / 100.0;
+        int zeugnisnote = (int) Math.ceil(gerundet - 0.5);
+
+        System.out.println("Durchschnitt: " + gerundet);
+        System.out.println("Zeugnisnote:  " + zeugnisnote);
+        scanner.close();
+    }
+}</pre>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </article>
+
+            <!-- ============ AP 6: TEST-VORBEREITUNG ============ -->
+            <article class="module-panel" data-module="ap-quiz" role="tabpanel" hidden>
+              <h2>6. Test-Vorbereitung</h2>
+              <div id="module-ap-quiz" class="lesson">
+                <div class="lesson-head">
+                  <p class="lesson-intro">Bereite dich auf den 1. Test vor. Die Fragen werden zufällig aus allen AP-Kapiteln gezogen: Theorie, „Was gibt der Code aus?“ und kleine Rechenaufgaben. Am Ende bekommst du eine Note und siehst, welche Kapitel du wiederholen solltest.</p>
+                  <div class="progress" data-progress="ap-quiz">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                  </div>
+                </div>
+                <div class="final-quiz" id="fq-ap"></div>
               </div>
             </article>
 
@@ -1954,10 +2808,17 @@
         id: 'ap',
         code: 'AP',
         title: 'Programmierung',
-        description: 'Programmieren mit Java: Variablen, Datentypen, Kontrollstrukturen, Methoden und objektorientierte Programmierung.',
+        description: 'Programmieren mit Java: Grundbegriffe, Hello World, Variablen und Datentypen, Operatoren sowie eine erste Programmierübung.',
         icon: 'code',
-        status: 'soon',
-        modules: []
+        status: 'active',
+        modules: [
+          { id: 'ap-grundlagen', title: 'Grundbegriffe' },
+          { id: 'ap-hello',      title: 'Hello World & Ausgabe' },
+          { id: 'ap-variablen',  title: 'Variablen & Datentypen' },
+          { id: 'ap-operatoren', title: 'Operatoren & Typumwandlung' },
+          { id: 'ap-noten',      title: 'Übung: Notenberechnung' },
+          { id: 'ap-quiz',       title: 'Test-Vorbereitung' }
+        ]
       },
       {
         id: 'itt2',
@@ -2180,7 +3041,7 @@
       for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
       return a;
     };
-    const setFeedback = (el, ok, msg) => { el.className = 'feedback' + (ok === true ? ' ok' : ok === false ? ' bad' : ''); el.textContent = msg; };
+    const setFeedback = (el, ok, msg) => { el.classList.add('feedback'); el.classList.toggle('ok', ok === true); el.classList.toggle('bad', ok === false); el.textContent = msg; };
     const setupQuiz = (el, mod, id) => { el.classList.add('quiz'); el.dataset.mod = mod; el.dataset.ex = id; };
     const actionsHTML = (solve = true) => `
       <div class="quiz-actions">
@@ -2190,14 +3051,15 @@
       </div>
       <div class="feedback" aria-live="polite"></div>`;
 
-    function choiceQuiz(el, { mod, id, question, options, correct, explain = '' }) {
+    function choiceQuiz(el, { mod, id, question, options, correct, explain = '', code = '' }) {
       const multi = Array.isArray(correct);
       setupQuiz(el, mod, id);
       el.innerHTML = `
         <p class="quiz-q">${question}</p>
+        ${code ? `<pre class="code" data-hl>${codeHTML(code)}</pre>` : ''}
         ${multi ? '<p class="quiz-hint">Mehrere Antworten sind richtig.</p>' : ''}
         <div class="options">${options.map((o, i) => `
-          <button type="button" class="option" data-i="${i}" aria-pressed="false"><span class="mark ${multi ? 'box' : ''}"></span>${o}</button>`).join('')}
+          <button type="button" class="option" data-i="${i}" aria-pressed="false"><span class="mark ${multi ? 'box' : ''}"></span><span>${o}</span></button>`).join('')}
         </div>
         ${multi ? actionsHTML(false) : '<div class="feedback" aria-live="polite"></div>'}`;
       const opts = $$('.option', el), fb = $('.feedback', el);
@@ -2683,11 +3545,88 @@
       });
     }
 
+    /* =========================================================
+       CODE-BAUSTEINE (Java-Syntaxhervorhebung, Fehlersuche)
+       <pre class="code">…</pre>          → wird automatisch eingefärbt
+       <pre class="code" data-lines>…</pre> → zusätzlich mit Zeilennummern
+       ========================================================= */
+    const JAVA_RE = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|\b(public|private|protected|class|static|void|int|double|boolean|char|long|short|byte|float|final|new|import|package|return|if|else|for|while|do|switch|case|break|default|true|false|null|this)\b|\b(String|System|Scanner|Math|Roboter)\b|\b(\d+(?:\.\d+)?[fFlLdD]?)\b/g;
+    const escHTML = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    function highlightJava(code) {
+      let out = '', last = 0;
+      code.replace(JAVA_RE, (m, com, str, kw, type, num, idx) => {
+        out += escHTML(code.slice(last, idx));
+        const cls = com ? 'tk-com' : str ? 'tk-str' : kw ? 'tk-kw' : type ? 'tk-type' : 'tk-num';
+        out += `<span class="${cls}">${escHTML(m)}</span>`;
+        last = idx + m.length;
+        return m;
+      });
+      return out + escHTML(code.slice(last));
+    }
+    /* Entfernt Leerzeilen am Anfang/Ende und die gemeinsame Einrückung */
+    function dedent(code) {
+      const lines = code.replace(/^\s*\n/, '').replace(/\s+$/, '').split('\n');
+      const ind = Math.min(...lines.filter(l => l.trim()).map(l => l.match(/^ */)[0].length));
+      return lines.map(l => l.slice(ind));
+    }
+    function codeHTML(code, numbered = false) {
+      const lines = dedent(code);
+      return numbered
+        ? lines.map((l, i) => `<span class="cl"><span class="ln">${i + 1}</span>${highlightJava(l) || ' '}</span>`).join('')
+        : highlightJava(lines.join('\n'));
+    }
+    function highlightAll(root = document) {
+      $$('pre.code:not([data-hl])', root).forEach(p => {
+        if (!p.textContent.trim()) return;
+        p.innerHTML = codeHTML(p.textContent, p.hasAttribute('data-lines'));
+        p.setAttribute('data-hl', '');
+      });
+    }
+
+    /* bugQuiz(el, {mod, id, question, code, bugs:[Zeilenindex ab 0], notes:{index: 'Erklärung'}})
+       Fehlersuche: fehlerhafte Zeilen antippen. */
+    function bugQuiz(el, { mod, id, question, code, bugs, notes = {} }) {
+      setupQuiz(el, mod, id);
+      const lines = dedent(code);
+      el.innerHTML = `
+        <p class="quiz-q">${question}</p>
+        <p class="quiz-hint">Tippe auf alle Zeilen, die einen Fehler enthalten, und drücke dann „Prüfen“.</p>
+        <div class="bug-code">${lines.map((l, i) => `<button type="button" class="bug-line" data-i="${i}" aria-pressed="false"><span class="ln">${i + 1}</span><span class="bl">${highlightJava(l) || ' '}</span></button>`).join('')}</div>
+        <ul class="bug-notes" hidden>${bugs.map(i => `<li><strong>Zeile ${i + 1}:</strong> ${notes[i] || ''}</li>`).join('')}</ul>
+        ${actionsHTML()}`;
+      const rows = $$('.bug-line', el), fb = $('.feedback', el), notesEl = $('.bug-notes', el);
+      const unmark = () => { rows.forEach(r => r.classList.remove('ok', 'bad')); setFeedback(fb, null, ''); };
+      el.addEventListener('click', (e) => {
+        const row = e.target.closest('.bug-line');
+        const act = e.target.closest('[data-act]')?.dataset.act;
+        if (row) { row.setAttribute('aria-pressed', row.getAttribute('aria-pressed') !== 'true'); return unmark(); }
+        if (act === 'check') {
+          const sel = rows.filter(r => r.getAttribute('aria-pressed') === 'true').map(r => +r.dataset.i);
+          rows.forEach(r => {
+            const i = +r.dataset.i, s = sel.includes(i), b = bugs.includes(i);
+            r.classList.toggle('ok', s && b); r.classList.toggle('bad', s && !b);
+          });
+          const found = sel.filter(i => bugs.includes(i)).length, wrong = sel.length - found;
+          if (found === bugs.length && !wrong) {
+            setFeedback(fb, true, `Super – alle ${bugs.length} Fehler gefunden!`); notesEl.hidden = false; Progress.done(mod, id);
+          } else {
+            setFeedback(fb, false, `${found} von ${bugs.length} Fehlern gefunden` + (wrong ? ` – ${wrong} markierte Zeile${wrong > 1 ? 'n sind' : ' ist'} eigentlich korrekt.` : '.'));
+          }
+        } else if (act === 'solve') {
+          rows.forEach(r => { const b = bugs.includes(+r.dataset.i); r.setAttribute('aria-pressed', b); r.classList.toggle('ok', b); r.classList.remove('bad'); });
+          notesEl.hidden = false; setFeedback(fb, null, 'Lösung eingeblendet – die Erklärungen stehen unter dem Code.');
+        } else if (act === 'reset') {
+          rows.forEach(r => r.setAttribute('aria-pressed', 'false')); notesEl.hidden = true; unmark();
+        }
+      });
+    }
+
     /* numberQuiz(el, {mod, id, question, answer, tol, unit, solution}) – Rechenaufgabe mit Zahleneingabe */
-    function numberQuiz(el, { mod, id, question, answer, tol = 0.01, unit = '', solution = '' }) {
+    function numberQuiz(el, { mod, id, question, answer, tol = 0.01, unit = '', solution = '', code = '' }) {
       setupQuiz(el, mod, id);
       el.innerHTML = `
         <p class="quiz-q">${question}</p>
+        ${code ? `<pre class="code" data-hl>${codeHTML(code)}</pre>` : ''}
         <div class="calc"><label>Ergebnis<input class="num-input" inputmode="decimal" aria-label="Ergebnis"></label><span style="padding-bottom:.4rem">${unit}</span></div>
         ${actionsHTML()}`;
       const inp = $('input', el), fb = $('.feedback', el);
@@ -2795,33 +3734,67 @@
     ];
 
     /* =========================================================
-       GESAMT-QUIZ – Ablauf
+       GESAMT-QUIZ – Ablauf (wiederverwendbar für jeden Kurs)
+       finalQuiz(root, {mod, bank, topics, course, bestKey})
+         bank:   Fragenpool (siehe QUIZ_BANK)
+         topics: { modulId: 'Anzeigename' }
+         course: Kurs-ID für den Sprung „Wiederholen“
        ========================================================= */
-    function initFinalQuiz() {
-      const MOD = 'quiz';
-      Progress.register(MOD, ['quiz-pass']);
-      const TOPICS = { mainboard: 'Mainboard', cpu: 'CPU', ram: 'Arbeitsspeicher (RAM)', massenspeicher: 'Massenspeicher', gpu: 'Grafikkarte (GPU)' };
-      const BEST_KEY = 'bs-quiz-best';
-      const startEl = $('#fq-start'), runEl = $('#fq-run'), resEl = $('#fq-result');
+    function finalQuiz(root, { mod, bank, topics: TOPICS, course, bestKey }) {
+      Progress.register(mod, [mod + '-pass']);
+      const BEST_KEY = bestKey || 'bs-quiz-best-' + mod;
+      root.innerHTML = `
+        <div class="quiz fq-settings fq-start">
+          <p class="quiz-q">Quiz einstellen</p>
+          <div><p class="quiz-hint">Themen</p><div class="fq-topics"></div></div>
+          <label class="calc" style="align-items:center">
+            <span class="muted" style="font-size:.85rem">Anzahl der Fragen</span>
+            <select class="fq-select fq-count">
+              <option value="10">10 Fragen (Kurztest)</option>
+              <option value="20" selected>20 Fragen</option>
+              <option value="30">30 Fragen</option>
+              <option value="999">Alle Fragen</option>
+            </select>
+          </label>
+          <p class="muted fq-best" style="margin:0;font-size:.9rem"></p>
+          <div class="feedback fq-start-fb"></div>
+          <div class="quiz-actions" style="margin-top:0"><button type="button" class="btn btn-primary fq-go">Quiz starten</button></div>
+        </div>
+        <div class="quiz fq-run" hidden>
+          <div class="fq-head"><span class="fq-pos"></span><span class="fq-topic"></span></div>
+          <div class="progress-bar fq-bar"><span class="fq-barfill"></span></div>
+          <p class="quiz-q fq-q"></p>
+          <pre class="code fq-code" hidden></pre>
+          <p class="quiz-hint fq-hint"></p>
+          <div class="fq-body"></div>
+          <div class="feedback fq-fb" aria-live="polite"></div>
+          <div class="quiz-actions">
+            <button type="button" class="btn btn-primary" data-fq="next">Antwort prüfen</button>
+            <button type="button" class="btn" data-fq="abort">Abbrechen</button>
+          </div>
+        </div>
+        <div class="fq-result" hidden></div>`;
+      const q$ = sel => $(sel, root);
+      const startEl = q$('.fq-start'), runEl = q$('.fq-run'), resEl = q$('.fq-result');
       const fmtN = n => n.toLocaleString('de-DE', { maximumFractionDigits: 3 });
       const grade = p => p >= 92 ? ['1', 'sehr gut'] : p >= 81 ? ['2', 'gut'] : p >= 67 ? ['3', 'befriedigend']
         : p >= 50 ? ['4', 'ausreichend'] : p >= 30 ? ['5', 'mangelhaft'] : ['6', 'ungenügend'];
       const correctText = q => q.n !== undefined ? `${fmtN(q.n)} ${q.unit}` : [].concat(q.a).map(i => q.o[i]).join(' · ');
       let qs = [], idx = 0, results = [], checked = false;
 
-      $('#fq-topics').innerHTML = Object.entries(TOPICS).map(([k, v]) =>
-        `<label class="toggle"><input type="checkbox" value="${k}" checked> ${v} <span>(${QUIZ_BANK.filter(q => q.t === k).length})</span></label>`).join('');
+      q$('.fq-topics').innerHTML = Object.entries(TOPICS).map(([k, v]) =>
+        `<label class="toggle"><input type="checkbox" value="${k}" checked> ${v} <span>(${bank.filter(q => q.t === k).length})</span></label>`).join('');
 
       const showBest = () => {
         let b = null;
         try { b = JSON.parse(localStorage.getItem(BEST_KEY)); } catch {}
-        $('#fq-best').textContent = b ? `🏆 Dein bestes Ergebnis: ${b.pct} % (${b.right} / ${b.total} Fragen) – Note ${grade(b.pct)[0]} am ${b.date}` : `Fragenpool: ${QUIZ_BANK.length} Fragen. Noch kein Ergebnis gespeichert.`;
+        q$('.fq-best').textContent = b ? `🏆 Dein bestes Ergebnis: ${b.pct} % (${b.right} / ${b.total} Fragen) – Note ${grade(b.pct)[0]} am ${b.date}` : `Fragenpool: ${bank.length} Fragen. Noch kein Ergebnis gespeichert.`;
       };
 
       const pickQuestions = () => {
-        const topics = $$('#fq-topics input:checked').map(i => i.value);
-        const n = +$('#fq-count').value;
-        const pools = topics.map(t => shuffle(QUIZ_BANK.filter(q => q.t === t)));
+        const topics = $$('.fq-topics input:checked', root).map(i => i.value);
+        const n = +q$('.fq-count').value;
+        const pools = topics.map(t => shuffle(bank.filter(q => q.t === t)));
         const out = [];
         while (out.length < n && pools.some(p => p.length)) pools.forEach(p => { if (p.length && out.length < n) out.push(p.shift()); });
         return shuffle(out);
@@ -2838,34 +3811,37 @@
       const render = () => {
         const q = qs[idx];
         checked = false;
-        $('#fq-pos').textContent = `Frage ${idx + 1} von ${qs.length}`;
-        $('#fq-topic').textContent = TOPICS[q.t];
-        $('#fq-bar').style.width = (idx / qs.length) * 100 + '%';
-        $('#fq-q').textContent = q.q;
+        q$('.fq-pos').textContent = `Frage ${idx + 1} von ${qs.length}`;
+        q$('.fq-topic').textContent = TOPICS[q.t];
+        q$('.fq-barfill').style.width = (idx / qs.length) * 100 + '%';
+        q$('.fq-q').innerHTML = q.q;
+        const codeEl = q$('.fq-code');
+        codeEl.hidden = !q.c;
+        codeEl.innerHTML = q.c ? codeHTML(q.c) : '';
         const multi = Array.isArray(q.a);
-        $('#fq-hint').textContent = q.n !== undefined ? 'Rechenaufgabe – gib das Ergebnis als Zahl ein (Komma oder Punkt).'
+        q$('.fq-hint').textContent = q.n !== undefined ? 'Rechenaufgabe – gib das Ergebnis als Zahl ein (Komma oder Punkt).'
           : multi ? 'Mehrere Antworten sind richtig.' : 'Eine Antwort ist richtig.';
-        $('#fq-body').innerHTML = q.n !== undefined
-          ? `<div class="calc"><label>Ergebnis<input class="num-input" id="fq-num" inputmode="decimal" aria-label="Ergebnis"></label><span style="padding-bottom:.4rem">${q.unit}</span></div>`
-          : `<div class="options">${q.order.map(i => `<button type="button" class="option" data-i="${i}" aria-pressed="false"><span class="mark ${multi ? 'box' : ''}"></span>${q.o[i]}</button>`).join('')}</div>`;
-        setFeedback($('#fq-fb'), null, '');
+        q$('.fq-body').innerHTML = q.n !== undefined
+          ? `<div class="calc"><label>Ergebnis<input class="num-input fq-num" inputmode="decimal" aria-label="Ergebnis"></label><span style="padding-bottom:.4rem">${q.unit}</span></div>`
+          : `<div class="options">${q.order.map(i => `<button type="button" class="option" data-i="${i}" aria-pressed="false"><span class="mark ${multi ? 'box' : ''}"></span><span>${q.o[i]}</span></button>`).join('')}</div>`;
+        setFeedback(q$('.fq-fb'), null, '');
         $('[data-fq="next"]', runEl).textContent = 'Antwort prüfen';
-        $('#fq-num')?.addEventListener('keydown', e => { if (e.key === 'Enter') $('[data-fq="next"]', runEl).click(); });
-        $('#fq-num')?.focus();
+        const num = q$('.fq-num');
+        if (num) { num.addEventListener('keydown', e => { if (e.key === 'Enter') $('[data-fq="next"]', runEl).click(); }); num.focus(); }
       };
 
       const evaluate = () => {
-        const q = qs[idx], fb = $('#fq-fb');
+        const q = qs[idx], fb = q$('.fq-fb');
         let ok, given;
         if (q.n !== undefined) {
-          const raw = $('#fq-num').value.trim();
+          const num = q$('.fq-num'), raw = num.value.trim();
           if (!raw) return setFeedback(fb, false, 'Bitte gib ein Ergebnis ein.');
           const v = parseFloat(raw.replace(',', '.')), v2 = parseFloat(raw.replace(/\./g, '').replace(',', '.'));
           ok = [v, v2].some(x => Math.abs(x - q.n) <= q.tol + 1e-9);
           given = raw + ' ' + q.unit;
-          $('#fq-num').classList.add(ok ? 'ok' : 'bad'); $('#fq-num').disabled = true;
+          num.classList.add(ok ? 'ok' : 'bad'); num.disabled = true;
         } else {
-          const opts = $$('#fq-body .option');
+          const opts = $$('.fq-body .option', root);
           const sel = opts.filter(o => o.getAttribute('aria-pressed') === 'true').map(o => +o.dataset.i);
           if (!sel.length) return setFeedback(fb, false, 'Bitte wähle eine Antwort aus.');
           const corr = [].concat(q.a);
@@ -2879,7 +3855,8 @@
         }
         results.push({ q, ok, given });
         checked = true;
-        setFeedback(fb, ok, (ok ? '✓ Richtig! ' : `✗ Leider falsch. Richtig: ${correctText(q)}. `) + q.e);
+        fb.classList.toggle('ok', ok); fb.classList.toggle('bad', !ok);
+        fb.innerHTML = (ok ? '✓ Richtig! ' : `✗ Leider falsch. Richtig: ${correctText(q)}. `) + q.e;
         $('[data-fq="next"]', runEl).textContent = idx === qs.length - 1 ? 'Zur Auswertung' : 'Weiter';
       };
 
@@ -2892,7 +3869,7 @@
         try { best = JSON.parse(localStorage.getItem(BEST_KEY)); } catch {}
         const isBest = total >= 10 && (!best || pct > best.pct);
         if (isBest) { try { localStorage.setItem(BEST_KEY, JSON.stringify({ pct, right, total, date })); } catch {} }
-        if (pct >= 50 && total >= 10) Progress.done(MOD, 'quiz-pass');
+        if (pct >= 50 && total >= 10) Progress.done(mod, mod + '-pass');
 
         const byTopic = Object.keys(TOPICS).map(t => {
           const rs = results.filter(r => r.q.t === t);
@@ -2930,6 +3907,7 @@
           ${wrong.length ? `<p class="quiz-q" style="margin-top:1.5rem">Deine Fehler im Überblick</p>
             ${wrong.map(r => `<div class="review-item">
               <p><strong>${r.q.q}</strong></p>
+              ${r.q.c ? `<pre class="code">${codeHTML(r.q.c)}</pre>` : ''}
               <p class="ya">Deine Antwort: ${r.given}</p>
               <p class="ra">Richtig: ${correctText(r.q)}</p>
               <p class="muted">${r.q.e}</p>
@@ -2939,10 +3917,10 @@
         resEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       };
 
-      $('#fq-go').addEventListener('click', () => {
+      q$('.fq-go').addEventListener('click', () => {
         const list = pickQuestions();
-        if (!list.length) return setFeedback($('#fq-start-fb'), false, 'Bitte wähle mindestens ein Thema aus.');
-        setFeedback($('#fq-start-fb'), null, '');
+        if (!list.length) return setFeedback(q$('.fq-start-fb'), false, 'Bitte wähle mindestens ein Thema aus.');
+        setFeedback(q$('.fq-start-fb'), null, '');
         begin(list);
       });
 
@@ -2952,8 +3930,8 @@
         if (opt && !checked) {
           const q = qs[idx];
           if (Array.isArray(q.a)) opt.setAttribute('aria-pressed', opt.getAttribute('aria-pressed') !== 'true');
-          else $$('#fq-body .option').forEach(o => o.setAttribute('aria-pressed', o === opt));
-          setFeedback($('#fq-fb'), null, '');
+          else $$('.fq-body .option', root).forEach(o => o.setAttribute('aria-pressed', o === opt));
+          setFeedback(q$('.fq-fb'), null, '');
         }
         if (act === 'next') {
           if (!checked) return evaluate();
@@ -2969,11 +3947,457 @@
         const go = e.target.closest('[data-goto]');
         if (act === 'new') { resEl.hidden = true; startEl.hidden = false; startEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         if (act === 'retry') begin(shuffle(results.filter(r => !r.ok).map(r => r.q)));
-        if (go) location.hash = `#/itt1/${go.dataset.goto}`;
+        if (go) location.hash = `#/${course}/${go.dataset.goto}`;
       });
 
       showBest();
     }
+
+    function initFinalQuiz() {
+      finalQuiz($('#fq-itt1'), {
+        mod: 'quiz', bank: QUIZ_BANK, course: 'itt1', bestKey: 'bs-quiz-best',
+        topics: { mainboard: 'Mainboard', cpu: 'CPU', ram: 'Arbeitsspeicher (RAM)', massenspeicher: 'Massenspeicher', gpu: 'Grafikkarte (GPU)' }
+      });
+    }
+
+    /* =========================================================
+       KURS AP – PROGRAMMIERUNG (Java, kompatibel zu Java 7/8 / leJOS)
+       ========================================================= */
+    function initAp() {
+      /* ---------- 1. Grundbegriffe ---------- */
+      let MOD = 'ap-grundlagen';
+      Progress.register(MOD, ['apg-ide', 'apg-pipe', 'apg-ci', 'apg-java', 'apg-struct', 'apg-oop']);
+      choiceQuiz($('#apg-quiz-ide'), {
+        mod: MOD, id: 'apg-ide', question: 'Welche Funktionen bietet eine IDE typischerweise?',
+        options: [
+          'Syntax-Hervorhebung und Autovervollständigung',
+          'Kompilieren und Starten per Knopfdruck',
+          'Debugger zur schrittweisen Fehlersuche',
+          'Sie schreibt das komplette Programm automatisch',
+          'Sie ersetzt das Betriebssystem'
+        ],
+        correct: [0, 1, 2], explain: 'Programmieren muss man trotzdem selbst – die IDE ist das Werkzeug.'
+      });
+      clozeQuiz($('#apg-quiz-pipe'), {
+        mod: MOD, id: 'apg-pipe', distractors: ['Interpreter', 'Maschinencode (.exe)'],
+        text: `
+          <div class="pipeline">
+            <div class="pipe-step">✍️ Du schreibst Code</div><span class="pipe-arrow" aria-hidden="true">➜</span>
+            {{Quellcode (.java)}}<span class="pipe-arrow" aria-hidden="true">➜</span>
+            {{Compiler (javac)}}<span class="pipe-arrow" aria-hidden="true">➜</span>
+            {{Bytecode (.class)}}<span class="pipe-arrow" aria-hidden="true">➜</span>
+            {{Java Virtual Machine (JVM)}}<span class="pipe-arrow" aria-hidden="true">➜</span>
+            <div class="pipe-step">▶️ läuft auf PC und EV3</div>
+          </div>`
+      });
+      sortQuiz($('#apg-quiz-ci'), {
+        mod: MOD, id: 'apg-ci',
+        buckets: [{ id: 'c', label: 'Compiler' }, { id: 'i', label: 'Interpreter' }],
+        items: [
+          { text: 'übersetzt das gesamte Programm vor der Ausführung', bucket: 'c' },
+          { text: 'übersetzt Anweisung für Anweisung während der Ausführung', bucket: 'i' },
+          { text: 'meldet Syntaxfehler schon vor dem Programmstart', bucket: 'c' },
+          { text: 'erzeugt eine Datei mit dem übersetzten Programm', bucket: 'c' },
+          { text: 'Fehler fallen erst auf, wenn die Zeile ausgeführt wird', bucket: 'i' },
+          { text: 'typisch für C, C++ und javac', bucket: 'c' },
+          { text: 'typisch für Python und JavaScript', bucket: 'i' }
+        ]
+      });
+      choiceQuiz($('#apg-quiz-java'), {
+        mod: MOD, id: 'apg-java', question: 'Ist Java eine kompilierte oder eine interpretierte Sprache?',
+        options: [
+          'Beides: javac kompiliert den Quellcode in Bytecode, die JVM führt den Bytecode aus',
+          'Nur kompiliert – direkt in Maschinencode für Windows',
+          'Nur interpretiert – wie JavaScript im Browser',
+          'Weder noch – der Prozessor liest Java-Code direkt'
+        ],
+        correct: 0, explain: 'Genau diese Kombination macht Java plattformunabhängig.'
+      });
+      assignQuiz($('#apg-quiz-struct'), {
+        mod: MOD, id: 'apg-struct', choices: ['Sequenz', 'Verzweigung', 'Schleife'],
+        items: [
+          { text: 'Der Roboter fährt 1 m vor, dreht sich um 90° und fährt 50 cm weiter.', answer: 'Sequenz' },
+          { text: 'Wenn der Abstandssensor weniger als 20 cm misst, bremsen – sonst weiterfahren.', answer: 'Verzweigung' },
+          { text: 'Fahre so lange vorwärts, bis der Tastsensor gedrückt wird.', answer: 'Schleife' },
+          { text: 'Ist der Durchschnitt ≤ 4,5? Dann „bestanden“ ausgeben, sonst „nicht bestanden“.', answer: 'Verzweigung' },
+          { text: 'Lies 10-mal eine Note ein und addiere sie zur Summe.', answer: 'Schleife' },
+          { text: 'Variable anlegen, Wert berechnen, Ergebnis ausgeben.', answer: 'Sequenz' }
+        ]
+      });
+      assignQuiz($('#apg-quiz-oop'), {
+        mod: MOD, id: 'apg-oop', choices: ['Klasse', 'Objekt', 'Attribut', 'Methode'],
+        items: [
+          { text: '<code>Roboter</code> – der Bauplan für alle Roboter', answer: 'Klasse' },
+          { text: 'Der EV3-Roboter „Robbi“ von Gruppe B', answer: 'Objekt' },
+          { text: '<code>geschwindigkeit</code>', answer: 'Attribut' },
+          { text: '<code>fahreVorwaerts()</code>', answer: 'Methode' },
+          { text: '<code>name</code>', answer: 'Attribut' },
+          { text: '<code>drehen(90)</code>', answer: 'Methode' }
+        ]
+      });
+
+      /* ---------- 2. Hello World ---------- */
+      MOD = 'ap-hello';
+      Progress.register(MOD, ['aph-main', 'aph-bug', 'aph-comment', 'aph-print', 'aph-concat', 'aph-escape', 'aph-esc-out']);
+      choiceQuiz($('#aph-quiz-main'), {
+        mod: MOD, id: 'aph-main', question: 'Welche Zeile macht eine Java-Klasse ausführbar?',
+        options: [
+          '<code>public static void main(String[] args)</code>',
+          '<code>public class HelloWorld</code>',
+          '<code>System.out.println()</code>',
+          '<code>public static void start()</code>'
+        ],
+        correct: 0, explain: 'Die main-Methode ist der Startpunkt jedes Java-Programms.'
+      });
+      bugQuiz($('#aph-quiz-bug'), {
+        mod: MOD, id: 'aph-bug', question: 'Fehlersuche: In diesem Programm stecken 3 Fehler. Finde sie!',
+        code: `
+          public class HelloWorld {
+              public static void main(String[] args) {
+                  system.out.println("Hallo Welt");
+                  System.out.println("Ich lerne Java")
+                  System.out.println("Java ist " + "cool");
+                  System.out.println(Tschüss);
+              }
+          }`,
+        bugs: [2, 3, 5],
+        notes: {
+          2: '<code>system</code> muss großgeschrieben werden: <code>System</code> (Case Sensitivity).',
+          3: 'Das Semikolon <code>;</code> am Ende der Anweisung fehlt.',
+          5: 'Text muss in doppelten Anführungszeichen stehen: <code>"Tschüss"</code>. Ohne Anführungszeichen sucht Java eine Variable namens Tschüss.'
+        }
+      });
+      choiceQuiz($('#aph-quiz-comment'), {
+        mod: MOD, id: 'aph-comment', question: 'Welche Zeilen sind gültige Kommentare in Java?',
+        options: ['<code>// Das ist ein Kommentar</code>', '<code>/* Das ist ein Kommentar */</code>', '<code># Das ist ein Kommentar</code>', '<code>&lt;!-- Das ist ein Kommentar --&gt;</code>'],
+        correct: [0, 1], explain: '<code>#</code> ist ein Kommentar in Python, <code>&lt;!-- --&gt;</code> in HTML.'
+      });
+      choiceQuiz($('#aph-quiz-print'), {
+        mod: MOD, id: 'aph-print', question: 'Was gibt dieses Programm auf der Konsole aus?',
+        code: `
+          System.out.print("Hallo ");
+          System.out.print("Welt");
+          System.out.println("!");
+          System.out.println("Tschüss");`,
+        options: [
+          '<code class="out">Hallo Welt!\nTschüss</code>',
+          '<code class="out">Hallo \nWelt\n!\nTschüss</code>',
+          '<code class="out">Hallo Welt!Tschüss</code>',
+          '<code class="out">Hallo Welt! Tschüss</code>'
+        ],
+        correct: 0, explain: '<code>print</code> bleibt in derselben Zeile, erst <code>println</code> macht danach einen Zeilenumbruch.'
+      });
+      choiceQuiz($('#aph-quiz-concat'), {
+        mod: MOD, id: 'aph-concat', question: 'Was wird ausgegeben?',
+        code: `System.out.println("Ich bin " + 17 + " Jahre alt.");`,
+        options: [
+          '<code class="out">Ich bin 17 Jahre alt.</code>',
+          '<code class="out">Ich bin + 17 + Jahre alt.</code>',
+          '<code class="out">Ich bin17Jahre alt.</code>',
+          'Compilerfehler – Text und Zahl kann man nicht verbinden'
+        ],
+        correct: 0, explain: 'Mit <code>+</code> werden Text und Zahl verbunden. Die Leerzeichen stehen bereits in den Texten.'
+      });
+      clozeQuiz($('#aph-quiz-escape'), {
+        mod: MOD, id: 'aph-escape', distractors: ['Text fett drucken', 'Programm beenden'],
+        text: `
+          <div class="match-grid">
+            <div class="mg-term"><code>\\t</code></div><div>{{Tabulator (Sprung zur nächsten Tab-Position)}}</div>
+            <div class="mg-term"><code>\\n</code></div><div>{{Zeilenumbruch (neue Zeile)}}</div>
+            <div class="mg-term"><code>\\b</code></div><div>{{Backspace (ein Zeichen zurück)}}</div>
+            <div class="mg-term"><code>\\f</code></div><div>{{Seitenvorschub (Form Feed)}}</div>
+            <div class="mg-term"><code>\\r</code></div><div>{{Wagenrücklauf (zurück an den Zeilenanfang)}}</div>
+            <div class="mg-term"><code>\\"</code></div><div>{{doppeltes Anführungszeichen}}</div>
+            <div class="mg-term"><code>\\'</code></div><div>{{einfaches Anführungszeichen}}</div>
+            <div class="mg-term"><code>\\\\</code></div><div>{{Backslash}}</div>
+          </div>`
+      });
+      choiceQuiz($('#aph-quiz-esc-out'), {
+        mod: MOD, id: 'aph-esc-out', question: 'Was gibt diese Zeile aus?',
+        code: `System.out.println("Er sagte: \\"Hi\\"\\nTschüss");`,
+        options: [
+          '<code class="out">Er sagte: "Hi"\nTschüss</code>',
+          '<code class="out">Er sagte: \\"Hi\\"\\nTschüss</code>',
+          '<code class="out">Er sagte: "Hi" Tschüss</code>',
+          'Compilerfehler wegen der Anführungszeichen'
+        ],
+        correct: 0, explain: '<code>\\"</code> gibt ein Anführungszeichen aus, <code>\\n</code> sorgt für eine neue Zeile.'
+      });
+
+      /* ---------- 3. Variablen & Datentypen ---------- */
+      MOD = 'ap-variablen';
+      Progress.register(MOD, ['apv-steps', 'apv-names', 'apv-types', 'apv-byte', 'apv-bug', 'apv-steckbrief']);
+      assignQuiz($('#apv-quiz-steps'), {
+        mod: MOD, id: 'apv-steps', choices: ['Deklaration', 'Initialisierung', 'Deklaration + Initialisierung', 'Verwendung'],
+        items: [
+          { text: '<code>int alter;</code>', answer: 'Deklaration' },
+          { text: '<code>alter = 17;</code>', answer: 'Initialisierung' },
+          { text: '<code>double groesse = 1.72;</code>', answer: 'Deklaration + Initialisierung' },
+          { text: '<code>System.out.println(alter);</code>', answer: 'Verwendung' },
+          { text: '<code>String name = "Lena";</code>', answer: 'Deklaration + Initialisierung' }
+        ]
+      });
+      assignQuiz($('#apv-quiz-names'), {
+        mod: MOD, id: 'apv-names', choices: ['korrekt', 'erlaubt, aber gegen die Konvention', 'Compilerfehler'],
+        items: [
+          { text: '<code>hatFuehrerschein</code>', answer: 'korrekt' },
+          { text: '<code>10klasse</code>', answer: 'Compilerfehler' },
+          { text: '<code>Alter</code>', answer: 'erlaubt, aber gegen die Konvention' },
+          { text: '<code>klasse10</code>', answer: 'korrekt' },
+          { text: '<code>koerper groesse</code>', answer: 'Compilerfehler' },
+          { text: '<code>class</code>', answer: 'Compilerfehler' },
+          { text: '<code>hatfuehrerschein</code>', answer: 'erlaubt, aber gegen die Konvention' },
+          { text: '<code>größe</code>', answer: 'erlaubt, aber gegen die Konvention' }
+        ]
+      });
+      assignQuiz($('#apv-quiz-types'), {
+        mod: MOD, id: 'apv-types', choices: ['int', 'long', 'double', 'boolean', 'char', 'String'],
+        items: [
+          { text: 'Alter einer Person in Jahren', answer: 'int' },
+          { text: 'Körpergröße in Metern (1,72)', answer: 'double' },
+          { text: 'Hat die Person einen Führerschein?', answer: 'boolean' },
+          { text: 'Klassengruppe (A, B oder C)', answer: 'char' },
+          { text: 'Vorname', answer: 'String' },
+          { text: 'Weltbevölkerung (ca. 8,2 Milliarden)', answer: 'long' },
+          { text: 'Preis eines Artikels (19,99 €)', answer: 'double' },
+          { text: 'Postleitzahl 01067 (mit führender Null!)', answer: 'String' }
+        ]
+      });
+      numberQuiz($('#apv-quiz-byte'), {
+        mod: MOD, id: 'apv-byte', answer: 127, tol: 0,
+        question: 'Welchen größten Wert kann eine Variable vom Typ <code>byte</code> speichern?',
+        solution: 'byte hat 8 Bit: 2⁸ = 256 Werte von −128 bis 127.'
+      });
+      bugQuiz($('#apv-quiz-bug'), {
+        mod: MOD, id: 'apv-bug', question: 'Fehlersuche: Welche Zeilen enthalten einen Fehler?',
+        code: `
+          int alter = 17;
+          double groesse = 1,72;
+          String name = 'Lena';
+          char gruppe = "B";
+          boolean hatFuehrerschein = false;
+          float preis = 9.99;
+          long einwohner = 8200000000L;`,
+        bugs: [1, 2, 3, 5],
+        notes: {
+          1: 'Kommazahlen brauchen einen <strong>Punkt</strong>: <code>1.72</code>',
+          2: 'Text (String) steht in <strong>doppelten</strong> Anführungszeichen: <code>"Lena"</code>',
+          3: 'Ein <code>char</code> steht in <strong>einfachen</strong> Anführungszeichen: <code>\'B\'</code>',
+          5: 'Bei <code>float</code> fehlt das <code>f</code>: <code>9.99f</code> (ohne f ist 9.99 ein double-Literal)'
+        }
+      });
+      clozeQuiz($('#apv-quiz-steckbrief'), {
+        mod: MOD, id: 'apv-steckbrief', distractors: ['Int', 'string'],
+        text: `<div class="code-cloze">{{String}} name = "Lena";
+{{int}} alter = 17;
+{{double}} groesse = 1.72;
+{{char}} gruppe = 'B';
+{{boolean}} hatFuehrerschein = false;</div>`
+      });
+
+      /* ---------- 4. Operatoren ---------- */
+      MOD = 'ap-operatoren';
+      Progress.register(MOD, ['apo-div', 'apo-mod', 'apo-prio', 'apo-inc', 'apo-cmp', 'apo-equals', 'apo-concat', 'apo-final', 'apo-cast', 'apo-cast2']);
+      choiceQuiz($('#apo-quiz-div'), {
+        mod: MOD, id: 'apo-div', question: 'Was gibt diese Zeile aus?',
+        code: 'System.out.println(7 / 2);',
+        options: ['<code class="out">3</code>', '<code class="out">3.5</code>', '<code class="out">4</code>', '<code class="out">3.0</code>'],
+        correct: 0, explain: 'Beide Zahlen sind int → Ganzzahldivision, die Nachkommastellen werden abgeschnitten. Mit <code>7 / 2.0</code> käme 3.5 heraus.'
+      });
+      numberQuiz($('#apo-quiz-mod'), {
+        mod: MOD, id: 'apo-mod', answer: 2, tol: 0,
+        question: 'Welchen Wert liefert der Ausdruck <code>17 % 5</code>?',
+        solution: '17 / 5 = 3 Rest 2 → der Modulo-Operator liefert den Rest: 2.'
+      });
+      numberQuiz($('#apo-quiz-prio'), {
+        mod: MOD, id: 'apo-prio', answer: 15, tol: 0,
+        question: 'Was gibt dieses Programm aus?', code: 'System.out.println((2 + 3) * 4 - 10 / 2);',
+        solution: 'Klammer zuerst: 5 · 4 = 20, Punkt vor Strich: 10 / 2 = 5 → 20 − 5 = 15.'
+      });
+      numberQuiz($('#apo-quiz-inc'), {
+        mod: MOD, id: 'apo-inc', answer: 18, tol: 0,
+        question: 'Welchen Wert hat <code>x</code> am Ende?',
+        code: `
+          int x = 5;
+          x += 3;
+          x++;
+          x *= 2;`,
+        solution: '5 + 3 = 8 → 8 + 1 = 9 → 9 · 2 = 18'
+      });
+      choiceQuiz($('#apo-quiz-cmp'), {
+        mod: MOD, id: 'apo-cmp', question: 'Was wird ausgegeben?',
+        code: `
+          int a = 7;
+          System.out.println(a >= 7);
+          System.out.println(a != 7);`,
+        options: ['<code class="out">true\nfalse</code>', '<code class="out">false\ntrue</code>', '<code class="out">true\ntrue</code>', '<code class="out">7\n7</code>'],
+        correct: 0, explain: '7 ≥ 7 ist wahr, 7 ≠ 7 ist falsch. Vergleiche liefern immer einen boolean.'
+      });
+      choiceQuiz($('#apo-quiz-equals'), {
+        mod: MOD, id: 'apo-equals', question: 'Mit welcher Bedingung prüfst du richtig, ob in der String-Variable <code>name</code> der Text „Lena“ steht?',
+        options: ['<code>name.equals("Lena")</code>', '<code>name == "Lena"</code>', '<code>name = "Lena"</code>', '<code>name.equal("Lena")</code>'],
+        correct: 0, explain: '<code>=</code> ist eine Zuweisung, <code>==</code> vergleicht bei Strings nicht zuverlässig den Inhalt, und die Methode heißt <code>equals</code> (mit s).'
+      });
+      choiceQuiz($('#apo-quiz-concat'), {
+        mod: MOD, id: 'apo-concat', question: 'Was wird ausgegeben?',
+        code: 'System.out.println("Ergebnis: " + 4 + 2);',
+        options: ['<code class="out">Ergebnis: 42</code>', '<code class="out">Ergebnis: 6</code>', '<code class="out">Ergebnis: 4 + 2</code>', '<code class="out">Ergebnis: 4 2</code>'],
+        correct: 0, explain: 'Von links nach rechts: "Ergebnis: " + 4 = "Ergebnis: 4", dann + 2 → "Ergebnis: 42". Mit Klammern <code>(4 + 2)</code> käme 6 heraus.'
+      });
+      choiceQuiz($('#apo-quiz-final'), {
+        mod: MOD, id: 'apo-final', question: 'Welche Zeile deklariert eine Konstante korrekt (nach Konvention)?',
+        options: ['<code>final double MWST_SATZ = 0.19;</code>', '<code>final double mwstSatz = 0.19;</code>', '<code>double final MWST_SATZ = 0.19;</code>', '<code>const double MWST_SATZ = 0.19;</code>'],
+        correct: 0, explain: '<code>final</code> steht vorne, der Name besteht nur aus Großbuchstaben. <code>const</code> gibt es in Java nicht.'
+      });
+      choiceQuiz($('#apo-quiz-cast'), {
+        mod: MOD, id: 'apo-cast', question: 'Was wird ausgegeben?',
+        code: `
+          int a = 7;
+          int b = 2;
+          double r = a / b;
+          System.out.println(r);`,
+        options: ['<code class="out">3.0</code>', '<code class="out">3.5</code>', '<code class="out">3</code>', '<code class="out">4.0</code>'],
+        correct: 0, explain: 'Erst Ganzzahldivision (7 / 2 = 3), dann wird die 3 in double gespeichert → 3.0.'
+      });
+      choiceQuiz($('#apo-quiz-cast2'), {
+        mod: MOD, id: 'apo-cast2', question: 'Bei welchen Ausdrücken erhält man 3.5? (a = 7, b = 2, beide int)',
+        options: ['<code>(double) a / b</code>', '<code>a / (double) b</code>', '<code>a * 1.0 / b</code>', '<code>(double) (a / b)</code>', '<code>a / b * 1.0</code>'],
+        correct: [0, 1, 2], explain: 'Der Cast bzw. die Kommazahl muss <strong>vor</strong> der Division wirken. Bei <code>(double) (a / b)</code> und <code>a / b * 1.0</code> wird zuerst ganzzahlig geteilt → 3.0.'
+      });
+
+      /* ---------- 5. Notenberechnung ---------- */
+      MOD = 'ap-noten';
+      Progress.register(MOD, ['apn-out', 'apn-why', 'apn-fix', 'apn-round', 'apn-grade', 'apn-scanner']);
+      choiceQuiz($('#apn-quiz-out'), {
+        mod: MOD, id: 'apn-out', question: 'Was gibt das Programm oben tatsächlich aus?',
+        options: [
+          '<code class="out">Ihr Notendurchschnitt beträgt: 2.0</code>',
+          '<code class="out">Ihr Notendurchschnitt beträgt: 2.8333333333333335</code>',
+          '<code class="out">Ihr Notendurchschnitt beträgt: 2.83</code>',
+          '<code class="out">Ihr Notendurchschnitt beträgt: 3</code>'
+        ],
+        correct: 0, explain: '17 / 6 ergibt als Ganzzahldivision 2, gespeichert in einem double also 2.0.'
+      });
+      choiceQuiz($('#apn-quiz-why'), {
+        mod: MOD, id: 'apn-why', question: 'Warum liefert das Programm keinen korrekten Notendurchschnitt?',
+        options: [
+          'Alle Werte in Zeile 11 sind int – es findet eine Ganzzahldivision statt, die Nachkommastellen werden abgeschnitten',
+          'Die Schulaufgaben dürfen nicht doppelt gezählt werden',
+          'double kann keine Nachkommastellen speichern',
+          'Die Variable anzahl ist falsch, es müssten 4 Noten sein'
+        ],
+        correct: 0, explain: 'Die Speicherung in double kommt zu spät, die Division ist dann schon ganzzahlig passiert.'
+      });
+      choiceQuiz($('#apn-quiz-fix'), {
+        mod: MOD, id: 'apn-fix', question: 'Welche Korrekturen der Zeile 11 liefern den richtigen Durchschnitt (2.8333…)?',
+        options: [
+          '<code>double durchschnitt = (summeTest + summeSA*2) / (double) anzahl;</code>',
+          '<code>double durchschnitt = (double) (summeTest + summeSA*2) / anzahl;</code>',
+          '<code>double durchschnitt = (double) ((summeTest + summeSA*2) / anzahl);</code>',
+          '<code>double durchschnitt = (summeTest + summeSA*2) / anzahl * 1.0;</code>'
+        ],
+        correct: [0, 1], explain: 'Der Cast muss <strong>vor</strong> der Division wirken. In den beiden anderen Varianten wird erst ganzzahlig geteilt.'
+      });
+      numberQuiz($('#apn-quiz-round'), {
+        mod: MOD, id: 'apn-round', answer: 3.46, tol: 0.001,
+        question: 'Welcher Wert steht nach dieser Zeile in <code>gerundet</code>?',
+        code: `
+          double durchschnitt = 3.4567;
+          double gerundet = Math.round(durchschnitt * 100) / 100.0;`,
+        solution: '3.4567 · 100 = 345.67 → Math.round → 346 → 346 / 100.0 = 3.46'
+      });
+      assignQuiz($('#apn-quiz-grade'), {
+        mod: MOD, id: 'apn-grade', choices: ['1', '2', '3', '4', '5', '6'],
+        items: [
+          { text: 'Durchschnitt 1,50', answer: '1' },
+          { text: 'Durchschnitt 2,50', answer: '2' },
+          { text: 'Durchschnitt 2,51', answer: '3' },
+          { text: 'Durchschnitt 2,83', answer: '3' },
+          { text: 'Durchschnitt 4,49', answer: '4' },
+          { text: 'Durchschnitt 5,51', answer: '6' }
+        ]
+      });
+      choiceQuiz($('#apn-quiz-scanner'), {
+        mod: MOD, id: 'apn-scanner', question: 'Warum kann nach <code>nextInt()</code> mit <code>nextLine()</code> kein Name mehr eingegeben werden?',
+        code: `
+          int alter = scanner.nextInt();
+          String name = scanner.nextLine();   // name ist leer!`,
+        options: [
+          'nextInt() liest nur die Zahl – das Enter bleibt im Puffer und wird von nextLine() sofort als leere Zeile gelesen',
+          'Ein Scanner kann nur eine einzige Eingabe lesen',
+          'nextLine() funktioniert nur vor nextInt()',
+          'Der Scanner wurde vorher geschlossen'
+        ],
+        correct: 0, explain: 'Lösung: nach <code>nextInt()</code> einmal <code>scanner.nextLine();</code> aufrufen, um den Rest der Zeile zu verwerfen.'
+      });
+
+      /* ---------- 6. Test-Vorbereitung ---------- */
+      finalQuiz($('#fq-ap'), {
+        mod: 'ap-quiz', bank: AP_QUIZ_BANK, course: 'ap',
+        topics: { 'ap-grundlagen': 'Grundbegriffe', 'ap-hello': 'Hello World & Ausgabe', 'ap-variablen': 'Variablen & Datentypen', 'ap-operatoren': 'Operatoren & Typumwandlung', 'ap-noten': 'Notenberechnung & Scanner' }
+      });
+    }
+
+    /* Fragenpool für die AP-Test-Vorbereitung (Format wie QUIZ_BANK, zusätzlich c: Code zur Frage) */
+    const AP_QUIZ_BANK = [
+      // ---------- Grundbegriffe ----------
+      { t: 'ap-grundlagen', q: 'Was ist eine IDE?', o: ['Eine Entwicklungsumgebung, die Editor, Compiler/Ausführen und Debugger vereint', 'Eine Programmiersprache', 'Ein Betriebssystem für Roboter', 'Ein Dateiformat für Java-Programme'], a: 0, e: 'Beispiele: Eclipse, IntelliJ IDEA, NetBeans.' },
+      { t: 'ap-grundlagen', q: 'Was erzeugt der Java-Compiler (javac) aus einer .java-Datei?', o: ['Bytecode in einer .class-Datei', 'Eine .exe-Datei für Windows', 'Ein Python-Skript', 'HTML-Code'], a: 0, e: 'Der Bytecode wird anschließend von der JVM ausgeführt.' },
+      { t: 'ap-grundlagen', q: 'Warum gilt Java als plattformunabhängig?', o: ['Der Bytecode läuft auf jedem Gerät, für das es eine Java Virtual Machine (JVM) gibt', 'Java läuft nur unter Windows', 'Java-Programme werden für jedes System neu geschrieben', 'Java braucht keinen Prozessor'], a: 0, e: '„Write once, run anywhere“ – sogar auf dem EV3-Stein mit leJOS.' },
+      { t: 'ap-grundlagen', q: 'Was unterscheidet einen Compiler von einem Interpreter?', o: ['Der Compiler übersetzt das ganze Programm vor der Ausführung, der Interpreter Anweisung für Anweisung während der Ausführung', 'Der Interpreter übersetzt vor der Ausführung, der Compiler währenddessen', 'Es gibt keinen Unterschied', 'Ein Compiler wird nur für Webseiten verwendet'], a: 0, e: 'Java nutzt beides: javac (Compiler) + JVM.' },
+      { t: 'ap-grundlagen', q: 'Aus welchen drei Grundstrukturen besteht die strukturierte Programmierung?', o: ['Sequenz, Verzweigung, Schleife', 'Klasse, Objekt, Methode', 'Compiler, Interpreter, Bytecode', 'Eingabe, Verarbeitung, Ausgabe'], a: 0, e: 'Wilde Sprünge (goto) sind dabei verboten.' },
+      { t: 'ap-grundlagen', q: 'Was ist eine Klasse in der objektorientierten Programmierung?', o: ['Ein Bauplan, nach dem Objekte erzeugt werden', 'Ein konkretes Exemplar mit eigenen Werten', 'Eine Variable für ganze Zahlen', 'Ein Fehler im Programm'], a: 0, e: 'Das konkrete Exemplar ist das Objekt.' },
+      { t: 'ap-grundlagen', q: 'Was ist ein Objekt?', o: ['Ein konkretes Exemplar einer Klasse mit eigenen Attributwerten', 'Der Bauplan für mehrere Exemplare', 'Ein Kommentar im Code', 'Eine Programmiersprache'], a: 0, e: 'z. B. der Roboter „Robbi“ als Objekt der Klasse Roboter.' },
+      { t: 'ap-grundlagen', q: 'Welche dieser Sprachen sind objektorientierte Programmiersprachen?', o: ['Java', 'C#', 'Python', 'HTML'], a: [0, 1, 2], e: 'HTML ist eine Auszeichnungssprache, keine Programmiersprache.' },
+      { t: 'ap-grundlagen', q: 'Welche Vorteile hat die objektorientierte Programmierung?', o: ['Wiederverwendbarkeit, z. B. durch Vererbung', 'Bessere Struktur und Wartbarkeit großer Programme', 'Programme laufen ganz ohne Compiler', 'Man braucht keine Variablen mehr'], a: [0, 1], e: 'Weitere Vorteile: realitätsnahe Modellierung, Kapselung, Teamarbeit.' },
+
+      // ---------- Hello World ----------
+      { t: 'ap-hello', q: 'Welche Methode macht eine Java-Klasse ausführbar?', o: ['<code>public static void main(String[] args)</code>', '<code>public void start()</code>', '<code>System.out.println()</code>', '<code>public class Main</code>'], a: 0, e: 'Hier startet jedes Java-Programm.' },
+      { t: 'ap-hello', q: 'Welche Zeile ist fehlerfrei?', o: ['<code>System.out.println("Hallo");</code>', '<code>system.out.println("Hallo");</code>', '<code>System.out.println("Hallo")</code>', '<code>System.out.println(Hallo);</code>'], a: 0, e: 'Großes S bei System, Semikolon am Ende, Text in Anführungszeichen.' },
+      { t: 'ap-hello', q: 'Was wird ausgegeben?', c: 'System.out.print("A");\nSystem.out.println("B");\nSystem.out.println("C");', o: ['<code class="out">AB\nC</code>', '<code class="out">A\nB\nC</code>', '<code class="out">ABC</code>', '<code class="out">A B C</code>'], a: 0, e: 'print bleibt in der Zeile, println bricht danach um.' },
+      { t: 'ap-hello', q: 'Welche Zeilen sind gültige Java-Kommentare?', o: ['<code>// Kommentar</code>', '<code>/* Kommentar */</code>', '<code># Kommentar</code>', '<code>-- Kommentar</code>'], a: [0, 1], e: '# ist Python, -- ist SQL.' },
+      { t: 'ap-hello', q: 'Was bewirkt die Escape-Sequenz <code>\\n</code>?', o: ['Zeilenumbruch', 'Tabulator', 'Backslash ausgeben', 'Programm beenden'], a: 0, e: '<code>\\t</code> wäre der Tabulator.' },
+      { t: 'ap-hello', q: 'Wie gibt man ein doppeltes Anführungszeichen innerhalb eines Strings aus?', o: ['<code>\\"</code>', '<code>""</code>', '<code>\\q</code>', '<code>/"</code>'], a: 0, e: 'Der Backslash „entwertet“ das Anführungszeichen.' },
+      { t: 'ap-hello', q: 'Was wird ausgegeben?', c: 'System.out.println("Ich bin " + 17 + " Jahre alt.");', o: ['<code class="out">Ich bin 17 Jahre alt.</code>', '<code class="out">Ich bin + 17 + Jahre alt.</code>', '<code class="out">Ich bin17Jahre alt.</code>', 'Compilerfehler'], a: 0, e: '+ verbindet Text und Zahl.' },
+      { t: 'ap-hello', q: 'Womit muss jede Anweisung in Java enden?', o: ['Mit einem Semikolon <code>;</code>', 'Mit einem Punkt <code>.</code>', 'Mit einem Doppelpunkt <code>:</code>', 'Mit einer geschweiften Klammer <code>}</code>'], a: 0, e: 'Fehlt das Semikolon, meldet der Compiler einen Fehler.' },
+      { t: 'ap-hello', q: 'Wie muss die Datei für <code>public class HelloWorld</code> heißen?', o: ['HelloWorld.java', 'helloworld.java', 'HelloWorld.class', 'main.java'], a: 0, e: 'Dateiname = Klassenname (inkl. Groß-/Kleinschreibung) + .java. Die .class-Datei erzeugt der Compiler.' },
+
+      // ---------- Variablen ----------
+      { t: 'ap-variablen', q: 'In welcher Reihenfolge arbeitet man mit Variablen?', o: ['Deklarieren → Initialisieren → Verwenden', 'Initialisieren → Deklarieren → Verwenden', 'Verwenden → Deklarieren → Initialisieren', 'Die Reihenfolge ist egal'], a: 0, e: 'Erst den Behälter anlegen, dann befüllen, dann benutzen.' },
+      { t: 'ap-variablen', q: 'Welche Variablennamen sind korrekt (gültig UND nach Konvention)?', o: ['<code>alter</code>', '<code>klasse10</code>', '<code>hatFuehrerschein</code>', '<code>10klasse</code>', '<code>Alter</code>', '<code>koerper groesse</code>'], a: [0, 1, 2], e: '10klasse und koerper groesse sind Compilerfehler, Alter verstößt gegen die Konvention.' },
+      { t: 'ap-variablen', q: 'Welcher Datentyp passt für die Körpergröße 1,72 m?', o: ['<code>double</code>', '<code>int</code>', '<code>char</code>', '<code>boolean</code>'], a: 0, e: 'Kommazahlen → double (mit Punkt: 1.72).' },
+      { t: 'ap-variablen', q: 'Welche Zeile ist korrekt?', o: ["<code>char gruppe = 'B';</code>", '<code>char gruppe = "B";</code>', "<code>String name = 'Lena';</code>", '<code>double groesse = 1,72;</code>'], a: 0, e: "char in einfachen, String in doppelten Anführungszeichen, Kommazahlen mit Punkt." },
+      { t: 'ap-variablen', q: 'Welche float-Zuweisung ist korrekt?', o: ['<code>float preis = 9.99f;</code>', '<code>float preis = 9.99;</code>', '<code>float preis = 9,99f;</code>', '<code>float preis = "9.99";</code>'], a: 0, e: 'Ohne f ist 9.99 ein double-Literal → Compilerfehler.' },
+      { t: 'ap-variablen', q: 'Welcher Datentyp eignet sich für die Weltbevölkerung (ca. 8,2 Milliarden)?', o: ['<code>long</code>', '<code>int</code>', '<code>short</code>', '<code>byte</code>'], a: 0, e: 'int reicht nur bis ca. 2,1 Milliarden.' },
+      { t: 'ap-variablen', q: 'Welchen größten Wert kann ein <code>byte</code> speichern?', n: 127, tol: 0, unit: '', e: '8 Bit → −128 bis 127.' },
+      { t: 'ap-variablen', q: 'Warum wird <code>String</code> großgeschrieben?', o: ['String ist eine Klasse – Klassen werden großgeschrieben', 'Weil Text immer großgeschrieben wird', 'Das ist ein Tippfehler, string ist auch richtig', 'Weil String ein primitiver Datentyp ist'], a: 0, e: 'Primitive Datentypen (int, double …) werden kleingeschrieben.' },
+      { t: 'ap-variablen', q: 'Welcher Datentyp passt für die Postleitzahl 01067?', o: ['<code>String</code>', '<code>int</code>', '<code>double</code>', '<code>char</code>'], a: 0, e: 'Als Zahl ginge die führende Null verloren – und mit PLZ rechnet man nicht.' },
+      { t: 'ap-variablen', q: 'Was bedeutet das <code>=</code> in <code>alter = 17;</code>?', o: ['„bekommt den Wert“ (Zuweisung)', '„ist gleich“ (Vergleich)', '„ist ungefähr“', '„wird addiert“'], a: 0, e: 'Verglichen wird mit ==.' },
+
+      // ---------- Operatoren ----------
+      { t: 'ap-operatoren', q: 'Was wird ausgegeben?', c: 'System.out.println(7 / 2);', o: ['<code class="out">3</code>', '<code class="out">3.5</code>', '<code class="out">4</code>', '<code class="out">3.0</code>'], a: 0, e: 'Ganzzahldivision: zwei int → int.' },
+      { t: 'ap-operatoren', q: 'Was wird ausgegeben?', c: 'System.out.println(7 / 2.0);', o: ['<code class="out">3.5</code>', '<code class="out">3</code>', '<code class="out">3.0</code>', '<code class="out">4</code>'], a: 0, e: 'Eine Kommazahl ist beteiligt → double-Division.' },
+      { t: 'ap-operatoren', q: 'Welchen Wert hat <code>10 % 3</code>?', n: 1, tol: 0, unit: '', e: '10 / 3 = 3 Rest 1.' },
+      { t: 'ap-operatoren', q: 'Was gibt <code>System.out.println(2 + 3 * 4);</code> aus?', n: 14, tol: 0, unit: '', e: 'Punkt vor Strich: 3 · 4 = 12, + 2 = 14.' },
+      { t: 'ap-operatoren', q: 'Was wird ausgegeben?', c: 'System.out.println("Summe: " + 2 + 3);', o: ['<code class="out">Summe: 23</code>', '<code class="out">Summe: 5</code>', '<code class="out">Summe: 2 + 3</code>', 'Compilerfehler'], a: 0, e: 'Sobald ein String beteiligt ist, wird angehängt statt addiert.' },
+      { t: 'ap-operatoren', q: 'Welchen Wert hat x am Ende?', c: 'int x = 5;\nx += 3;\nx++;', n: 9, tol: 0, unit: '', e: '5 + 3 = 8, dann ++ → 9.' },
+      { t: 'ap-operatoren', q: 'Wie vergleicht man den Inhalt zweier Strings richtig?', o: ['<code>name.equals("Lena")</code>', '<code>name == "Lena"</code>', '<code>name = "Lena"</code>', '<code>name.equal("Lena")</code>'], a: 0, e: '== vergleicht bei Strings nicht zuverlässig den Inhalt.' },
+      { t: 'ap-operatoren', q: 'Welche Zeile deklariert eine Konstante korrekt?', o: ['<code>final double MWST_SATZ = 0.19;</code>', '<code>const double MWST_SATZ = 0.19;</code>', '<code>final double mwstSatz;</code>', '<code>double MWST_SATZ final = 0.19;</code>'], a: 0, e: 'final + Name in Großbuchstaben, meist direkt initialisiert.' },
+      { t: 'ap-operatoren', q: 'Was ergibt <code>(int) 3.99</code>?', n: 3, tol: 0, unit: '', e: 'Der Cast zu int schneidet ab – er rundet nicht!' },
+      { t: 'ap-operatoren', q: 'Was wird ausgegeben?', c: 'int a = 7, b = 2;\ndouble r = a / b;\nSystem.out.println(r);', o: ['<code class="out">3.0</code>', '<code class="out">3.5</code>', '<code class="out">3</code>', '<code class="out">4.0</code>'], a: 0, e: 'Erst Ganzzahldivision (3), dann Speicherung als double (3.0).' },
+      { t: 'ap-operatoren', q: 'Was gibt <code>System.out.println(5 != 3);</code> aus?', o: ['<code class="out">true</code>', '<code class="out">false</code>', '<code class="out">2</code>', 'Compilerfehler'], a: 0, e: '5 ist ungleich 3 → true.' },
+      { t: 'ap-operatoren', q: 'Welchen Datentyp erhält das Literal <code>3.1415</code> automatisch?', o: ['<code>double</code>', '<code>float</code>', '<code>int</code>', '<code>String</code>'], a: 0, e: 'Kommazahlen-Literale sind double, ganze Zahlen int.' },
+
+      // ---------- Notenberechnung ----------
+      { t: 'ap-noten', q: 'Warum ergibt <code>double schnitt = 17 / 6;</code> den Wert 2.0?', o: ['Ganzzahldivision: 17 und 6 sind int, die Nachkommastellen werden abgeschnitten', 'double kann keine Nachkommastellen speichern', 'Java rundet immer ab', 'Weil 17 / 6 genau 2 ist'], a: 0, e: 'Lösung: 17 / (double) 6 oder 17 / 6.0.' },
+      { t: 'ap-noten', q: 'Welcher Wert steht danach in gerundet?', c: 'double d = 2.8333;\ndouble gerundet = Math.round(d * 100) / 100.0;', n: 2.83, tol: 0.001, unit: '', e: '283.33 → Math.round → 283 → / 100.0 = 2.83' },
+      { t: 'ap-noten', q: 'Welcher Wert steht danach in gerundet (eine Nachkommastelle)?', c: 'double d = 1.555;\ndouble gerundet = Math.round(d * 10) / 10.0;', n: 1.6, tol: 0.001, unit: '', e: '15.55 → Math.round → 16 → / 10.0 = 1.6 (eine Nachkommastelle).' },
+      { t: 'ap-noten', q: 'Ein Schnitt von 2,50 ergibt bei „x,5 → bessere Note“ welche Zeugnisnote?', n: 2, tol: 0, unit: '', e: 'Bis einschließlich 2,50 gibt es die 2, ab 2,51 die 3.' },
+      { t: 'ap-noten', q: 'Warum ist nach <code>nextInt()</code> das folgende <code>nextLine()</code> leer?', o: ['nextInt() lässt das Enter im Puffer, nextLine() liest diesen Rest sofort', 'nextLine() funktioniert nur einmal pro Programm', 'Der Scanner wurde automatisch geschlossen', 'nextInt() löscht alle weiteren Eingaben'], a: 0, e: 'Abhilfe: nach nextInt() einmal scanner.nextLine(); aufrufen.' },
+      { t: 'ap-noten', q: 'Welche Zeile wird benötigt, um den Scanner verwenden zu können?', o: ['<code>import java.util.Scanner;</code>', '<code>import Scanner;</code>', '<code>include java.util.Scanner;</code>', '<code>using java.util.Scanner;</code>'], a: 0, e: 'Der Import steht ganz oben, vor der Klasse.' },
+      { t: 'ap-noten', q: 'Mit welcher Scanner-Methode liest man eine ganze Zahl ein?', o: ['<code>nextInt()</code>', '<code>nextLine()</code>', '<code>readInt()</code>', '<code>getNumber()</code>'], a: 0, e: 'nextLine() liest Text, nextDouble() eine Kommazahl.' },
+      { t: 'ap-noten', q: 'Welche Korrektur liefert den richtigen Durchschnitt?', c: 'int summe = 17;\nint anzahl = 6;', o: ['<code>double schnitt = summe / (double) anzahl;</code>', '<code>double schnitt = (double) (summe / anzahl);</code>', '<code>double schnitt = summe / anzahl * 1.0;</code>', '<code>int schnitt = summe / anzahl;</code>'], a: 0, e: 'Der Cast muss vor der Division wirken.' }
+    ];
 
     /* =========================================================
        MODUL: GRAFIKKARTE (GPU)
@@ -3684,7 +5108,9 @@
     initMassenspeicher();
     initGpu();
     initFinalQuiz();
+    initAp();
     initOpenTasks();
+    highlightAll();
     updateProgressUI();
     isLoggedIn() ? showApp() : showLogin();
   })();
