@@ -440,7 +440,7 @@
     .mem-card {
       position: relative; min-height: 118px; padding: .6rem;
       display: grid; place-items: center; text-align: center;
-      font-size: .85rem; line-height: 1.35;
+      font-size: .85rem; line-height: 1.35; min-width: 0; overflow-wrap: anywhere; hyphens: auto;
       border: 2px solid; border-radius: var(--radius-sm);
       transition: transform .15s, background .2s;
     }
@@ -541,6 +541,15 @@
     }
     .open-task textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
     .open-task .sample { margin-bottom: 0; }
+    /* ---------- Parallel-Demo & Pipeline ---------- */
+    .race-title { font-weight: 700; font-size: .9rem; margin-bottom: .4rem; }
+    .race-grid { display: grid; grid-template-columns: repeat(32, 1fr); gap: 1px; padding: 2px; background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 6px; }
+    .race-grid span { aspect-ratio: 1; background: #1f2630; }
+    .race-stat { margin-top: .35rem; font-size: .85rem; color: var(--text-muted); }
+    .pipeline { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: 1rem; }
+    .pipe-step { padding: .5rem .7rem; font-weight: 600; background: var(--bg-elev); border: 2px solid var(--border); border-radius: var(--radius-sm); }
+    .pipe-arrow { color: var(--text-muted); font-size: 1.3rem; }
+    .pipeline .gap { margin: 0; }
     .range-row { display: grid; gap: .4rem; }
     #addr-out { white-space: normal; }
     .range-row input { width: 100%; accent-color: var(--accent); }
@@ -551,12 +560,14 @@
       .dimm-label { flex-basis: 6.5rem; font-size: .78rem; }
       .eva { grid-template-columns: 1fr; }
       .eva-arrow { justify-self: center; transform: rotate(90deg); }
+      .pipeline { flex-direction: column; align-items: stretch; text-align: center; }
+      .pipe-arrow { transform: rotate(90deg); align-self: center; }
       .assign-row { grid-template-columns: 1fr; }
       .assign-opts { justify-content: flex-start; }
       .overlay-fig .gap { min-width: 6.5rem; font-size: .8rem; min-height: 1.6rem; padding: 0 .4rem; }
     }
     @media (max-width: 520px) {
-      .memory { grid-template-columns: repeat(2, 1fr); }
+      .memory { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .mem-card { min-height: 104px; font-size: .78rem; }
     }
 
@@ -1587,7 +1598,218 @@
 
             <article class="module-panel" data-module="gpu" role="tabpanel" hidden>
               <h2>5. Grafikkarte (GPU)</h2>
-              <div id="module-gpu" class="placeholder">Platzhalter für GPU-Modul</div>
+              <!-- ============ MODUL GRAFIKKARTE ============ -->
+              <div id="module-gpu" class="lesson">
+
+                <div class="lesson-head">
+                  <p class="lesson-intro">Der <strong>Grafikprozessor (GPU)</strong> berechnet das Monitorbild und gibt es über die Grafikausgänge aus. Moderne GPUs bestehen aus tausenden kleinen Recheneinheiten, den <strong>Shadern</strong>. Deshalb sind sie nicht nur für Spiele, sondern auch für KI und Wissenschaft unverzichtbar.</p>
+                  <div class="progress" data-progress="gpu">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="gpu">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="gpu-s1">1 · Grafikprozessor</button>
+                    <button type="button" data-scroll="gpu-s2">2 · Memory</button>
+                    <button type="button" data-scroll="gpu-s3">3 · Allgemeine Berechnungen</button>
+                    <button type="button" data-scroll="gpu-s4">4 · Schnittstellen</button>
+                    <button type="button" data-scroll="gpu-s5">5 · Ausgabepuffer</button>
+                    <button type="button" data-scroll="gpu-s6">6 · Shadereinheiten</button>
+                  </nav>
+                </div>
+
+                <!-- ---------- 1. GPU ---------- -->
+                <section class="lesson-section" id="gpu-s1">
+                  <h3><span class="sec-num">1</span> Der Grafikprozessor (GPU)</h3>
+                  <p>Der Grafikprozessor (<strong>G</strong>raphics <strong>P</strong>rocessing <strong>U</strong>nit) berechnet das Monitorbild und stellt es über die Grafikausgänge des Rechners zur Verfügung. Er kann an drei Stellen sitzen:</p>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Integrierte Grafik (iGPU)</dt><dd>Die GPU ist <strong>im Prozessor</strong> verbaut. Sie nutzt den Arbeitsspeicher des Computers mit. Das kann zu knappem Speicher und langsamerer Programmausführung führen. Dafür ist sie günstig und stromsparend.</dd></div>
+                    <div class="gl-item"><dt>Chipsatz-Grafik (Onboard)</dt><dd>Die GPU ist <strong>auf dem Mainboard</strong> untergebracht. Das gibt es heute nur noch selten.</dd></div>
+                    <div class="gl-item"><dt>Dedizierte Grafikkarte</dt><dd>Separate, <strong>steckbare Platine</strong> mit eigener GPU und eigenem Grafikspeicher (VRAM). Sie ist über PCIe x16 mit dem Prozessor verbunden und für Spiele, 3D und KI gedacht.</dd></div>
+                  </dl>
+
+                  <figure class="figure" style="max-width:640px">
+                    <svg viewBox="0 0 600 250" role="img" aria-label="Aufbau einer dedizierten Grafikkarte ohne Kühler mit nummerierten Bauteilen">
+                      <rect x="8" y="30" width="26" height="190" rx="3" fill="#9ca3af"/>
+                      <rect x="14" y="60" width="14" height="30" rx="2" fill="#111"/><rect x="14" y="100" width="14" height="30" rx="2" fill="#111"/><rect x="14" y="140" width="14" height="22" rx="2" fill="#111"/>
+                      <rect x="36" y="40" width="530" height="160" rx="6" fill="#0f2a1c" stroke="#24402f" stroke-width="2"/>
+                      <rect x="210" y="85" width="80" height="80" rx="4" fill="#9ca3af"/><rect x="222" y="97" width="56" height="56" rx="2" fill="#1f2937"/>
+                      <g fill="#111827" stroke="#4b5563">
+                        <rect x="150" y="70" width="34" height="24" rx="2"/><rect x="150" y="113" width="34" height="24" rx="2"/><rect x="150" y="156" width="34" height="24" rx="2"/>
+                        <rect x="316" y="70" width="34" height="24" rx="2"/><rect x="316" y="113" width="34" height="24" rx="2"/><rect x="316" y="156" width="34" height="24" rx="2"/>
+                        <rect x="200" y="52" width="34" height="22" rx="2"/><rect x="266" y="52" width="34" height="22" rx="2"/>
+                      </g>
+                      <g fill="#374151" stroke="#6b7280">
+                        <rect x="390" y="70" width="22" height="22" rx="2"/><rect x="418" y="70" width="22" height="22" rx="2"/><rect x="446" y="70" width="22" height="22" rx="2"/><rect x="474" y="70" width="22" height="22" rx="2"/>
+                        <rect x="390" y="100" width="22" height="22" rx="2"/><rect x="418" y="100" width="22" height="22" rx="2"/><rect x="446" y="100" width="22" height="22" rx="2"/><rect x="474" y="100" width="22" height="22" rx="2"/>
+                      </g>
+                      <rect x="500" y="26" width="52" height="18" rx="2" fill="#111" stroke="#4b5563"/><path d="M508 32 h4 v6 h-4z M516 32 h4 v6 h-4z M524 32 h4 v6 h-4z M532 32 h4 v6 h-4z M540 32 h4 v6 h-4z" fill="#6b7280"/>
+                      <path d="M80 200 h290 v14 h-290 z" fill="#c9a227"/><rect x="118" y="200" width="6" height="14" fill="#0d1117"/>
+                      <g class="mb-badge">
+                        <circle cx="250" cy="125" r="13"/><text x="250" y="125">1</text>
+                        <circle cx="167" cy="125" r="13"/><text x="167" y="125">2</text>
+                        <circle cx="443" cy="96" r="13"/><text x="443" y="96">3</text>
+                        <circle cx="526" cy="16" r="13"/><text x="526" y="16">4</text>
+                        <circle cx="225" cy="232" r="13"/><text x="225" y="232">5</text>
+                        <circle cx="21" cy="236" r="13"/><text x="21" y="236">6</text>
+                      </g>
+                    </svg>
+                    <figcaption>Dedizierte Grafikkarte, schematisch ohne Kühler</figcaption>
+                  </figure>
+                  <div class="two-col">
+                    <ol class="box info" style="padding-left:2.2rem">
+                      <li><strong>GPU-Chip</strong>: der eigentliche Grafikprozessor mit den Shadereinheiten</li>
+                      <li><strong>Grafikspeicher (VRAM)</strong>: schneller, eigener Speicher, z. B. GDDR6/GDDR7</li>
+                      <li><strong>Spannungswandler</strong>: erzeugen die Spannungen für GPU und VRAM</li>
+                    </ol>
+                    <ol class="box info" start="4" style="padding-left:2.2rem">
+                      <li><strong>Stromanschluss</strong>: Zusatzstrom vom Netzteil (z. B. 8-Pin oder 12V-2x6)</li>
+                      <li><strong>PCIe-x16-Kontakte</strong>: Verbindung zum Mainboard</li>
+                      <li><strong>Slotblende</strong> mit den Bildausgängen (HDMI, DisplayPort)</li>
+                    </ol>
+                  </div>
+                  <div class="box info">
+                    <span class="box-title">Hardwarebeschleunigung &amp; Grafik-APIs</span>
+                    Bei der <strong>Hardwarebeschleunigung</strong> (hardware acceleration) werden rechenintensive Grafikaufgaben an die GPU ausgelagert. Das entlastet die CPU. Programme sprechen die GPU über Programmierschnittstellen (<strong>APIs</strong>) an, z. B. <strong>DirectX</strong>, <strong>OpenGL</strong> (Open Graphics Library) oder <strong>Vulkan</strong>. Darüber werden 2D- und 3D-Inhalte gerendert, also als Pixel dargestellt.
+                  </div>
+                  <div id="gpu-quiz-igpu"></div>
+                </section>
+
+                <!-- ---------- 2. Memory ---------- -->
+                <section class="lesson-section" id="gpu-s2">
+                  <h3><span class="sec-num">2</span> Memory: Grafikkarte</h3>
+                  <p>Finde die passenden Pärchen.</p>
+                  <div id="gpu-quiz-memory"></div>
+                </section>
+
+                <!-- ---------- 3. GPGPU ---------- -->
+                <section class="lesson-section" id="gpu-s3">
+                  <h3><span class="sec-num">3</span> Grafikkarten für allgemeine Berechnungen</h3>
+                  <p>Grafikkarten eignen sich auch gut für Berechnungen, die nichts mit Grafik zu tun haben. Das hat spätestens das Krypto-Mining gezeigt. <strong>CPUs</strong> sind gut für <strong>lineare</strong> Berechnungen, bei denen ein Schritt auf dem vorherigen aufbaut. <strong>GPUs</strong> sind stark bei <strong>parallelen</strong> Berechnungen, bei denen viele gleichartige, voneinander unabhängige Rechnungen anfallen. Beispiele: Passwörter per Brute Force knacken, Wetterberechnungen, Design von Biomolekülen und heute vor allem das Training von <strong>KI-Modellen</strong>.</p>
+                  <div class="box info">
+                    <span class="box-title">GPGPU (General Purpose Computing on GPUs)</span>
+                    Im Volunteer-Computing-Projekt <strong>Folding@home</strong> hat die Einbeziehung von GPUs die Rechenleistung enorm gesteigert. Für NVIDIA-Grafikkarten gibt es <strong>CUDA</strong> als API für allgemeine Berechnungen. Die herstellerunabhängige Alternative ist die offene Programmierplattform <strong>OpenCL</strong> (Open Computing Language).
+                  </div>
+
+                  <div class="quiz">
+                    <p class="quiz-q">Parallel-Demo: Ein Bild aus 576 Pixeln berechnen</p>
+                    <div class="two-col">
+                      <div><div class="race-title">CPU · 8 Kerne, hoher Takt</div><div class="race-grid" id="race-cpu"></div><div class="race-stat" id="race-cpu-stat">bereit</div></div>
+                      <div><div class="race-title">GPU · 192 Shader, niedrigerer Takt</div><div class="race-grid" id="race-gpu"></div><div class="race-stat" id="race-gpu-stat">bereit</div></div>
+                    </div>
+                    <div class="quiz-actions"><button type="button" class="btn btn-primary" id="race-start">Start</button></div>
+                    <p class="quiz-hint" style="margin:.75rem 0 0 !important">Jeder einzelne CPU-Kern ist schneller als eine Shadereinheit. Die GPU berechnet aber sehr viele Pixel gleichzeitig. Echte GPUs haben sogar tausende Shader.</p>
+                  </div>
+                  <div id="gpu-quiz-gpgpu"></div>
+                </section>
+
+                <!-- ---------- 4. Schnittstellen ---------- -->
+                <section class="lesson-section" id="gpu-s4">
+                  <h3><span class="sec-num">4</span> Grafikschnittstellen</h3>
+                  <p>Setze die Schnittstellen an die richtigen Stellen im Text.</p>
+                  <div id="gpu-quiz-ports"></div>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Schnittstelle</th><th>Signal</th><th>Ton</th><th>max. Datenrate (Beispiel)</th></tr></thead>
+                      <tbody>
+                        <tr><td>VGA</td><td>analog</td><td>nein</td><td>– (veraltet)</td></tr>
+                        <tr><td>DVI</td><td>digital (DVI-I auch analog)</td><td>nein</td><td>ca. 7,9 Gbit/s (Dual Link)</td></tr>
+                        <tr><td>HDMI 2.1</td><td>digital</td><td>ja</td><td>48 Gbit/s brutto · 42,7 Gbit/s netto</td></tr>
+                        <tr><td>DisplayPort 2.1</td><td>digital</td><td>ja</td><td>80 Gbit/s brutto · ca. 77 Gbit/s netto</td></tr>
+                        <tr><td>USB-C (DP Alt Mode / Thunderbolt)</td><td>digital</td><td>ja</td><td>Thunderbolt 4: 40 Gbit/s · Thunderbolt 5: 80 Gbit/s</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+
+                <!-- ---------- 5. Ausgabepuffer ---------- -->
+                <section class="lesson-section" id="gpu-s5">
+                  <h3><span class="sec-num">5</span> Berechnung des Ausgabepuffers (Frame Buffer)</h3>
+                  <p>Der <strong>Ausgabepuffer</strong> (Frame Buffer) speichert das fertig berechnete Bild, bevor es an den Monitor geht. Seine Größe hängt von der <strong>Bildauflösung</strong> und der <strong>Farbtiefe</strong> ab.</p>
+                  <div class="formula">Speicher (Bit) = Breite × Höhe × Farbtiefe (Bit)</div>
+                  <div class="formula">Speicher (MiB) = Bit ÷ 8 ÷ 1024 ÷ 1024</div>
+                  <div class="box info">
+                    <span class="box-title">MiB oder MB?</span>
+                    1 <strong>MiB</strong> (Mebibyte) = 1024 × 1024 Byte = 1.048.576 Byte (Binärpräfix). 1 <strong>MB</strong> (Megabyte) = 1.000.000 Byte (Dezimalpräfix). Bei der Farbtiefe gilt: 24 Bit = 8 Bit je Farbkanal (Rot, Grün, Blau). 30 Bit = 10 Bit je Kanal, z. B. für HDR.
+                  </div>
+                  <div id="gpu-quiz-buffer"></div>
+
+                  <div class="quiz">
+                    <p class="quiz-q">Framebuffer-Rechner</p>
+                    <div class="calc">
+                      <label>Auflösung<select id="fb-res">
+                        <option value="1280x720">1280 × 720 (HD)</option><option value="1920x1080">1920 × 1080 (Full HD)</option>
+                        <option value="2560x1440" selected>2560 × 1440 (WQHD)</option><option value="3840x2160">3840 × 2160 (4K UHD)</option><option value="7680x4320">7680 × 4320 (8K)</option>
+                      </select></label>
+                      <label>Farbtiefe<select id="fb-depth"><option value="24">24 Bit (8 je Kanal)</option><option value="30" selected>30 Bit (10 je Kanal)</option><option value="32">32 Bit (inkl. Alpha)</option></select></label>
+                      <label>Puffer<select id="fb-buf"><option value="1" selected>1 (einfach)</option><option value="2">2 (Double Buffering)</option><option value="3">3 (Triple Buffering)</option></select></label>
+                    </div>
+                    <div id="fb-out"></div>
+                  </div>
+                  <div id="gpu-quiz-buffer2"></div>
+                </section>
+
+                <!-- ---------- 6. Shadereinheiten ---------- -->
+                <section class="lesson-section" id="gpu-s6">
+                  <h3><span class="sec-num">6</span> Shadereinheiten</h3>
+                  <p>Ein <strong>Shader</strong> ist ein kleines Programm, das auf der GPU läuft und für <strong>jeden Eckpunkt</strong> eines 3D-Modells oder <strong>jeden Bildpunkt</strong> berechnet, wie er aussehen soll: Position, Farbe, Licht, Schatten. <strong>Shadereinheiten</strong> sind die Recheneinheiten der GPU, die diese Programme ausführen. Eine einzelne Einheit ist einfach aufgebaut, aber eine moderne GPU hat davon <strong>tausende</strong>, und alle arbeiten gleichzeitig.</p>
+
+                  <div class="box info">
+                    <span class="box-title">Die Grafik-Pipeline (vereinfacht)</span>
+                    Ein 3D-Bild entsteht in mehreren Stufen: Die <strong>Eckpunkte</strong> (Vertices) der Objekte werden vom <strong>Vertex-Shader</strong> im Raum positioniert. Bei der <strong>Rasterisierung</strong> werden die Dreiecke in einzelne Bildpunkte zerlegt. Der <strong>Pixel-Shader</strong> berechnet für jeden Bildpunkt die Farbe. Das fertige Bild landet im <strong>Framebuffer</strong> und geht von dort an den Monitor.
+                  </div>
+                  <p>Bringe die Stufen der Pipeline in die richtige Reihenfolge.</p>
+                  <div id="gpu-quiz-pipe"></div>
+
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Vertex-Shader</dt><dd>Berechnet die Position der Eckpunkte: verschieben, drehen, skalieren, perspektivisch darstellen</dd></div>
+                    <div class="gl-item"><dt>Pixel-Shader (Fragment-Shader)</dt><dd>Berechnet die Farbe jedes Bildpunkts: Texturen, Beleuchtung, Schatten, Spiegelungen</dd></div>
+                    <div class="gl-item"><dt>Compute-Shader</dt><dd>Allgemeine Berechnungen ohne direkten Bildbezug, z. B. Physik, Partikel, KI (GPGPU)</dd></div>
+                    <div class="gl-item"><dt>Unified Shader</dt><dd>Früher gab es getrennte Einheiten für Vertex- und Pixel-Shader. Seit DirectX 10 (ca. 2006) sind die Einheiten <strong>universell</strong>: Jede kann jede Shader-Art ausführen. So ist die GPU immer gleichmäßig ausgelastet.</dd></div>
+                  </dl>
+                  <div id="gpu-quiz-shtype"></div>
+                  <div id="gpu-quiz-unified"></div>
+
+                  <h4 style="margin:1.5rem 0 .5rem">Wie heißen Shadereinheiten bei den Herstellern?</h4>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Hersteller</th><th>Bezeichnung</th><th>Gruppiert in</th><th>Beispiel</th></tr></thead>
+                      <tbody>
+                        <tr><td>NVIDIA</td><td>CUDA-Kerne</td><td>Streaming Multiprocessors (SM)</td><td>GeForce RTX 4060: 3.072 · RTX 5090: 21.760</td></tr>
+                        <tr><td>AMD</td><td>Stream-Prozessoren</td><td>Compute Units (CU, je 64)</td><td>Radeon RX 7900 XTX: 6.144 (96 CUs)</td></tr>
+                        <tr><td>Intel</td><td>Xe-Vektor-Engines (früher Execution Units)</td><td>Xe-Kerne</td><td>Arc-Grafikkarten und iGPUs</td></tr>
+                        <tr><td>zum Vergleich: CPU</td><td>CPU-Kerne</td><td>–</td><td>Ryzen 7 7700X: 8 Kerne</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="box merke">
+                    <span class="box-title">Achtung beim Vergleichen!</span>
+                    Die Anzahl der Shadereinheiten kann man nur <strong>innerhalb derselben Architektur</strong> sinnvoll vergleichen, z. B. zwei NVIDIA-Karten derselben Generation. Zwischen Herstellern oder Generationen leistet eine Einheit unterschiedlich viel. Die tatsächliche Leistung hängt außerdem von <strong>Takt</strong>, <strong>Architektur</strong>, <strong>Speicherbandbreite</strong> und Treibern ab.
+                  </div>
+                  <div id="gpu-quiz-names"></div>
+
+                  <h4 style="margin:1.5rem 0 .5rem">Rechenleistung in TFLOPS</h4>
+                  <p>Die theoretische Rechenleistung wird in <strong>FLOPS</strong> (Floating Point Operations per Second, Gleitkommaoperationen pro Sekunde) angegeben. Eine Shadereinheit schafft pro Takt eine Multiplikation mit anschließender Addition (FMA). Das zählt als <strong>2 Operationen</strong>.</p>
+                  <div class="formula">FLOPS = Shadereinheiten × Takt × 2</div>
+                  <div class="quiz">
+                    <p class="quiz-q">TFLOPS-Rechner</p>
+                    <div class="calc">
+                      <label>Shadereinheiten<input type="number" class="num-input" id="tf-sh" min="1" value="16384"></label>
+                      <label>Boost-Takt (GHz)<input type="number" class="num-input" id="tf-ghz" min="0.1" step="0.01" value="2.52"></label>
+                    </div>
+                    <div id="tf-out"></div>
+                    <p class="quiz-hint" style="margin:.5rem 0 0 !important">Voreinstellung: GeForce RTX 4090 (16.384 CUDA-Kerne, 2,52 GHz). Vereinfachte Formel: Manche Architekturen (z. B. AMD RDNA 3) schaffen pro Takt doppelt so viel.</p>
+                  </div>
+                  <div id="gpu-quiz-tflops"></div>
+
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Textureinheiten (TMU)</dt><dd>Laden Texturen (Oberflächenbilder) und legen sie auf die 3D-Objekte</dd></div>
+                    <div class="gl-item"><dt>ROPs (Render Output Units)</dt><dd>Schreiben die fertigen Pixel in den Framebuffer, inklusive Kantenglättung</dd></div>
+                    <div class="gl-item"><dt>RT-Kerne (Raytracing)</dt><dd>Spezialeinheiten, die Lichtstrahlen berechnen: realistische Spiegelungen, Schatten und Beleuchtung</dd></div>
+                    <div class="gl-item"><dt>Tensor-Kerne / KI-Einheiten</dt><dd>Spezialisiert auf Matrizenrechnung für KI. Werden z. B. für Upscaling (DLSS, FSR) und KI-Anwendungen genutzt.</dd></div>
+                  </dl>
+                </section>
+              </div>
             </article>
 
             <article class="module-panel" data-module="quiz" role="tabpanel" hidden>
@@ -2380,6 +2602,187 @@
       });
     }
 
+    /* numberQuiz(el, {mod, id, question, answer, tol, unit, solution}) – Rechenaufgabe mit Zahleneingabe */
+    function numberQuiz(el, { mod, id, question, answer, tol = 0.01, unit = '', solution = '' }) {
+      setupQuiz(el, mod, id);
+      el.innerHTML = `
+        <p class="quiz-q">${question}</p>
+        <div class="calc"><label>Ergebnis<input class="num-input" inputmode="decimal" aria-label="Ergebnis"></label><span style="padding-bottom:.4rem">${unit}</span></div>
+        ${actionsHTML()}`;
+      const inp = $('input', el), fb = $('.feedback', el);
+      inp.addEventListener('input', () => { inp.classList.remove('ok', 'bad'); setFeedback(fb, null, ''); });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') $('[data-act="check"]', el).click(); });
+      el.addEventListener('click', (e) => {
+        const act = e.target.closest('[data-act]')?.dataset.act;
+        if (act === 'check') {
+          const v = parseFloat(inp.value.replace(/\./g, '').replace(',', '.'));
+          const v2 = parseFloat(inp.value.replace(',', '.'));
+          const ok = [v, v2].some(x => Math.abs(x - answer) <= tol);
+          inp.classList.toggle('ok', ok); inp.classList.toggle('bad', !ok);
+          if (ok) { setFeedback(fb, true, 'Richtig! ' + solution); Progress.done(mod, id); }
+          else setFeedback(fb, false, 'Leider falsch. Prüfe deinen Rechenweg (und die Einheit).');
+        } else if (act === 'solve') {
+          inp.value = answer.toLocaleString('de-DE', { maximumFractionDigits: 3 }); inp.classList.add('ok');
+          setFeedback(fb, null, solution);
+        } else if (act === 'reset') { inp.value = ''; inp.classList.remove('ok', 'bad'); setFeedback(fb, null, ''); }
+      });
+    }
+
+    /* =========================================================
+       MODUL: GRAFIKKARTE (GPU)
+       ========================================================= */
+    function initGpu() {
+      const MOD = 'gpu';
+      Progress.register(MOD, ['gpu-igpu', 'gpu-memory', 'gpu-gpgpu', 'gpu-ports', 'gpu-buffer', 'gpu-buffer2',
+        'gpu-pipe', 'gpu-shtype', 'gpu-unified', 'gpu-names', 'gpu-tflops']);
+      const fmt = (n, d = 2) => n.toLocaleString('de-DE', { maximumFractionDigits: d });
+
+      // 1. GPU
+      choiceQuiz($('#gpu-quiz-igpu'), {
+        mod: MOD, id: 'gpu-igpu', question: 'Welchen Nachteil hat eine im Prozessor integrierte Grafik (iGPU)?',
+        options: [
+          'Sie nutzt den Arbeitsspeicher des Computers mit – das kann zu knappem Speicher und langsamerer Programmausführung führen',
+          'Sie benötigt einen eigenen PCIe-x16-Steckplatz',
+          'Sie verbraucht deutlich mehr Strom als eine dedizierte Grafikkarte',
+          'Sie kann kein Bild an den Monitor ausgeben'
+        ],
+        correct: 0, explain: 'Eine dedizierte Grafikkarte hat dagegen ihren eigenen, schnellen Grafikspeicher (VRAM).'
+      });
+
+      // 2. Memory
+      memoryQuiz($('#gpu-quiz-memory'), {
+        mod: MOD, id: 'gpu-memory',
+        pairs: [
+          ['Integrierte Grafikkarte', 'Die GPU ist im Prozessor verbaut.'],
+          ['Chipsatz-Grafik', 'Die GPU ist auf dem Mainboard installiert.'],
+          ['Dedizierte Grafikkarte', 'Separate, steckbare Platine zur Berechnung der Bildsignale.'],
+          ['Aufgabe der Grafikkarte', 'Die Bildsignale werden berechnet und über die Schnittstellen ausgegeben.'],
+          ['GPU', 'Graphics Processing Unit – auf Grafikberechnungen spezialisierter Prozessor.'],
+          ['Einheit der Bildwiederholrate', 'Hz oder fps (frames per second)'],
+          ['API', 'Anwendungsschnittstelle, z. B. DirectX, OpenGL, Vulkan']
+        ]
+      });
+
+      // 3. Parallel-Demo
+      const N = 576, cols = 32;
+      const color = i => { const x = i % cols, y = Math.floor(i / cols); return `hsl(${200 + y * 7} 75% ${32 + x * 1.1}%)`; };
+      const cpuGrid = $('#race-cpu'), gpuGrid = $('#race-gpu');
+      [cpuGrid, gpuGrid].forEach(g => (g.innerHTML = '<span></span>'.repeat(N)));
+      let timers = [];
+      const run = (grid, statEl, perStep, ms, label) => {
+        const cells = grid.children; let i = 0, steps = 0;
+        const t = setInterval(() => {
+          for (let k = 0; k < perStep && i < N; k++, i++) cells[i].style.background = color(i);
+          steps++;
+          statEl.textContent = `${label}: ${steps} Schritt${steps === 1 ? '' : 'e'} · ${(steps * ms / 1000).toLocaleString('de-DE')} s`;
+          if (i >= N) { clearInterval(t); statEl.textContent += ' ✓ fertig'; }
+        }, ms);
+        timers.push(t);
+      };
+      $('#race-start').addEventListener('click', () => {
+        timers.forEach(clearInterval); timers = [];
+        [cpuGrid, gpuGrid].forEach(g => [...g.children].forEach(c => (c.style.background = '')));
+        run(cpuGrid, $('#race-cpu-stat'), 8, 40, 'CPU');
+        run(gpuGrid, $('#race-gpu-stat'), 192, 200, 'GPU');
+      });
+      choiceQuiz($('#gpu-quiz-gpgpu'), {
+        mod: MOD, id: 'gpu-gpgpu', question: 'Für welche Aufgaben eignen sich GPUs besonders gut?',
+        options: [
+          'Viele gleichartige, voneinander unabhängige Berechnungen (z. B. Brute Force, Wetterberechnungen)',
+          'Training von KI-Modellen',
+          'Lineare Berechnungen, bei denen jeder Schritt vom Ergebnis des vorherigen abhängt',
+          'Das Starten des Betriebssystems'
+        ],
+        correct: [0, 1], explain: 'GPUs spielen ihre Stärke aus, wenn sich eine Aufgabe in viele unabhängige Teilaufgaben zerlegen lässt.'
+      });
+
+      // 4. Schnittstellen
+      clozeQuiz($('#gpu-quiz-ports'), {
+        mod: MOD, id: 'gpu-ports', distractors: ['SATA', 'RJ45'],
+        text: `
+          <p>{{VGA}} ermöglicht die analoge Übertragung von Bewegtbildern.</p>
+          <p>{{DisplayPort}} unterstützt digitale Bild- und Tonsignale und überträgt bis zu ca. 77 Gbit/s (netto, Version 2.x).</p>
+          <p>Hinter {{USB-C}} kann sich auch eine Thunderbolt-3/4/5-Schnittstelle verbergen (40 bzw. 80 Gbit/s).</p>
+          <p>{{DVI}} gehörte zu den ersten Standards, die ein digitales Videosignal liefern.</p>
+          <p>{{HDMI}} ist eine drahtgebundene Schnittstelle für die digitale Bild- und Tonübertragung mit bis zu 42,7 Gbit/s (netto, Version 2.1).</p>`
+      });
+
+      // 5. Ausgabepuffer
+      choiceQuiz($('#gpu-quiz-buffer'), {
+        mod: MOD, id: 'gpu-buffer',
+        question: 'Berechne für eine Auflösung von 2560 × 1440 Pixeln und eine Farbtiefe von 30 Bit (je 10 Bit für Rot, Grün und Blau) die benötigte Speichergröße in Mebibyte.',
+        options: ['13,824 MiB', '13,18 MiB', '13496,32 MiB', '6,59 MiB', '105,44 MiB'], correct: 1,
+        explain: '2560 × 1440 × 30 Bit = 110.592.000 Bit ÷ 8 = 13.824.000 Byte ÷ 1024 ÷ 1024 ≈ 13,18 MiB. (13,824 wäre MB statt MiB!)'
+      });
+      const fb = () => {
+        const [w, h] = $('#fb-res').value.split('x').map(Number), d = +$('#fb-depth').value, b = +$('#fb-buf').value;
+        const px = w * h, bits = px * d, bytes = bits / 8, mib = bytes / 1048576;
+        $('#fb-out').innerHTML = `
+          <div class="formula">Pixel = ${w} × ${h} = ${px.toLocaleString('de-DE')}</div>
+          <div class="formula">Bit = ${px.toLocaleString('de-DE')} × ${d} Bit = ${bits.toLocaleString('de-DE')} Bit</div>
+          <div class="formula">Byte = ${bits.toLocaleString('de-DE')} ÷ 8 = ${bytes.toLocaleString('de-DE')} Byte (= ${fmt(bytes / 1e6)} MB)</div>
+          <div class="formula">MiB = ${bytes.toLocaleString('de-DE')} ÷ 1024 ÷ 1024 = <strong>${fmt(mib)} MiB</strong>${b > 1 ? ` · × ${b} Puffer = <strong>${fmt(mib * b)} MiB</strong>` : ''}</div>`;
+      };
+      ['#fb-res', '#fb-depth', '#fb-buf'].forEach(s => $(s).addEventListener('change', fb));
+      fb();
+      numberQuiz($('#gpu-quiz-buffer2'), {
+        mod: MOD, id: 'gpu-buffer2', unit: 'MiB', answer: 23.73, tol: 0.01,
+        question: 'Jetzt du: Wie groß ist der Ausgabepuffer bei 4K UHD (3840 × 2160) und 24 Bit Farbtiefe? (Ergebnis in MiB, 2 Nachkommastellen)',
+        solution: '3840 × 2160 × 24 Bit = 199.065.600 Bit ÷ 8 = 24.883.200 Byte ÷ 1024 ÷ 1024 ≈ 23,73 MiB'
+      });
+
+      // 6. Shadereinheiten
+      clozeQuiz($('#gpu-quiz-pipe'), {
+        mod: MOD, id: 'gpu-pipe', distractors: ['Northbridge', 'Netzteil'],
+        text: `
+          <div class="pipeline">
+            <div class="pipe-step">Eckpunkte (Vertices)</div><span class="pipe-arrow" aria-hidden="true">➜</span>
+            {{Vertex-Shader}}<span class="pipe-arrow" aria-hidden="true">➜</span>
+            {{Rasterisierung}}<span class="pipe-arrow" aria-hidden="true">➜</span>
+            {{Pixel-Shader}}<span class="pipe-arrow" aria-hidden="true">➜</span>
+            {{Framebuffer}}<span class="pipe-arrow" aria-hidden="true">➜</span>
+            <div class="pipe-step">Monitor</div>
+          </div>`
+      });
+      assignQuiz($('#gpu-quiz-shtype'), {
+        mod: MOD, id: 'gpu-shtype', choices: ['Vertex-Shader', 'Pixel-Shader', 'Compute-Shader'],
+        items: [
+          { text: 'Berechnet die Position der Eckpunkte eines 3D-Modells', answer: 'Vertex-Shader' },
+          { text: 'Bestimmt die Farbe jedes einzelnen Bildpunkts', answer: 'Pixel-Shader' },
+          { text: 'Simuliert Physik oder berechnet KI – ganz ohne Bildbezug', answer: 'Compute-Shader' },
+          { text: 'Dreht und verschiebt eine Spielfigur in der 3D-Szene', answer: 'Vertex-Shader' },
+          { text: 'Legt Licht, Schatten und Spiegelungen auf eine Oberfläche', answer: 'Pixel-Shader' }
+        ]
+      });
+      choiceQuiz($('#gpu-quiz-unified'), {
+        mod: MOD, id: 'gpu-unified', question: 'Was bedeutet „Unified Shader Architecture“?',
+        options: [
+          'Jede Shadereinheit kann jede Shader-Art (Vertex, Pixel, Compute) ausführen',
+          'Alle Grafikkarten haben gleich viele Shadereinheiten',
+          'CPU und GPU teilen sich die Shadereinheiten',
+          'Es gibt getrennte Einheiten für Vertex- und Pixel-Shader'
+        ],
+        correct: 0, explain: 'Dadurch werden die Einheiten immer dort eingesetzt, wo gerade Arbeit anfällt – keine Einheit bleibt ungenutzt.'
+      });
+      choiceQuiz($('#gpu-quiz-names'), {
+        mod: MOD, id: 'gpu-names', question: 'Welche Begriffe bezeichnen Shadereinheiten?',
+        options: ['CUDA-Kerne (NVIDIA)', 'Stream-Prozessoren (AMD)', 'Tensor-Kerne', 'ROPs', 'Hyper-Threads'],
+        correct: [0, 1], explain: 'Tensor-Kerne und ROPs sind Spezialeinheiten, Hyper-Threading gibt es bei CPUs.'
+      });
+
+      const tflops = () => {
+        const sh = Math.max(1, +$('#tf-sh').value || 1), ghz = Math.max(0.01, +$('#tf-ghz').value || 0.01);
+        $('#tf-out').innerHTML = `<div class="formula">${sh.toLocaleString('de-DE')} × ${fmt(ghz)} GHz × 2 = ${fmt(sh * ghz * 2, 0)} GFLOPS = <strong>${fmt(sh * ghz * 2 / 1000, 1)} TFLOPS</strong></div>`;
+      };
+      ['#tf-sh', '#tf-ghz'].forEach(s => $(s).addEventListener('input', tflops));
+      tflops();
+      numberQuiz($('#gpu-quiz-tflops'), {
+        mod: MOD, id: 'gpu-tflops', unit: 'TFLOPS', answer: 15.11, tol: 0.06,
+        question: 'Eine GeForce RTX 4060 hat 3.072 CUDA-Kerne und einen Boost-Takt von 2,46 GHz. Berechne die theoretische Rechenleistung in TFLOPS.',
+        solution: '3.072 × 2,46 GHz × 2 = 15.114 GFLOPS ≈ 15,1 TFLOPS'
+      });
+    }
+
     /* =========================================================
        MODUL: MASSENSPEICHER
        ========================================================= */
@@ -2932,6 +3335,7 @@
     initCpu();
     initRam();
     initMassenspeicher();
+    initGpu();
     initOpenTasks();
     updateProgressUI();
     isLoggedIn() ? showApp() : showLogin();
