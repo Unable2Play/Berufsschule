@@ -514,9 +514,9 @@
     }
 
     /* ---------- RAM-Steckplätze ---------- */
-    .slot-tasks { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .75rem; }
-    .slot-tasks button { padding: .35rem .8rem; font-size: .85rem; color: var(--text-muted); background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 999px; }
-    .slot-tasks button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .slot-tasks, .pill-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .75rem; }
+    .slot-tasks button, .pill-tabs button { padding: .35rem .8rem; font-size: .85rem; color: var(--text-muted); background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 999px; }
+    .slot-tasks button[aria-pressed="true"], .pill-tabs button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
     .slot-tasks button.done::after { content: " ✓"; color: var(--success); font-weight: 700; }
     .slot-tasks button[aria-pressed="true"].done::after { color: #fff; }
     .dimm-board { display: grid; gap: .35rem; padding: 1rem .75rem; background: #132219; border: 1px solid #24402f; border-radius: var(--radius-sm); }
@@ -534,6 +534,13 @@
     .dimm.ok  { border-color: var(--success); }
     .dimm.bad { border-color: var(--danger); }
 
+    .open-task textarea {
+      width: 100%; min-height: 6rem; padding: .7rem .8rem; resize: vertical;
+      font: inherit; font-size: 16px; color: var(--text);
+      background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    }
+    .open-task textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .open-task .sample { margin-bottom: 0; }
     .range-row { display: grid; gap: .4rem; }
     #addr-out { white-space: normal; }
     .range-row input { width: 100%; accent-color: var(--accent); }
@@ -561,6 +568,8 @@
     @media (max-width: 860px) {
       .lesson-section { scroll-margin-top: calc(var(--header-h) + 4.5rem); }
       .wordbank { top: calc(var(--header-h) + 3.9rem); gap: .35rem; padding: .5rem; }
+      .sort-pool { position: sticky; top: calc(var(--header-h) + 3.9rem); z-index: 5; max-height: 38vh; overflow-y: auto; background: var(--bg); gap: .35rem; padding: .5rem; }
+      .sort-pool:empty, .sort-pool:not(:has(.chip)) { position: static; }
       .chip { padding: .3rem .55rem; font-size: .85rem; }
     }
     @media (max-width: 520px) {
@@ -1416,7 +1425,164 @@
 
             <article class="module-panel" data-module="massenspeicher" role="tabpanel" hidden>
               <h2>4. Massenspeicher</h2>
-              <div id="module-massenspeicher" class="placeholder">Platzhalter für Massenspeicher-Modul</div>
+              <!-- ============ MODUL MASSENSPEICHER ============ -->
+              <div id="module-massenspeicher" class="lesson">
+
+                <div class="lesson-head">
+                  <p class="lesson-intro"><strong>Massenspeicher</strong> speichern große Datenmengen dauerhaft, auch ohne Strom: Betriebssystem, Programme, Dokumente, Fotos. Die wichtigsten Vertreter sind die klassische <strong>Festplatte (HDD)</strong> und die <strong>SSD</strong> mit Flash-Speicher.</p>
+                  <div class="progress" data-progress="massenspeicher">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="massenspeicher">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="ms-s1">1 · SSD und HDD</button>
+                    <button type="button" data-scroll="ms-s2">2 · Kenngrößen &amp; M.2</button>
+                    <button type="button" data-scroll="ms-s3">3 · SLC, MLC, TLC, QLC</button>
+                  </nav>
+                </div>
+
+                <!-- ---------- 1. SSD und HDD ---------- -->
+                <section class="lesson-section" id="ms-s1">
+                  <h3><span class="sec-num">1</span> SSD und HDD</h3>
+                  <figure class="figure" style="max-width:620px">
+                    <svg viewBox="0 0 600 250" role="img" aria-label="Aufbau einer HDD mit Magnetscheibe und Schreib-/Lesekopf im Vergleich zu einer M.2-SSD mit Controller und Flash-Chips">
+                      <defs>
+                        <radialGradient id="platter" cx="40%" cy="35%"><stop offset="0" stop-color="#e5e7eb"/><stop offset=".6" stop-color="#9ca3af"/><stop offset="1" stop-color="#6b7280"/></radialGradient>
+                      </defs>
+                      <!-- HDD -->
+                      <rect x="20" y="15" width="250" height="190" rx="10" fill="#2b3038" stroke="#4b5563" stroke-width="2"/>
+                      <circle cx="120" cy="110" r="82" fill="url(#platter)"/>
+                      <circle cx="120" cy="110" r="55" fill="none" stroke="#6b7280" stroke-dasharray="2 4"/>
+                      <circle cx="120" cy="110" r="14" fill="#4b5563" stroke="#d1d5db" stroke-width="2"/>
+                      <path d="M238 182 L150 58" stroke="#d1d5db" stroke-width="7" stroke-linecap="round"/>
+                      <rect x="140" y="48" width="16" height="12" rx="2" fill="#f59e0b" transform="rotate(-35 148 54)"/>
+                      <circle cx="238" cy="182" r="13" fill="#4b5563" stroke="#d1d5db" stroke-width="2"/>
+                      <g class="svg-muted" font-size="11"><text x="168" y="34">Schreib-/Lesekopf</text><text x="28" y="200">Magnetscheibe (Platter)</text></g>
+                      <text x="145" y="232" class="svg-text" font-size="14" font-weight="700" text-anchor="middle">HDD – mechanisch, rotierende Scheiben</text>
+                      <!-- SSD (M.2) -->
+                      <rect x="320" y="80" width="260" height="66" rx="5" fill="#14532d" stroke="#3fb950" stroke-width="1.5"/>
+                      <path d="M320 86 h16 v54 h-16" fill="#c9a227"/><rect x="320" y="122" width="16" height="6" fill="#0d1117"/>
+                      <circle cx="572" cy="113" r="6" fill="#0d1117" stroke="#c9a227" stroke-width="2"/>
+                      <rect x="350" y="92" width="44" height="42" rx="3" fill="#1f2937" stroke="#4b5563"/>
+                      <rect x="408" y="90" width="66" height="46" rx="3" fill="#111827" stroke="#4b5563"/>
+                      <rect x="484" y="90" width="66" height="46" rx="3" fill="#111827" stroke="#4b5563"/>
+                      <g class="svg-muted" font-size="11" text-anchor="middle"><text x="372" y="70">Controller</text><text x="479" y="70">NAND-Flash-Chips</text><text x="328" y="165">Kontakte</text></g>
+                      <text x="450" y="232" class="svg-text" font-size="14" font-weight="700" text-anchor="middle">SSD – elektronisch, keine beweglichen Teile</text>
+                    </svg>
+                  </figure>
+                  <div class="two-col">
+                    <div class="box info"><span class="box-title">HDD (Hard Disk Drive)</span>Daten werden <strong>magnetisch</strong> auf rotierenden Scheiben gespeichert (z. B. 7.200 U/min). Ein Schreib-/Lesekopf fährt zur richtigen Stelle. Das kostet Zeit, und mechanische Teile können verschleißen. <span class="muted">Formfaktor meist 3,5" (Desktop) oder 2,5" (Notebook)</span></div>
+                    <div class="box info"><span class="box-title">SSD (Solid State Drive)</span>Daten werden <strong>elektronisch</strong> in NAND-Flash-Zellen gespeichert. Es gibt keine beweglichen Teile, deshalb ist sie sehr schnell, leise und robust. <span class="muted">Bauformen: 2,5" (SATA) oder M.2 (SATA oder NVMe)</span></div>
+                  </div>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Typische Werte</th><th>HDD</th><th>SSD (SATA)</th><th>SSD (NVMe, PCIe 4.0 x4)</th></tr></thead>
+                      <tbody>
+                        <tr><td>Lesen/Schreiben</td><td>ca. 150–280 MB/s</td><td>bis ca. 550 MB/s</td><td>bis ca. 7.000 MB/s</td></tr>
+                        <tr><td>Zugriffszeit</td><td>ca. 5–10 ms</td><td>&lt; 0,1 ms</td><td>&lt; 0,1 ms</td></tr>
+                        <tr><td>Preis pro GB</td><td>günstig</td><td>teurer</td><td>teurer</td></tr>
+                        <tr><td>Geräusch / Erschütterung</td><td>hörbar / empfindlich</td><td>lautlos / robust</td><td>lautlos / robust</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p>Ordne die Eigenschaften richtig zu: Vorteile und Nachteile der SSD sowie den typischen Einsatzzweck von SSD und HDD.</p>
+                  <div id="ms-quiz-sort"></div>
+                </section>
+
+                <!-- ---------- 2. Kenngrößen & M.2 ---------- -->
+                <section class="lesson-section" id="ms-s2">
+                  <h3><span class="sec-num">2</span> Kenngrößen und die M.2-Schnittstelle</h3>
+                  <p>Setze die Begriffe in die richtigen Lücken ein.</p>
+                  <div id="ms-quiz-cloze"></div>
+
+                  <p><strong>M.2-Größen entschlüsseln:</strong> Wähle eine Bauform. Die Zeichnung ist maßstabsgetreu, die gestrichelte Linie zeigt zum Vergleich 2280.</p>
+                  <div class="quiz">
+                    <div class="pill-tabs" id="m2-sizes" role="group" aria-label="M.2-Größe wählen"></div>
+                    <svg id="m2-svg" viewBox="0 0 470 122" role="img" aria-label="Maßstabsgetreue Zeichnung eines M.2-Moduls" style="width:100%;height:auto;display:block"></svg>
+                    <p id="m2-text" class="muted" style="margin:.5rem 0 0"></p>
+                  </div>
+                  <div class="box info">
+                    <span class="box-title">M.2: SATA oder NVMe?</span>
+                    Beide sehen fast gleich aus, sind aber unterschiedlich schnell. <strong>M.2-SATA</strong> schafft wie eine 2,5"-SATA-SSD max. ca. 600 MB/s. <strong>M.2-NVMe</strong> nutzt meist 4 PCIe-Lanes: PCIe 3.0 x4 ≈ 3,9 GB/s, PCIe 4.0 x4 ≈ 7,9 GB/s, PCIe 5.0 x4 ≈ 15,8 GB/s (vgl. PCIe-Tabelle im Kapitel Mainboard). Im Handbuch steht, welches Protokoll ein M.2-Slot unterstützt.
+                  </div>
+                  <div id="ms-quiz-m2"></div>
+
+                  <div class="quiz">
+                    <p class="quiz-q">Lebensdauer-Rechner (TBW)</p>
+                    <p class="quiz-hint">TBW = Total Bytes Written: So viele Terabyte darf man laut Hersteller insgesamt auf die SSD schreiben (Garantiewert).</p>
+                    <div class="calc">
+                      <label>TBW der SSD (TB)<input type="number" class="num-input" id="tbw-tb" min="1" value="600"></label>
+                      <label>Geschrieben pro Tag (GB)<input type="number" class="num-input" id="tbw-day" min="1" value="50"></label>
+                    </div>
+                    <div id="tbw-out"></div>
+                  </div>
+                </section>
+
+                <!-- ---------- 3. Flash-Typen ---------- -->
+                <section class="lesson-section" id="ms-s3">
+                  <h3><span class="sec-num">3</span> Flash-Typen: SLC, MLC, TLC und QLC</h3>
+                  <p>Die Begriffe SLC, MLC, TLC und QLC beschreiben verschiedene Typen von <strong>NAND-Flash-Speicher</strong> in SSDs. Sie unterscheiden sich darin, <strong>wie viele Bits pro Speicherzelle</strong> gespeichert werden. Mit n Bits muss eine Zelle 2<sup>n</sup> verschiedene Ladungszustände sicher unterscheiden.</p>
+                  <figure class="figure" style="max-width:560px">
+                    <svg id="ms-cells" viewBox="0 0 520 290" role="img" aria-label="Bits pro Zelle: SLC 2, MLC 4, TLC 8, QLC 16 Zustände"></svg>
+                    <figcaption>Mehr Bits pro Zelle bedeuten mehr Speicherdichte und geringere Kosten, aber weniger Performance und Haltbarkeit.</figcaption>
+                  </figure>
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead><tr><th>Typ</th><th>Bits/Zelle</th><th>Speicherdichte</th><th>Haltbarkeit</th><th>Performance</th><th>Preis pro GB</th><th>Datenverlust-Risiko</th><th>Schreibzyklen ca.</th></tr></thead>
+                      <tbody>
+                        <tr><td>SLC</td><td>1</td><td>niedrig</td><td>sehr hoch</td><td>sehr hoch</td><td>sehr hoch</td><td>sehr gering</td><td>100.000</td></tr>
+                        <tr><td>MLC</td><td>2</td><td>mittel</td><td>hoch</td><td>hoch</td><td>hoch</td><td>gering</td><td>10.000</td></tr>
+                        <tr><td>TLC</td><td>3</td><td>hoch</td><td>mittel</td><td>mittel</td><td>mittel</td><td>erhöht</td><td>3.000</td></tr>
+                        <tr><td>QLC</td><td>4</td><td>sehr hoch</td><td>niedrig</td><td>niedrig</td><td>niedrig</td><td>am höchsten</td><td>1.000</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Speicherdichte (Density)</dt><dd>Steigt mit der Anzahl der Bits pro Zelle. QLC speichert auf gleichem Raum mehr Daten als TLC, MLC oder SLC.</dd></div>
+                    <div class="gl-item"><dt>Performance</dt><dd>SLC ist am schnellsten, da jede Zelle nur zwei Zustände kennt. QLC ist am langsamsten, weil Lesen und Schreiben komplexer sind und mehr Fehlerkorrektur nötig ist.</dd></div>
+                    <div class="gl-item"><dt>Haltbarkeit (Durability)</dt><dd>SLC hält am längsten, die Fehlertoleranz ist am höchsten. Mit jeder weiteren Bit-Stufe sinkt die Zahl der möglichen Schreibzyklen pro Zelle deutlich.</dd></div>
+                    <div class="gl-item"><dt>Datenverlust</dt><dd>Das Risiko steigt mit der Anzahl der Bits pro Zelle. QLC ist besonders empfindlich gegenüber vielen Schreibvorgängen.</dd></div>
+                  </dl>
+                  <div class="box merke">
+                    <span class="box-title">Welcher Speicher ist der beste?</span>
+                    <ul>
+                      <li><strong>SLC:</strong> technisch der beste (schnell, haltbar, sicher), aber teuer. Wird fast nur in Industrie, Servern und kritischen Anwendungen eingesetzt.</li>
+                      <li><strong>MLC:</strong> guter Kompromiss aus Haltbarkeit, Performance und Preis, für professionelle Anwendungen</li>
+                      <li><strong>TLC:</strong> heute Standard bei Consumer-SSDs. Gutes Preis-Leistungs-Verhältnis, ausreichend haltbar bei normaler Nutzung</li>
+                      <li><strong>QLC:</strong> am günstigsten mit der höchsten Kapazität, aber nur für leseintensive Anwendungen mit seltenem Schreiben</li>
+                    </ul>
+                  </div>
+
+                  <p><strong>Aufgabe 1:</strong> Schreibe die Abkürzungen aus.</p>
+                  <div id="ms-quiz-abbr"></div>
+                  <div id="ms-quiz-states"></div>
+
+                  <p><strong>Aufgabe 2:</strong> Welcher Flash-Typ passt zu welchem Einsatz?</p>
+                  <div id="ms-quiz-scen"></div>
+                  <div class="quiz open-task" data-note="ms-best">
+                    <p class="quiz-q">Welcher Flashspeicher ist für dich persönlich am besten geeignet? Begründe deine Auswahl und beschreibe, wofür du den Speicher nutzen würdest.</p>
+                    <textarea rows="4" placeholder="Deine Antwort … (wird nur in diesem Browser gespeichert)"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>
+                      <span class="box-title">Mögliche Lösung</span>
+                      Für die meisten Privatnutzer ist eine <strong>TLC-SSD</strong> ideal, am besten als M.2-NVMe-SSD für Betriebssystem, Programme und Spiele. Sie bietet ein gutes Preis-Leistungs-Verhältnis, ist sehr schnell und bei normaler Nutzung mehr als ausreichend haltbar. Wer große Datenmengen nur ablegt (Fotos, Filme), kann zusätzlich günstig eine QLC-SSD oder eine HDD nutzen.
+                    </div>
+                  </div>
+
+                  <p><strong>Aufgabe 3:</strong> Kosten der Flash-Typen</p>
+                  <div id="ms-quiz-cost"></div>
+                  <div class="quiz open-task" data-note="ms-cost">
+                    <p class="quiz-q">Welche Speicher sind teurer, welche günstiger – und woran liegt das genau? Erkläre in eigenen Worten.</p>
+                    <textarea rows="4" placeholder="Deine Antwort … (wird nur in diesem Browser gespeichert)"></textarea>
+                    <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
+                    <div class="box merke sample" hidden>
+                      <span class="box-title">Mögliche Lösung</span>
+                      <strong>SLC ist am teuersten, QLC am günstigsten</strong> (pro GB). Je mehr Bits eine Zelle speichert, desto mehr Daten passen auf dieselbe Chipfläche. Das senkt die Herstellungskosten pro Gigabyte. Dafür sinken Geschwindigkeit und Haltbarkeit, weil die Zelle mehr Ladungszustände unterscheiden muss (QLC: 16) und eine aufwendigere Fehlerkorrektur nötig ist.
+                    </div>
+                  </div>
+                </section>
+              </div>
             </article>
 
             <article class="module-panel" data-module="gpu" role="tabpanel" hidden>
@@ -2194,6 +2360,173 @@
       });
     }
 
+    /* Offene Aufgaben: <div class="open-task" data-note="key"> mit <textarea> und versteckter Musterlösung (.sample).
+       Die Antwort wird nur im Browser (localStorage) gemerkt. */
+    function initOpenTasks() {
+      const KEY = 'bs-notes';
+      let notes = {};
+      try { notes = JSON.parse(localStorage.getItem(KEY)) || {}; } catch { notes = {}; }
+      $$('.open-task').forEach(t => {
+        const ta = $('textarea', t), key = t.dataset.note, btn = $('[data-act="sample"]', t), sample = $('.sample', t);
+        ta.value = notes[key] || '';
+        ta.addEventListener('input', () => {
+          notes[key] = ta.value;
+          try { localStorage.setItem(KEY, JSON.stringify(notes)); } catch {}
+        });
+        btn.addEventListener('click', () => {
+          sample.hidden = !sample.hidden;
+          btn.textContent = sample.hidden ? 'Musterlösung anzeigen' : 'Musterlösung ausblenden';
+        });
+      });
+    }
+
+    /* =========================================================
+       MODUL: MASSENSPEICHER
+       ========================================================= */
+    function initMassenspeicher() {
+      const MOD = 'massenspeicher';
+      Progress.register(MOD, ['ms-sort', 'ms-cloze', 'ms-m2', 'ms-abbr', 'ms-states', 'ms-scen', 'ms-cost']);
+
+      // 1. SSD und HDD
+      sortQuiz($('#ms-quiz-sort'), {
+        mod: MOD, id: 'ms-sort',
+        buckets: [
+          { id: 'pro', label: 'SSD – Vorteile' }, { id: 'con', label: 'SSD – Nachteile' },
+          { id: 'ssd', label: 'Einsatzzweck SSD' }, { id: 'hdd', label: 'Einsatzzweck HDD' }
+        ],
+        items: [
+          { text: 'leiser im Betrieb', bucket: 'pro' },
+          { text: 'schnellere Lese- und Schreibgeschwindigkeit', bucket: 'pro' },
+          { text: 'resistenter gegen mechanische Beschädigungen', bucket: 'pro' },
+          { text: 'geringerer Stromverbrauch', bucket: 'pro' },
+          { text: 'kleineres Format', bucket: 'pro' },
+          { text: 'höherer Preis pro Gigabyte', bucket: 'con' },
+          { text: 'Speicherzellen haben begrenzte Schreibzyklen', bucket: 'con' },
+          { text: 'Datenwiederherstellung schwieriger', bucket: 'con' },
+          { text: 'Systemlaufwerk (Betriebssystem)', bucket: 'ssd' },
+          { text: 'Einsatz in mobilen Geräten (Notebooks, Tablets …)', bucket: 'ssd' },
+          { text: 'Server mit hoher I/O-Last und vielen gleichzeitigen Zugriffen (VDI, Datenbanken …)', bucket: 'ssd' },
+          { text: 'Datensicherung und Archivierung (Backups, große Datenarchive)', bucket: 'hdd' },
+          { text: 'Server mit hohen Kapazitätsanforderungen', bucket: 'hdd' },
+          { text: 'Günstige Massenspeicher für große Datenmengen (Medienarchive …)', bucket: 'hdd' }
+        ]
+      });
+
+      // 2. Lückentext Kenngrößen & M.2
+      clozeQuiz($('#ms-quiz-cloze'), {
+        mod: MOD, id: 'ms-cloze', distractors: ['2242', 'IDE-Protokoll'],
+        text: `
+          <p>Die Abmessungen einer Festplatte stecken – wie schon beim Mainboard – im {{Formfaktor}} (z. B. 3,5" oder 2,5").</p>
+          <p>Die Lebensdauer einer SSD wird in {{TBW (Total Bytes Written)}} angegeben.</p>
+          <p>Die maximale Datenmenge eines Speichermediums wird als {{Speicherkapazität}} angegeben.</p>
+          <p>Mit der {{Datentransferrate}} wird die Menge an digitalen Informationen definiert, die in einer bestimmten Zeit von einem Ort zu einem anderen bewegt werden kann.</p>
+          <p>Es gibt verschiedene Flashspeicher, die die Abkürzungen {{SLC, MLC, TLC und QLC}} tragen.</p>
+          <p><strong>M.2:</strong> Der Standard für Desktop-PCs und die meisten Laptops – fast alle gekauften M.2-SSDs – hat die Größe {{2280}}. Die ersten beiden Ziffern geben die Breite, die restlichen die Länge in Millimetern an.</p>
+          <p>M.2 beschreibt nur die physische Bauform (einen kleinen, flachen Steckplatz direkt auf dem Mainboard). Was in diesem Steckplatz passiert, hängt vom Protokoll und den {{Lanes}} ab:</p>
+          <p>– {{SATA-Protokoll}}: älter und langsamer. M.2-SATA-SSDs nutzen dieselbe Datenrate wie 2,5"-SATA-SSDs (max. ca. 600 MB/s).</p>
+          <p>– {{NVMe-Protokoll}} (PCIe): der moderne Standard. NVMe (Non-Volatile Memory Express) wurde speziell für Flash-Speicher entwickelt und nutzt die schnellen PCIe-Lanes der CPU oder des Chipsatzes.</p>`
+      });
+
+      // M.2-Größen
+      const sizes = ['2230', '2242', '2260', '2280', '22110'];
+      const tabs = $('#m2-sizes'), svg = $('#m2-svg');
+      tabs.innerHTML = sizes.map(s => `<button type="button" data-size="${s}">${s}</button>`).join('');
+      const drawM2 = size => {
+        const w = +size.slice(0, 2), l = +size.slice(2), S = 4, x0 = 15, y0 = 10, W = l * S, H = w * S;
+        $$('button', tabs).forEach(b => b.setAttribute('aria-pressed', b.dataset.size === size));
+        const chips = [];
+        for (let x = x0 + 70; x + 60 < x0 + W - 20; x += 75) chips.push(`<rect x="${x}" y="${y0 + 16}" width="60" height="${H - 32}" rx="3" fill="#111827" stroke="#4b5563"/>`);
+        svg.innerHTML = `
+          <rect x="${x0}" y="${y0}" width="${80 * S}" height="${H}" rx="4" fill="none" stroke="#8b949e" stroke-dasharray="5 4"/>
+          <rect x="${x0}" y="${y0}" width="${W}" height="${H}" rx="4" fill="#14532d" stroke="#3fb950" stroke-width="1.5"/>
+          <path d="M${x0} ${y0 + 4} h14 v${H - 8} h-14" fill="#c9a227"/>
+          <rect x="${x0}" y="${y0 + H - 22}" width="14" height="6" fill="#0d1117"/>
+          <rect x="${x0 + 22}" y="${y0 + 18}" width="36" height="${H - 36}" rx="3" fill="#1f2937" stroke="#4b5563"/>
+          ${chips.join('')}
+          <circle cx="${x0 + W - 6}" cy="${y0 + H / 2}" r="6" fill="#0d1117" stroke="#c9a227" stroke-width="2"/>
+          <text x="${x0 + W / 2}" y="${y0 + H + 16}" class="svg-text" font-size="13" font-weight="700" text-anchor="middle">${w} × ${l} mm</text>`;
+        $('#m2-text').innerHTML = `<strong>M.2 ${size}</strong>: ${w} mm breit, ${l} mm lang. ${
+          { '2230': 'Sehr kurz – z. B. in Handheld-Konsolen und kleinen Notebooks.',
+            '2242': 'Kurz – in manchen Notebooks und Mini-PCs.',
+            '2260': 'Selten anzutreffen.',
+            '2280': 'Der Standard bei Desktop-PCs und den meisten Notebooks.',
+            '22110': 'Extra lang – vor allem in Servern (z. B. mit Kondensatoren gegen Stromausfall).' }[size]}`;
+      };
+      tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) drawM2(b.dataset.size); });
+      drawM2('2280');
+
+      choiceQuiz($('#ms-quiz-m2'), {
+        mod: MOD, id: 'ms-m2', question: 'Was bedeutet die Angabe „2242“ bei einer M.2-SSD?',
+        options: ['22 mm breit, 42 mm lang', '22 mm lang, 42 mm breit', 'Datentransferrate von 2.242 MB/s', 'Generation 22, Version 42'],
+        correct: 0, explain: 'Die ersten beiden Ziffern sind die Breite, der Rest die Länge in mm.'
+      });
+
+      // TBW-Rechner
+      const tbw = () => {
+        const tb = Math.max(1, +$('#tbw-tb').value || 1), gb = Math.max(1, +$('#tbw-day').value || 1);
+        const years = tb * 1000 / gb / 365;
+        $('#tbw-out').innerHTML = `<div class="formula">${tb} TB × 1000 ÷ ${gb} GB/Tag ÷ 365 = <strong>${years.toLocaleString('de-DE', { maximumFractionDigits: 1 })} Jahre</strong></div>
+          <p class="muted" style="margin:0;font-size:.85rem">Ein typischer Heimanwender schreibt eher 10–50 GB pro Tag. Die TBW-Grenze ist deshalb selten das Problem.</p>`;
+      };
+      ['#tbw-tb', '#tbw-day'].forEach(s => $(s).addEventListener('input', tbw));
+      tbw();
+
+      // 3. Flash-Typen – Zellen-Grafik
+      const types = [['SLC', 1, '#3b82f6'], ['MLC', 2, '#eab308'], ['TLC', 3, '#22c55e'], ['QLC', 4, '#f97316']];
+      let g = `
+        <defs><marker id="cell-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8b949e"/></marker></defs>
+        <path d="M40 18 H480" stroke="#8b949e" stroke-width="2" marker-end="url(#cell-arr)"/>
+        <text x="260" y="12" class="svg-muted" font-size="12" text-anchor="middle">höhere Speicherdichte · geringere Kosten</text>
+        <path d="M40 278 H480" stroke="#8b949e" stroke-width="2" marker-start="url(#cell-arr)"/>
+        <text x="260" y="272" class="svg-muted" font-size="12" text-anchor="middle">höhere Performance · höhere Haltbarkeit</text>`;
+      types.forEach(([name, bits, color], i) => {
+        const n = 2 ** bits, x = 40 + i * 120, h = 180 / n;
+        for (let k = 0; k < n; k++) {
+          const label = (n - 1 - k).toString(2).padStart(bits, '0');
+          g += `<rect x="${x}" y="${30 + k * h}" width="80" height="${h}" fill="${color}" fill-opacity=".25" stroke="${color}"/>`;
+          g += `<text x="${x + 40}" y="${30 + k * h + h / 2}" font-size="${Math.min(14, h * .75)}" class="svg-text" text-anchor="middle" dominant-baseline="central" font-family="ui-monospace,monospace">${label}</text>`;
+        }
+        g += `<text x="${x + 40}" y="230" class="svg-text" font-size="14" font-weight="700" text-anchor="middle">${name}</text>`;
+        g += `<text x="${x + 40}" y="248" class="svg-muted" font-size="11" text-anchor="middle">${bits} Bit · ${n} Zustände</text>`;
+      });
+      $('#ms-cells').innerHTML = g;
+
+      clozeQuiz($('#ms-quiz-abbr'), {
+        mod: MOD, id: 'ms-abbr', distractors: ['Dual-Level Cell', 'Quick-Load Cell'],
+        text: `
+          <div class="match-grid">
+            <div class="mg-term">SLC</div><div>{{Single-Level Cell}}</div>
+            <div class="mg-term">MLC</div><div>{{Multi-Level Cell}}</div>
+            <div class="mg-term">TLC</div><div>{{Triple-Level Cell}}</div>
+            <div class="mg-term">QLC</div><div>{{Quad-Level Cell}}</div>
+          </div>`
+      });
+      choiceQuiz($('#ms-quiz-states'), {
+        mod: MOD, id: 'ms-states', question: 'Wie viele unterschiedliche Ladungszustände muss eine TLC-Zelle sicher unterscheiden können?',
+        options: ['3', '6', '8', '16'], correct: 2,
+        explain: '3 Bit → 2³ = 8 Zustände. Bei QLC sind es schon 2⁴ = 16 – deshalb ist QLC langsamer und fehleranfälliger.'
+      });
+      assignQuiz($('#ms-quiz-scen'), {
+        mod: MOD, id: 'ms-scen', choices: ['SLC', 'MLC', 'TLC', 'QLC'],
+        items: [
+          { text: 'Industriesteuerung oder kritischer Server mit extrem vielen Schreibzugriffen – Kosten spielen keine Rolle', answer: 'SLC' },
+          { text: 'Professionelle Workstation: guter Kompromiss aus Haltbarkeit, Leistung und Preis', answer: 'MLC' },
+          { text: 'Gaming-PC oder Office-Laptop eines typischen Nutzers', answer: 'TLC' },
+          { text: 'Günstiges Archiv für Filme und Fotos, das selten beschrieben wird', answer: 'QLC' }
+        ]
+      });
+      choiceQuiz($('#ms-quiz-cost'), {
+        mod: MOD, id: 'ms-cost', question: 'Warum ist QLC-Speicher pro Gigabyte günstiger als SLC?',
+        options: [
+          'Eine QLC-Zelle speichert 4 Bit statt 1 Bit – auf gleicher Chipfläche passt viermal so viel',
+          'QLC-SSDs brauchen keinen Controller',
+          'QLC-SSDs haben weniger Anschlüsse',
+          'QLC-Speicher muss nicht gekühlt werden'
+        ],
+        correct: 0, explain: 'Mehr Bits pro Zelle = mehr Kapazität pro Chip = geringere Kosten pro GB.'
+      });
+    }
+
     /* =========================================================
        MODUL: ARBEITSSPEICHER (RAM)
        ========================================================= */
@@ -2598,6 +2931,8 @@
     initMainboard();
     initCpu();
     initRam();
+    initMassenspeicher();
+    initOpenTasks();
     updateProgressUI();
     isLoggedIn() ? showApp() : showLogin();
   })();
