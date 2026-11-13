@@ -550,6 +550,25 @@
     .pipe-step { padding: .5rem .7rem; font-weight: 600; background: var(--bg-elev); border: 2px solid var(--border); border-radius: var(--radius-sm); }
     .pipe-arrow { color: var(--text-muted); font-size: 1.3rem; }
     .pipeline .gap { margin: 0; }
+    /* ---------- Gesamt-Quiz ---------- */
+    .fq-settings { display: grid; gap: 1rem; }
+    .fq-topics { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; }
+    .fq-select { padding: .5rem; font: inherit; font-size: 16px; color: var(--text); background: var(--bg-elev); border: 1px solid var(--border); border-radius: 6px; }
+    .fq-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; font-size: .85rem; color: var(--text-muted); }
+    .fq-topic { padding: .1rem .65rem; font-weight: 600; color: var(--accent-2); background: var(--accent-soft); border-radius: 999px; }
+    .fq-bar { margin-bottom: 1.25rem; }
+    .fq-q { font-size: 1.1rem; }
+    .fq-score { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .fq-ring { --p: 0; --c: var(--success); flex-shrink: 0; width: 120px; height: 120px; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(var(--c) calc(var(--p) * 1%), var(--bg-elev-2) 0); }
+    .fq-ring span { width: 94px; height: 94px; display: grid; place-items: center; font-size: 1.6rem; font-weight: 800; background: var(--bg); border-radius: 50%; }
+    .fq-grade { font-size: 1.3rem; font-weight: 800; margin: 0 0 .25rem !important; }
+    .tb-row { display: grid; grid-template-columns: minmax(140px, 200px) 1fr auto auto; gap: .5rem .75rem; align-items: center; margin: .5rem 0; }
+    .tb-row .progress-bar { flex: none; }
+    .tb-row .btn { padding: .3rem .7rem; font-size: .8rem; }
+    .review-item { margin: .6rem 0; padding: .75rem 1rem; background: var(--bg); border: 1px solid var(--border); border-left: 4px solid var(--danger); border-radius: var(--radius-sm); }
+    .review-item p { margin: .25rem 0 !important; }
+    .review-item .ra { color: var(--success); }
+    .review-item .ya { color: var(--danger); }
     .range-row { display: grid; gap: .4rem; }
     #addr-out { white-space: normal; }
     .range-row input { width: 100%; accent-color: var(--accent); }
@@ -559,6 +578,8 @@
       .match-grid > div.mg-term { border-bottom: 0; padding-bottom: .2rem; }
       .dimm-label { flex-basis: 6.5rem; font-size: .78rem; }
       .eva { grid-template-columns: 1fr; }
+      .tb-row { grid-template-columns: 1fr auto; }
+      .tb-row .progress-bar { grid-column: 1 / -1; grid-row: 2; }
       .eva-arrow { justify-self: center; transform: rotate(90deg); }
       .pipeline { flex-direction: column; align-items: stretch; text-align: center; }
       .pipe-arrow { transform: rotate(90deg); align-self: center; }
@@ -1814,7 +1835,54 @@
 
             <article class="module-panel" data-module="quiz" role="tabpanel" hidden>
               <h2>6. Gesamt-Quiz</h2>
-              <div id="module-quiz" class="placeholder">Platzhalter für Gesamt-Quiz</div>
+              <!-- ============ GESAMT-QUIZ ============ -->
+              <div id="module-quiz" class="lesson">
+                <div class="lesson-head">
+                  <p class="lesson-intro">Teste dein Wissen aus allen Kapiteln. Die Fragen werden zufällig aus dem Fragenpool gezogen und gleichmäßig auf die gewählten Themen verteilt. Am Ende bekommst du eine Note nach IHK-Notenschlüssel und siehst, welche Themen du wiederholen solltest.</p>
+                  <div class="progress" data-progress="quiz">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                  </div>
+                </div>
+
+                <!-- Start / Einstellungen -->
+                <div id="fq-start" class="quiz fq-settings">
+                  <p class="quiz-q">Quiz einstellen</p>
+                  <div>
+                    <p class="quiz-hint">Themen</p>
+                    <div class="fq-topics" id="fq-topics"></div>
+                  </div>
+                  <label class="calc" style="align-items:center">
+                    <span class="muted" style="font-size:.85rem">Anzahl der Fragen</span>
+                    <select id="fq-count" class="fq-select">
+                      <option value="10">10 Fragen (Kurztest)</option>
+                      <option value="20" selected>20 Fragen</option>
+                      <option value="30">30 Fragen</option>
+                      <option value="999">Alle Fragen</option>
+                    </select>
+                  </label>
+                  <p class="muted" id="fq-best" style="margin:0;font-size:.9rem"></p>
+                  <div class="feedback" id="fq-start-fb"></div>
+                  <div class="quiz-actions" style="margin-top:0"><button type="button" class="btn btn-primary" id="fq-go">Quiz starten</button></div>
+                </div>
+
+                <!-- Laufendes Quiz -->
+                <div id="fq-run" class="quiz" hidden>
+                  <div class="fq-head"><span id="fq-pos"></span><span class="fq-topic" id="fq-topic"></span></div>
+                  <div class="progress-bar fq-bar"><span id="fq-bar"></span></div>
+                  <p class="quiz-q fq-q" id="fq-q"></p>
+                  <p class="quiz-hint" id="fq-hint"></p>
+                  <div id="fq-body"></div>
+                  <div class="feedback" id="fq-fb" aria-live="polite"></div>
+                  <div class="quiz-actions">
+                    <button type="button" class="btn btn-primary" data-fq="next">Antwort prüfen</button>
+                    <button type="button" class="btn" data-fq="abort">Abbrechen</button>
+                  </div>
+                </div>
+
+                <!-- Ergebnis -->
+                <div id="fq-result" hidden></div>
+              </div>
             </article>
 
             <div class="module-pager">
@@ -2629,6 +2697,272 @@
     }
 
     /* =========================================================
+       GESAMT-QUIZ – Fragenpool
+       ---------------------------------------------------------
+       Neue Frage ergänzen = Objekt anhängen:
+         t: Thema (Modul-ID), q: Frage, e: Erklärung
+         Auswahl:  o: [Optionen], a: Index (Single) oder [Indizes] (Multiple)
+         Rechnung: n: Lösung, tol: Toleranz, unit: Einheit
+       Die Reihenfolge der Optionen wird beim Quiz automatisch gemischt.
+       ========================================================= */
+    const QUIZ_BANK = [
+      // ---------- Mainboard ----------
+      { t: 'mainboard', q: 'Welcher Formfaktor hat die Maße 305 × 244 mm?', o: ['ATX', 'E-ATX', 'Micro-ATX', 'Mini-ITX'], a: 0, e: 'ATX = 305 × 244 mm (12" × 9,6"). Micro-ATX = 244 × 244 mm, Mini-ITX = 170 × 170 mm.' },
+      { t: 'mainboard', q: 'Wofür ist der 8-Pin-Anschluss (EPS12V) oben links auf dem Mainboard?', o: ['Zusätzliche 12-V-Versorgung der CPU', 'Anschluss der Gehäuselüfter', 'Stromversorgung der Grafikkarte', 'Anschluss der Frontpanel-Taster'], a: 0, e: 'Der 8-Pin-Anschluss versorgt die Spannungswandler der CPU mit 12 V.' },
+      { t: 'mainboard', q: 'Welche Aufgabe hat die Knopfbatterie (CR2032) auf dem Mainboard?', o: ['Sie versorgt Echtzeituhr und CMOS-Speicher (UEFI-Einstellungen), wenn der PC aus ist', 'Sie liefert Strom für die Lüfter', 'Sie dient als Notstrom für die SSD', 'Sie puffert die CPU-Spannung bei Lastspitzen'], a: 0, e: 'Ohne Batterie gehen Uhrzeit und UEFI-Einstellungen beim Trennen vom Strom verloren.' },
+      { t: 'mainboard', q: 'Welche Komponenten sind direkt an die CPU angebunden?', o: ['Arbeitsspeicher (RAM)', 'PCIe-x16-Slot (Grafikkarte)', 'SATA-Anschlüsse', 'Audio', 'LAN'], a: [0, 1], e: 'RAM, PEG-Slot (PCIe x16) und die Bildausgänge hängen an der CPU – SATA, Audio, LAN usw. am Chipsatz.' },
+      { t: 'mainboard', q: 'Welche Aufgabe hat der Chipsatz (PCH)?', o: ['Er verbindet die CPU mit Peripherie wie SATA, USB, LAN und Audio', 'Er berechnet das Monitorbild', 'Er speichert Programme dauerhaft', 'Er wandelt die Netzspannung in 12 V um'], a: 0, e: 'Der Platform Controller Hub ist über den DMI-Bus mit der CPU verbunden.' },
+      { t: 'mainboard', q: 'Welche Schnittstelle überträgt ein analoges Bildsignal?', o: ['VGA', 'HDMI', 'DisplayPort', 'DVI-D'], a: 0, e: 'VGA (D-Sub, 15-polig) ist analog. HDMI, DisplayPort und DVI-D sind digital.' },
+      { t: 'mainboard', q: 'Welche Schnittstellen übertragen Bild UND Ton digital?', o: ['HDMI', 'DisplayPort', 'VGA', 'DVI-D'], a: [0, 1], e: 'HDMI und DisplayPort übertragen Bild und Ton, VGA und DVI nur Bild.' },
+      { t: 'mainboard', q: 'Berechne die Übertragungsrate von PCIe 3.0 x16 in GB/s (8 GT/s, Codierung 128b/130b).', n: 15.754, tol: 0.02, unit: 'GB/s', e: '1 bit × 16 Lanes × 8 GT/s × 128/130 ÷ 8 ≈ 15,754 GB/s' },
+      { t: 'mainboard', q: 'Welche Schnittstellen arbeiten seriell?', o: ['PCIe', 'SATA', 'USB', 'Anbindung des RAM an die CPU'], a: [0, 1, 2], e: 'PCIe, SATA und USB sind seriell. Der RAM ist parallel angebunden.' },
+      { t: 'mainboard', q: 'Was ist ein Vorteil der seriellen gegenüber der parallelen Datenübertragung?', o: ['Keine Laufzeitunterschiede zwischen Leitungen – dadurch höhere Taktraten möglich', 'Es werden mehr Leitungen benötigt', 'Sie funktioniert nur über sehr kurze Strecken', 'Es werden immer 64 Bit gleichzeitig übertragen'], a: 0, e: 'Seriell: weniger Leitungen, günstiger, störungsärmer, höhere Taktraten.' },
+      { t: 'mainboard', q: 'Wie viele Zentimeter entspricht 1 Zoll (inch)?', o: ['2,54 cm', '3,2 cm', '1,54 cm', '25,4 cm'], a: 0, e: '1" = 2,54 cm = 25,4 mm.' },
+      { t: 'mainboard', q: 'Was legt der Formfaktor eines Mainboards NICHT fest?', o: ['Die Farbe der Platine', 'Die äußeren Abmessungen', 'Die Positionen der Befestigungslöcher', 'Die Lage von Sockeln und Anschlüssen'], a: 0, e: 'Die Farbe ist reine Designfrage des Herstellers.' },
+      { t: 'mainboard', q: 'Was bedeutet die M.2-Bezeichnung „2280“?', o: ['22 mm breit, 80 mm lang', '22 mm lang, 80 mm breit', 'PCIe-Generation 2, 80 Lanes', '2.280 MB/s Datenrate'], a: 0, e: 'Die ersten zwei Ziffern sind die Breite, der Rest die Länge in mm.' },
+
+      // ---------- CPU ----------
+      { t: 'cpu', q: 'Wofür steht das EVA-Prinzip?', o: ['Eingabe – Verarbeitung – Ausgabe', 'Erfassen – Verwalten – Archivieren', 'Eingabe – Vergleich – Abschluss', 'Energie – Verbrauch – Ausgabe'], a: 0, e: 'Grundprinzip jeder Datenverarbeitung.' },
+      { t: 'cpu', q: 'Welche Geräte sind Eingabegeräte?', o: ['Tastatur', 'Mikrofon', 'Scanner', 'Drucker', 'Monitor'], a: [0, 1, 2], e: 'Drucker und Monitor sind Ausgabegeräte.' },
+      { t: 'cpu', q: 'Was ist ein Netzteil im Sinne des EVA-Prinzips?', o: ['Keine der EVA-Einheiten', 'Eingabeeinheit', 'Verarbeitungseinheit', 'Speichereinheit'], a: 0, e: 'Das Netzteil versorgt nur mit Strom – es verarbeitet keine Daten (ebenso das Motherboard).' },
+      { t: 'cpu', q: 'Welche Einheit der CPU führt Additionen und logische Vergleiche aus?', o: ['Rechenwerk (ALU)', 'Steuerwerk', 'Cache', 'Adressbus'], a: 0, e: 'Die ALU (Arithmetic Logic Unit) rechnet, das Steuerwerk koordiniert.' },
+      { t: 'cpu', q: 'Was speichert der Befehlszähler?', o: ['Die Adresse des nächsten auszuführenden Befehls', 'Die Anzahl der laufenden Programme', 'Die aktuelle Taktfrequenz', 'Das Zwischenergebnis der ALU'], a: 0, e: 'Zwischenergebnisse speichert der Akkumulator.' },
+      { t: 'cpu', q: 'Über welchen Bus werden Daten in beide Richtungen übertragen (Prozessor ↔ Speicher/Peripherie)?', o: ['Datenbus', 'Adressbus', 'Steuerbus'], a: 0, e: 'Der Datenbus ist bidirektional. Über den Adressbus legt die CPU nur Adressen an.' },
+      { t: 'cpu', q: 'Ein Adressbus hat 32 Leitungen. Wie viel Speicher (in GiB) kann damit adressiert werden, wenn jede Adresse 1 Byte anspricht?', n: 4, tol: 0.001, unit: 'GiB', e: '2³² = 4.294.967.296 Byte = 4 GiB' },
+      { t: 'cpu', q: 'Was versteht man unter dem Von-Neumann-Flaschenhals?', o: ['Programm und Daten teilen sich einen Bus – der Speicherzugriff bremst das System', 'Der CPU-Kühler ist zu klein', 'Der Arbeitsspeicher ist zu klein', 'Die Festplatte ist langsamer als die SSD'], a: 0, e: 'Abhilfe: Caches oder getrennte Busse (Harvard-Architektur).' },
+      { t: 'cpu', q: 'Was kennzeichnet die Harvard-Architektur?', o: ['Getrennte Speicher und Busse für Befehle und Daten', 'Ein gemeinsamer Speicher für Programm und Daten', 'Eine CPU ohne Steuerwerk', 'Befehle werden ausschließlich parallel ausgeführt'], a: 0, e: 'Gemeinsamer Speicher ist das Merkmal der Von-Neumann-Architektur.' },
+      { t: 'cpu', q: 'Welche Cache-Stufe wird von allen CPU-Kernen gemeinsam genutzt?', o: ['L3-Cache', 'L1-Cache', 'L2-Cache', 'Register'], a: 0, e: 'L1 und L2 gehören meist zu einem einzelnen Kern.' },
+      { t: 'cpu', q: 'Was gibt die TDP (Thermal Design Power) an?', o: ['Die maximale Wärmeleistung in Watt unter typischer Last', 'Den maximalen Boost-Takt', 'Die Anzahl der Threads', 'Die Größe des L3-Caches'], a: 0, e: 'Nach der TDP wird der CPU-Kühler ausgelegt.' },
+      { t: 'cpu', q: 'Was ist der Boost-Takt einer CPU?', o: ['Der maximale Takt, den sie kurzzeitig unter bestimmten Bedingungen erreicht', 'Der Takt des Arbeitsspeichers', 'Der Takt im Energiesparmodus', 'Die Anzahl der Takte pro Befehl'], a: 0, e: 'Der Basistakt ist der Normalbetrieb, der Boost-Takt das kurzzeitige Maximum.' },
+      { t: 'cpu', q: 'Mit welchen Windows-Befehlen erhältst du Informationen über die PC-Komponenten und deren Status?', o: ['msinfo32', 'taskmgr', 'ipconfig', 'ping'], a: [0, 1], e: 'ipconfig und ping sind Netzwerkbefehle.' },
+      { t: 'cpu', q: 'Wozu dienen Benchmarktools?', o: ['Zur Messung der Leistungsfähigkeit von Hardwarekomponenten', 'Zur Überwachung der Internetnutzung', 'Zum Übertakten des Arbeitsspeichers', 'Zur Prüfung von Datenschutzbestimmungen'], a: 0, e: 'Standardisierte Tests machen Hardware vergleichbar.' },
+
+      // ---------- RAM ----------
+      { t: 'ram', q: 'Welche Speicher sind flüchtig?', o: ['RAM', 'L1-Cache', 'VRAM', 'ROM', 'Flashspeicher'], a: [0, 1, 2], e: 'ROM und Flash behalten ihre Daten auch ohne Strom.' },
+      { t: 'ram', q: 'Was bedeutet DDR (Double Data Rate)?', o: ['Daten werden bei steigender und fallender Taktflanke übertragen – 2 Transfers pro Takt', 'Das Modul hat die doppelte Speicherkapazität', 'Zwei Module arbeiten gleichzeitig', 'Daten werden zur Sicherheit doppelt gespeichert'], a: 0, e: 'Zwei Module gleichzeitig wäre Dual Channel.' },
+      { t: 'ram', q: 'Was bedeutet „Random Access“ (wahlfreier Zugriff)?', o: ['Jede Speicherzelle kann direkt und etwa gleich schnell adressiert werden', 'Die Daten werden zufällig verteilt gespeichert', 'Der Speicher wird zufällig gelöscht', 'Man muss die Daten der Reihe nach lesen'], a: 0, e: 'Der Reihe nach lesen müsste man bei sequenziellen Speichern wie Magnetbändern.' },
+      { t: 'ram', q: 'Welchen realen Takt (in MHz) hat ein DDR4-3200-Modul?', n: 1600, tol: 0.5, unit: 'MHz', e: '3200 MT/s ÷ 2 Transfers pro Takt = 1600 MHz' },
+      { t: 'ram', q: 'Welche Bandbreite (in GB/s) erreicht DDR4-3200 im Dual-Channel-Betrieb?', n: 51.2, tol: 0.1, unit: 'GB/s', e: '3200 MT/s × 8 Byte × 2 Kanäle = 51.200 MB/s = 51,2 GB/s' },
+      { t: 'ram', q: 'Was gibt die Angabe „CL15“ auf einem RAM-Modul an?', o: ['Die CAS-Latenz in Takten', 'Die Kapazität in GB', 'Die Betriebsspannung', 'Die Anzahl der Speicherchips'], a: 0, e: 'CL = Wartezeit zwischen Anfrage und Datenlieferung, gemessen in Takten.' },
+      { t: 'ram', q: 'Wie lange ist die Latenz in Nanosekunden bei DDR4-2133 mit CL15? (2 Nachkommastellen)', n: 14.06, tol: 0.05, unit: 'ns', e: '15 Takte ÷ 1066,5 MHz ≈ 14,06 ns (realer Takt = 2133 ÷ 2)' },
+      { t: 'ram', q: 'Laut Handbuch-Tabelle: In welche Slots gehören 2 RAM-Module für Dual Channel?', o: ['Channel A Slot 1 + Channel B Slot 2', 'Channel A Slot 1 + Channel A Slot 3', 'Channel B Slot 2 + Channel B Slot 4', 'Channel A Slot 3 + Channel B Slot 4'], a: 0, e: 'Je ein Modul pro Kanal (A und B).' },
+      { t: 'ram', q: 'Was sollte für optimalen Dual-Channel-Betrieb gelten?', o: ['Beide Module haben die gleiche Größe', 'Beide Module laufen mit derselben Taktrate', 'Beide Module stecken im selben Kanal', 'Die Module stammen von verschiedenen Herstellern'], a: [0, 1], e: 'Ideal ist ein Kit aus zwei identischen Modulen, verteilt auf Kanal A und B.' },
+      { t: 'ram', q: 'Was bedeutet SDRAM?', o: ['Synchronous Dynamic RAM – arbeitet synchron zum Systemtakt', 'Static Data RAM – speichert ohne Strom', 'Single Data RAM – ein Transfer pro Takt', 'Solid Disk RAM – RAM auf einer SSD'], a: 0, e: 'Durch den gemeinsamen Takt arbeitet SDRAM effizienter mit der CPU zusammen.' },
+      { t: 'ram', q: 'Passen DDR4-Module in einen DDR5-Steckplatz?', o: ['Nein – Technik und Position der Kerbe sind unterschiedlich', 'Ja, sie laufen dann nur langsamer', 'Ja, aber nur im Dual Channel', 'Ja, wenn man das UEFI aktualisiert'], a: 0, e: 'Die Kerbe verhindert, dass falsche Module eingesteckt werden.' },
+      { t: 'ram', q: 'Was ist die Hauptaufgabe des Arbeitsspeichers?', o: ['Daten und Programme temporär bereitstellen, damit die CPU schnell darauf zugreifen kann', 'Daten dauerhaft speichern', 'Das Monitorbild berechnen', 'Die Spannung für die CPU erzeugen'], a: 0, e: 'Der RAM ist schneller als SSD/HDD, aber flüchtig.' },
+
+      // ---------- Massenspeicher ----------
+      { t: 'massenspeicher', q: 'Welche Vorteile hat eine SSD gegenüber einer HDD?', o: ['Schnellere Lese- und Schreibgeschwindigkeit', 'Leiser im Betrieb', 'Resistenter gegen Erschütterungen', 'Günstiger pro Gigabyte'], a: [0, 1, 2], e: 'Pro GB ist die HDD (noch) günstiger.' },
+      { t: 'massenspeicher', q: 'Wofür eignen sich HDDs heute besonders?', o: ['Günstige Archivierung großer Datenmengen und Backups', 'Als Systemlaufwerk in Notebooks', 'Für Server mit hoher I/O-Last (Datenbanken)', 'In Smartphones'], a: 0, e: 'HDDs punkten mit geringem Preis pro GB und hoher Kapazität.' },
+      { t: 'massenspeicher', q: 'Was gibt der Wert TBW einer SSD an?', o: ['Die Datenmenge, die laut Hersteller insgesamt auf die SSD geschrieben werden darf', 'Die maximale Lesegeschwindigkeit', 'Die maximale Betriebstemperatur', 'Die Anzahl der Flash-Chips'], a: 0, e: 'TBW = Total Bytes Written – ein Maß für die Lebensdauer.' },
+      { t: 'massenspeicher', q: 'Eine SSD hat 600 TBW. Du schreibst 100 GB pro Tag. Nach wie vielen Jahren ist der TBW-Wert erreicht? (1 Nachkommastelle)', n: 16.44, tol: 0.1, unit: 'Jahre', e: '600 TB × 1000 ÷ 100 GB/Tag = 6000 Tage ÷ 365 ≈ 16,4 Jahre' },
+      { t: 'massenspeicher', q: 'Welches Protokoll nutzen schnelle M.2-SSDs über PCIe-Lanes?', o: ['NVMe', 'SATA', 'IDE', 'USB 2.0'], a: 0, e: 'NVMe (Non-Volatile Memory Express) wurde speziell für Flash-Speicher entwickelt.' },
+      { t: 'massenspeicher', q: 'Welche Datenrate erreicht eine SATA-SSD maximal ungefähr?', o: ['ca. 600 MB/s', 'ca. 7.000 MB/s', 'ca. 60 MB/s', 'ca. 6.000 MB/s'], a: 0, e: 'SATA III ist auf 6 Gbit/s begrenzt (≈ 600 MB/s). ~7.000 MB/s schafft NVMe mit PCIe 4.0 x4.' },
+      { t: 'massenspeicher', q: 'Wie viele Bits pro Zelle speichert TLC-Flash?', o: ['3', '1', '2', '4'], a: 0, e: 'SLC = 1, MLC = 2, TLC = 3 (Triple), QLC = 4 (Quad).' },
+      { t: 'massenspeicher', q: 'Wie viele unterschiedliche Ladungszustände muss eine QLC-Zelle unterscheiden?', n: 16, tol: 0, unit: 'Zustände', e: '4 Bit → 2⁴ = 16 Zustände' },
+      { t: 'massenspeicher', q: 'Welcher Flash-Typ ist am haltbarsten?', o: ['SLC', 'MLC', 'TLC', 'QLC'], a: 0, e: 'SLC: ca. 100.000 Schreibzyklen, QLC nur ca. 1.000.' },
+      { t: 'massenspeicher', q: 'Welcher Flash-Typ ist heute Standard bei Consumer-SSDs?', o: ['TLC', 'SLC', 'MLC', 'QLC'], a: 0, e: 'TLC bietet ein gutes Preis-Leistungs-Verhältnis mit ausreichender Haltbarkeit.' },
+      { t: 'massenspeicher', q: 'Warum ist QLC-Flash pro Gigabyte günstiger als SLC?', o: ['Eine Zelle speichert 4 statt 1 Bit – auf gleicher Chipfläche passt mehr', 'QLC-SSDs brauchen keinen Controller', 'QLC wird nicht gekühlt', 'QLC hat weniger Anschlüsse'], a: 0, e: 'Höhere Speicherdichte = geringere Kosten pro GB, aber weniger Haltbarkeit.' },
+      { t: 'massenspeicher', q: 'Was ist ein Nachteil von SSDs?', o: ['Die Speicherzellen haben begrenzte Schreibzyklen', 'Sie sind lauter als HDDs', 'Sie verbrauchen mehr Strom als HDDs', 'Sie sind empfindlicher gegen Stöße'], a: 0, e: 'Weitere Nachteile: höherer Preis pro GB, schwierigere Datenwiederherstellung.' },
+
+      // ---------- GPU ----------
+      { t: 'gpu', q: 'Wo kann sich der Grafikprozessor (GPU) befinden?', o: ['Im Prozessor (integrierte Grafik)', 'Auf dem Mainboard (Chipsatz-Grafik)', 'Auf einer dedizierten Grafikkarte', 'Im Netzteil'], a: [0, 1, 2], e: 'Chipsatz-Grafik auf dem Mainboard ist heute selten.' },
+      { t: 'gpu', q: 'Welchen Nachteil hat eine im Prozessor integrierte Grafik?', o: ['Sie nutzt den Arbeitsspeicher des Computers mit', 'Sie braucht einen eigenen PCIe-Slot', 'Sie verbraucht viel mehr Strom als eine Grafikkarte', 'Sie kann kein Bild ausgeben'], a: 0, e: 'Dedizierte Karten haben eigenen VRAM.' },
+      { t: 'gpu', q: 'In welcher Einheit wird die Bildwiederholrate angegeben?', o: ['Hz bzw. fps', 'GHz', 'MB/s', 'dpi'], a: 0, e: 'fps = frames per second (Bilder pro Sekunde).' },
+      { t: 'gpu', q: 'Berechne den Ausgabepuffer für 1920 × 1080 Pixel bei 24 Bit Farbtiefe in MiB. (2 Nachkommastellen)', n: 5.93, tol: 0.01, unit: 'MiB', e: '1920 × 1080 × 24 Bit ÷ 8 = 6.220.800 Byte ÷ 1024 ÷ 1024 ≈ 5,93 MiB' },
+      { t: 'gpu', q: 'Was sind CUDA-Kerne?', o: ['Die Shadereinheiten von NVIDIA-GPUs', 'Die CPU-Kerne von Intel-Prozessoren', 'Speicherchips auf der Grafikkarte', 'Bildausgänge der Grafikkarte'], a: 0, e: 'Bei AMD heißen sie Stream-Prozessoren.' },
+      { t: 'gpu', q: 'Was berechnet der Pixel-Shader?', o: ['Die Farbe jedes einzelnen Bildpunkts', 'Die Position der Eckpunkte eines 3D-Modells', 'Die Taktfrequenz der GPU', 'Die Lüftergeschwindigkeit'], a: 0, e: 'Die Eckpunkte berechnet der Vertex-Shader.' },
+      { t: 'gpu', q: 'Was bedeutet „Unified Shader Architecture“?', o: ['Jede Shadereinheit kann jede Shader-Art ausführen', 'Alle GPUs haben gleich viele Shader', 'CPU und GPU teilen sich die Shader', 'Vertex- und Pixel-Shader sind getrennte Einheiten'], a: 0, e: 'So wird die GPU immer gleichmäßig ausgelastet.' },
+      { t: 'gpu', q: 'Eine GPU hat 6.144 Shadereinheiten und taktet mit 2,5 GHz. Wie viele TFLOPS schafft sie theoretisch (Formel: Shader × Takt × 2)?', n: 30.72, tol: 0.05, unit: 'TFLOPS', e: '6.144 × 2,5 GHz × 2 = 30.720 GFLOPS = 30,72 TFLOPS' },
+      { t: 'gpu', q: 'Für welche Aufgaben eignen sich GPUs besonders gut?', o: ['Training von KI-Modellen', 'Passwörter per Brute Force knacken', 'Berechnungen, bei denen jeder Schritt vom vorherigen abhängt', 'Das Betriebssystem starten'], a: [0, 1], e: 'GPUs sind stark bei vielen gleichartigen, unabhängigen Berechnungen.' },
+      { t: 'gpu', q: 'Hinter welchem Anschluss kann sich eine Thunderbolt-Schnittstelle verbergen?', o: ['USB-C', 'VGA', 'DVI', 'HDMI'], a: 0, e: 'Thunderbolt 3/4/5 nutzt den USB-C-Stecker.' },
+      { t: 'gpu', q: 'Was ist OpenCL?', o: ['Eine herstellerunabhängige Plattform für allgemeine Berechnungen auf GPUs', 'Eine NVIDIA-exklusive Programmierschnittstelle', 'Ein Grafikkartenhersteller', 'Ein Monitoranschluss'], a: 0, e: 'Die NVIDIA-eigene Alternative heißt CUDA.' },
+      { t: 'gpu', q: 'Warum kann man die Shader-Anzahl einer NVIDIA- und einer AMD-Karte nicht direkt vergleichen?', o: ['Die Architekturen unterscheiden sich – eine Einheit leistet nicht gleich viel', 'AMD zählt die Shader doppelt', 'NVIDIA-Karten haben keine Shader', 'Die Shader-Anzahl ist bei allen Karten gleich'], a: 0, e: 'Vergleichbar ist die Zahl nur innerhalb derselben Architektur.' },
+      { t: 'gpu', q: 'Welche Grafik-APIs gibt es?', o: ['DirectX', 'OpenGL', 'Vulkan', 'NVMe', 'SATA'], a: [0, 1, 2], e: 'NVMe und SATA sind Speicherprotokolle.' }
+    ];
+
+    /* =========================================================
+       GESAMT-QUIZ – Ablauf
+       ========================================================= */
+    function initFinalQuiz() {
+      const MOD = 'quiz';
+      Progress.register(MOD, ['quiz-pass']);
+      const TOPICS = { mainboard: 'Mainboard', cpu: 'CPU', ram: 'Arbeitsspeicher (RAM)', massenspeicher: 'Massenspeicher', gpu: 'Grafikkarte (GPU)' };
+      const BEST_KEY = 'bs-quiz-best';
+      const startEl = $('#fq-start'), runEl = $('#fq-run'), resEl = $('#fq-result');
+      const fmtN = n => n.toLocaleString('de-DE', { maximumFractionDigits: 3 });
+      const grade = p => p >= 92 ? ['1', 'sehr gut'] : p >= 81 ? ['2', 'gut'] : p >= 67 ? ['3', 'befriedigend']
+        : p >= 50 ? ['4', 'ausreichend'] : p >= 30 ? ['5', 'mangelhaft'] : ['6', 'ungenügend'];
+      const correctText = q => q.n !== undefined ? `${fmtN(q.n)} ${q.unit}` : [].concat(q.a).map(i => q.o[i]).join(' · ');
+      let qs = [], idx = 0, results = [], checked = false;
+
+      $('#fq-topics').innerHTML = Object.entries(TOPICS).map(([k, v]) =>
+        `<label class="toggle"><input type="checkbox" value="${k}" checked> ${v} <span>(${QUIZ_BANK.filter(q => q.t === k).length})</span></label>`).join('');
+
+      const showBest = () => {
+        let b = null;
+        try { b = JSON.parse(localStorage.getItem(BEST_KEY)); } catch {}
+        $('#fq-best').textContent = b ? `🏆 Dein bestes Ergebnis: ${b.pct} % (${b.right} / ${b.total} Fragen) – Note ${grade(b.pct)[0]} am ${b.date}` : `Fragenpool: ${QUIZ_BANK.length} Fragen. Noch kein Ergebnis gespeichert.`;
+      };
+
+      const pickQuestions = () => {
+        const topics = $$('#fq-topics input:checked').map(i => i.value);
+        const n = +$('#fq-count').value;
+        const pools = topics.map(t => shuffle(QUIZ_BANK.filter(q => q.t === t)));
+        const out = [];
+        while (out.length < n && pools.some(p => p.length)) pools.forEach(p => { if (p.length && out.length < n) out.push(p.shift()); });
+        return shuffle(out);
+      };
+
+      const begin = list => {
+        qs = list.map(q => ({ ...q, order: q.o ? shuffle(q.o.map((_, i) => i)) : null }));
+        idx = 0; results = [];
+        startEl.hidden = true; resEl.hidden = true; runEl.hidden = false;
+        render();
+        runEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+
+      const render = () => {
+        const q = qs[idx];
+        checked = false;
+        $('#fq-pos').textContent = `Frage ${idx + 1} von ${qs.length}`;
+        $('#fq-topic').textContent = TOPICS[q.t];
+        $('#fq-bar').style.width = (idx / qs.length) * 100 + '%';
+        $('#fq-q').textContent = q.q;
+        const multi = Array.isArray(q.a);
+        $('#fq-hint').textContent = q.n !== undefined ? 'Rechenaufgabe – gib das Ergebnis als Zahl ein (Komma oder Punkt).'
+          : multi ? 'Mehrere Antworten sind richtig.' : 'Eine Antwort ist richtig.';
+        $('#fq-body').innerHTML = q.n !== undefined
+          ? `<div class="calc"><label>Ergebnis<input class="num-input" id="fq-num" inputmode="decimal" aria-label="Ergebnis"></label><span style="padding-bottom:.4rem">${q.unit}</span></div>`
+          : `<div class="options">${q.order.map(i => `<button type="button" class="option" data-i="${i}" aria-pressed="false"><span class="mark ${multi ? 'box' : ''}"></span>${q.o[i]}</button>`).join('')}</div>`;
+        setFeedback($('#fq-fb'), null, '');
+        $('[data-fq="next"]', runEl).textContent = 'Antwort prüfen';
+        $('#fq-num')?.addEventListener('keydown', e => { if (e.key === 'Enter') $('[data-fq="next"]', runEl).click(); });
+        $('#fq-num')?.focus();
+      };
+
+      const evaluate = () => {
+        const q = qs[idx], fb = $('#fq-fb');
+        let ok, given;
+        if (q.n !== undefined) {
+          const raw = $('#fq-num').value.trim();
+          if (!raw) return setFeedback(fb, false, 'Bitte gib ein Ergebnis ein.');
+          const v = parseFloat(raw.replace(',', '.')), v2 = parseFloat(raw.replace(/\./g, '').replace(',', '.'));
+          ok = [v, v2].some(x => Math.abs(x - q.n) <= q.tol + 1e-9);
+          given = raw + ' ' + q.unit;
+          $('#fq-num').classList.add(ok ? 'ok' : 'bad'); $('#fq-num').disabled = true;
+        } else {
+          const opts = $$('#fq-body .option');
+          const sel = opts.filter(o => o.getAttribute('aria-pressed') === 'true').map(o => +o.dataset.i);
+          if (!sel.length) return setFeedback(fb, false, 'Bitte wähle eine Antwort aus.');
+          const corr = [].concat(q.a);
+          ok = sel.length === corr.length && sel.every(i => corr.includes(i));
+          given = sel.map(i => q.o[i]).join(' · ');
+          opts.forEach(o => {
+            const i = +o.dataset.i, s = sel.includes(i), c = corr.includes(i);
+            o.classList.toggle('ok', c && s); o.classList.toggle('bad', s && !c); o.classList.toggle('missed', c && !s);
+            o.disabled = true;
+          });
+        }
+        results.push({ q, ok, given });
+        checked = true;
+        setFeedback(fb, ok, (ok ? '✓ Richtig! ' : `✗ Leider falsch. Richtig: ${correctText(q)}. `) + q.e);
+        $('[data-fq="next"]', runEl).textContent = idx === qs.length - 1 ? 'Zur Auswertung' : 'Weiter';
+      };
+
+      const finish = () => {
+        runEl.hidden = true;
+        const right = results.filter(r => r.ok).length, total = results.length;
+        const pct = Math.round((right / total) * 100), [g, gText] = grade(pct);
+        const date = new Date().toLocaleDateString('de-DE');
+        let best = null;
+        try { best = JSON.parse(localStorage.getItem(BEST_KEY)); } catch {}
+        const isBest = total >= 10 && (!best || pct > best.pct);
+        if (isBest) { try { localStorage.setItem(BEST_KEY, JSON.stringify({ pct, right, total, date })); } catch {} }
+        if (pct >= 50 && total >= 10) Progress.done(MOD, 'quiz-pass');
+
+        const byTopic = Object.keys(TOPICS).map(t => {
+          const rs = results.filter(r => r.q.t === t);
+          return { t, n: rs.length, ok: rs.filter(r => r.ok).length };
+        }).filter(x => x.n);
+        const wrong = results.filter(r => !r.ok);
+        const color = pct >= 67 ? 'var(--success)' : pct >= 50 ? '#eab308' : 'var(--danger)';
+
+        resEl.innerHTML = `
+          <div class="quiz">
+            <div class="fq-score">
+              <div class="fq-ring" style="--p:${pct};--c:${color}"><span>${pct} %</span></div>
+              <div>
+                <p class="fq-grade">Note ${g} (${gText})</p>
+                <p style="margin:0">${right} von ${total} Fragen richtig${isBest ? ' · 🏆 neuer Bestwert!' : ''}</p>
+                <p class="muted" style="margin:.25rem 0 0;font-size:.85rem">IHK-Notenschlüssel: ab 92 % = 1 · 81 % = 2 · 67 % = 3 · 50 % = 4 · 30 % = 5</p>
+                ${total < 10 ? '<p class="muted" style="margin:.25rem 0 0;font-size:.85rem">Hinweis: Durchgänge mit weniger als 10 Fragen zählen nicht für Bestwert und Fortschritt.</p>' : ''}
+              </div>
+            </div>
+            <p class="quiz-q">Ergebnis nach Themen</p>
+            ${byTopic.map(x => {
+              const p = Math.round((x.ok / x.n) * 100);
+              return `<div class="tb-row">
+                <span>${TOPICS[x.t]}</span>
+                <div class="progress-bar"><span style="width:${p}%;${p < 67 ? 'background:' + (p < 50 ? 'var(--danger)' : '#eab308') : ''}"></span></div>
+                <span class="muted" style="font-size:.85rem">${x.ok}/${x.n}</span>
+                ${p < 67 ? `<button type="button" class="btn" data-goto="${x.t}">Wiederholen</button>` : '<span aria-hidden="true">✓</span>'}
+              </div>`;
+            }).join('')}
+            <div class="quiz-actions">
+              <button type="button" class="btn btn-primary" data-fq="new">Neues Quiz</button>
+              ${wrong.length ? `<button type="button" class="btn" data-fq="retry">Nur die ${wrong.length} falschen Fragen wiederholen</button>` : ''}
+            </div>
+          </div>
+          ${wrong.length ? `<p class="quiz-q" style="margin-top:1.5rem">Deine Fehler im Überblick</p>
+            ${wrong.map(r => `<div class="review-item">
+              <p><strong>${r.q.q}</strong></p>
+              <p class="ya">Deine Antwort: ${r.given}</p>
+              <p class="ra">Richtig: ${correctText(r.q)}</p>
+              <p class="muted">${r.q.e}</p>
+            </div>`).join('')}` : '<p class="feedback ok" style="margin-top:1rem">Fehlerfrei – stark! 🎉</p>'}`;
+        resEl.hidden = false;
+        showBest();
+        resEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+
+      $('#fq-go').addEventListener('click', () => {
+        const list = pickQuestions();
+        if (!list.length) return setFeedback($('#fq-start-fb'), false, 'Bitte wähle mindestens ein Thema aus.');
+        setFeedback($('#fq-start-fb'), null, '');
+        begin(list);
+      });
+
+      runEl.addEventListener('click', (e) => {
+        const opt = e.target.closest('.option');
+        const act = e.target.closest('[data-fq]')?.dataset.fq;
+        if (opt && !checked) {
+          const q = qs[idx];
+          if (Array.isArray(q.a)) opt.setAttribute('aria-pressed', opt.getAttribute('aria-pressed') !== 'true');
+          else $$('#fq-body .option').forEach(o => o.setAttribute('aria-pressed', o === opt));
+          setFeedback($('#fq-fb'), null, '');
+        }
+        if (act === 'next') {
+          if (!checked) return evaluate();
+          if (idx < qs.length - 1) { idx++; render(); } else finish();
+        }
+        if (act === 'abort' && confirm('Quiz wirklich abbrechen? Dein Fortschritt in diesem Durchgang geht verloren.')) {
+          runEl.hidden = true; startEl.hidden = false;
+        }
+      });
+
+      resEl.addEventListener('click', (e) => {
+        const act = e.target.closest('[data-fq]')?.dataset.fq;
+        const go = e.target.closest('[data-goto]');
+        if (act === 'new') { resEl.hidden = true; startEl.hidden = false; startEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        if (act === 'retry') begin(shuffle(results.filter(r => !r.ok).map(r => r.q)));
+        if (go) location.hash = `#/itt1/${go.dataset.goto}`;
+      });
+
+      showBest();
+    }
+
+    /* =========================================================
        MODUL: GRAFIKKARTE (GPU)
        ========================================================= */
     function initGpu() {
@@ -3336,6 +3670,7 @@
     initRam();
     initMassenspeicher();
     initGpu();
+    initFinalQuiz();
     initOpenTasks();
     updateProgressUI();
     isLoggedIn() ? showApp() : showLogin();
