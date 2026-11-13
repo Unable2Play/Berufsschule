@@ -268,7 +268,7 @@
     .box.info  { border-left-color: var(--accent); }
     .box.task  { border-left-color: #f59e0b; }
     .box.merke { border-left-color: var(--success); }
-    .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 0 1rem; }
+    .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 0 1rem; }
     .figure { margin: 1rem 0; padding: .75rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); }
     .figure svg { display: block; width: 100%; height: auto; margin: 0 auto; }
     .figure figcaption { margin-top: .5rem; font-size: .8rem; color: var(--text-muted); text-align: center; }
@@ -423,6 +423,88 @@
       .module-nav ol { grid-auto-flow: column; grid-auto-columns: max-content; }
       .module-nav button { padding: .5rem .8rem; white-space: nowrap; }
     }
+    /* ---------- Zuordnung pro Aussage ---------- */
+    .assign { display: grid; gap: .5rem; }
+    .assign-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem 1rem; align-items: center; padding: .6rem .75rem; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .assign-row.ok  { border-color: var(--success); }
+    .assign-row.bad { border-color: var(--danger); }
+    .assign-opts { display: flex; flex-wrap: wrap; gap: .35rem; justify-content: flex-end; }
+    .assign-opt { padding: .3rem .7rem; font-size: .85rem; color: var(--text-muted); background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 999px; }
+    .assign-opt:hover { border-color: var(--accent); color: var(--text); }
+    .assign-opt[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .assign-row.ok  .assign-opt[aria-pressed="true"] { background: var(--success); border-color: var(--success); color: #0d1117; }
+    .assign-row.bad .assign-opt[aria-pressed="true"] { background: var(--danger); border-color: var(--danger); }
+
+    /* ---------- Memory-Spiel ---------- */
+    .memory { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .6rem; }
+    .mem-card {
+      position: relative; min-height: 118px; padding: .6rem;
+      display: grid; place-items: center; text-align: center;
+      font-size: .85rem; line-height: 1.35;
+      border: 2px solid; border-radius: var(--radius-sm);
+      transition: transform .15s, background .2s;
+    }
+    .mem-card.term { border-color: #3b82f6; background: rgba(59,130,246,.2); }
+    .mem-card.def  { border-color: #f43f5e; background: rgba(244,63,94,.16); }
+    .mem-card .mem-front { visibility: hidden; }
+    .mem-card::before { content: "?"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 1.8rem; font-weight: 800; color: rgba(255,255,255,.35); }
+    .mem-card.open::before, .mem-card.matched::before { content: none; }
+    .mem-card.open .mem-front, .mem-card.matched .mem-front { visibility: visible; }
+    .mem-card.open { background: var(--bg-elev-2); }
+    .mem-card.term .mem-front { font-weight: 700; font-size: .95rem; }
+    .mem-card.matched { border-color: var(--success); background: rgba(63,185,80,.12); cursor: default; }
+    .mem-card:not(.open):not(.matched):hover { transform: translateY(-2px); }
+    .mem-legend { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .85rem; color: var(--text-muted); margin-bottom: .75rem; }
+    .mem-legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: .35rem; border-radius: 3px; vertical-align: -1px; }
+    .mem-legend .l-term::before { background: #3b82f6; }
+    .mem-legend .l-def::before  { background: #f43f5e; }
+
+    /* ---------- EVA-Schaubild ---------- */
+    .eva { display: grid; grid-template-columns: 1fr auto 2.3fr auto 1fr; gap: .5rem; align-items: center; margin-bottom: 1rem; }
+    .eva-col { display: grid; gap: .6rem; justify-items: center; text-align: center; }
+    .eva-title { font-weight: 700; padding: 0 1rem .2rem; border-bottom: 2px solid var(--text-muted); }
+    .eva-box { width: 100%; display: grid; gap: .6rem; justify-items: center; padding: .7rem .5rem; background: var(--bg-elev); border: 2px solid var(--border); border-radius: var(--radius-sm); }
+    .eva-box.cpu { border-color: var(--accent); }
+    .eva-box.mem { border-color: var(--accent-2); }
+    .eva-pair { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; }
+    .eva-bus { display: flex; align-items: center; gap: .4rem; color: var(--text-muted); }
+    .eva-bus > span { font-size: 1.3rem; }
+    .eva-arrow { font-size: 1.6rem; color: var(--text-muted); }
+
+    /* ---------- Schaubild mit Lücken-Overlay ---------- */
+    .overlay-fig { position: relative; max-width: 640px; margin: 0 auto 1rem; }
+    .overlay-fig svg { display: block; width: 100%; height: auto; }
+    .overlay-fig .ov { position: absolute; transform: translate(-50%, -50%); }
+    .overlay-fig .gap { min-width: 8rem; background: var(--bg-elev); }
+
+    /* ---------- Glossar & Datenblatt ---------- */
+    .glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: .75rem; margin: 1rem 0; }
+    .gl-item { padding: .85rem 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .gl-item dt { font-weight: 700; color: var(--accent-2); margin-bottom: .25rem; }
+    .gl-item dd { margin: 0; font-size: .92rem; color: var(--text-muted); }
+    .sheet { margin-bottom: 1rem; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .sheet-title { padding: .7rem 1rem; font-size: 1.1rem; font-weight: 800; background: var(--bg-elev-2); border-bottom: 1px solid var(--border); }
+    .sheet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)); gap: 1px; background: var(--border); }
+    .spec { display: grid; gap: .15rem; align-content: start; padding: .65rem .8rem; background: var(--bg-elev); }
+    .spec-k { font-size: .72rem; letter-spacing: .03em; text-transform: uppercase; color: var(--text-muted); }
+    .spec-v { font-weight: 700; }
+    .spec .gap { display: block; width: 100%; margin: .35rem 0 0; }
+    .range-row { display: grid; gap: .4rem; }
+    #addr-out { white-space: normal; }
+    .range-row input { width: 100%; accent-color: var(--accent); }
+
+    @media (max-width: 760px) {
+      .eva { grid-template-columns: 1fr; }
+      .eva-arrow { justify-self: center; transform: rotate(90deg); }
+      .assign-row { grid-template-columns: 1fr; }
+      .assign-opts { justify-content: flex-start; }
+      .overlay-fig .gap { min-width: 6.5rem; font-size: .8rem; min-height: 1.6rem; padding: 0 .4rem; }
+    }
+    @media (max-width: 520px) {
+      .memory { grid-template-columns: repeat(2, 1fr); }
+      .mem-card { min-height: 104px; font-size: .78rem; }
+    }
+
     @media (max-width: 960px) {
       .board-wrap { grid-template-columns: 1fr; grid-template-areas: "ctrl" "svg" "list"; padding: .75rem; }
       .mb-svg { max-height: 70vh; }
@@ -972,7 +1054,160 @@
 
             <article class="module-panel" data-module="cpu" role="tabpanel" hidden>
               <h2>2. CPU</h2>
-              <div id="module-cpu" class="placeholder">Platzhalter für CPU-Modul</div>
+              <!-- ============ MODUL CPU ============ -->
+              <div id="module-cpu" class="lesson">
+
+                <div class="lesson-head">
+                  <p class="lesson-intro">Die <strong>CPU</strong> (Central Processing Unit, Prozessor) ist das Herzstück des Computers. Sie führt Programmbefehle aus und verarbeitet Daten. In diesem Kapitel lernst du, wie ein Computer grundsätzlich arbeitet, wie die CPU aufgebaut ist und wie man ihre Leistungsdaten liest.</p>
+                  <div class="progress" data-progress="cpu">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="cpu">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="cpu-s1">1 · EVA-Prinzip</button>
+                    <button type="button" data-scroll="cpu-s2">2 · E/V/A-Geräte</button>
+                    <button type="button" data-scroll="cpu-s3">3 · Aufbau der CPU</button>
+                    <button type="button" data-scroll="cpu-s4">4 · Von Neumann</button>
+                    <button type="button" data-scroll="cpu-s5">5 · Bus-System</button>
+                    <button type="button" data-scroll="cpu-s6">6 · Tools &amp; Benchmarks</button>
+                    <button type="button" data-scroll="cpu-s7">7 · Leistungsdaten</button>
+                    <button type="button" data-scroll="cpu-s8">8 · Datenblatt</button>
+                  </nav>
+                </div>
+
+                <!-- ---------- 1. EVA ---------- -->
+                <section class="lesson-section" id="cpu-s1">
+                  <h3><span class="sec-num">1</span> Das EVA-Prinzip</h3>
+                  <p>Das <strong>EVA-Prinzip</strong> ist ein Grundkonzept der Informatik und steht für <strong>E</strong>ingabe, <strong>V</strong>erarbeitung und <strong>A</strong>usgabe. Es beschreibt, wie Daten in einem Computersystem verarbeitet werden.</p>
+                  <div class="two-col">
+                    <div class="box info"><span class="box-title">Eingabe (Input)</span>Daten gelangen ins System, z. B. Tastatureingaben, Mausklicks, Sensordaten oder Dateien. <span class="muted">Eingabegeräte: Tastatur, Maus, Scanner, Mikrofon, Kamera</span></div>
+                    <div class="box info"><span class="box-title">Verarbeitung (Processing)</span>Programme analysieren, verändern oder werten die Daten aus. Zuständig ist die <strong>CPU</strong> mit <strong>Steuerwerk</strong> und <strong>Rechenwerk</strong>. Aus einfachen Rechenoperationen entstehen komplexe Aufgaben wie Bildverarbeitung oder KI.</div>
+                    <div class="box info"><span class="box-title">Ausgabe (Output)</span>Die Ergebnisse werden als Text, Bild, Ton oder Aktion ausgegeben. <span class="muted">Ausgabegeräte: Monitor, Drucker, Lautsprecher</span></div>
+                    <div class="box info"><span class="box-title">Speicher</span>Speicher wird für Eingabe, Ausgabe und Zwischenergebnisse genutzt. Er gilt deshalb als eigene Einheit (Speicherwerk), die über den <strong>Speicherbus</strong> an die CPU angeschlossen ist. <span class="muted">Beispiele: Cache, RAM, ROM, SSD</span></div>
+                  </div>
+                  <p>Setze die Komponenten an die richtige Position im Schaubild.</p>
+                  <div id="cpu-quiz-eva"></div>
+                </section>
+
+                <!-- ---------- 2. Geräte zuordnen ---------- -->
+                <section class="lesson-section" id="cpu-s2">
+                  <h3><span class="sec-num">2</span> Eingabe, Verarbeitung, Speicher oder Ausgabe?</h3>
+                  <p>Gib an, ob es sich um eine Eingabe-, Verarbeitungs-, Speicher- oder Ausgabeeinheit handelt – oder um keine davon.</p>
+                  <div id="cpu-quiz-io"></div>
+                </section>
+
+                <!-- ---------- 3. Aufbau der CPU ---------- -->
+                <section class="lesson-section" id="cpu-s3">
+                  <h3><span class="sec-num">3</span> Aufbau des Prozessors</h3>
+                  <p>Die Bestandteile der CPU arbeiten eng zusammen, um Befehle auszuführen und Daten zu verarbeiten:</p>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Steuerwerk (Control Unit, CU)</dt><dd>Koordiniert den gesamten Ablauf in der CPU. Es liest Befehle aus dem Arbeitsspeicher, interpretiert sie und sorgt dafür, dass die richtigen Operationen zur richtigen Zeit ausgeführt werden. Es erzeugt Steuer- und Taktimpulse.</dd></div>
+                    <div class="gl-item"><dt>Rechenwerk (Arithmetic Logic Unit, ALU)</dt><dd>Führt arithmetische (z. B. Addition, Subtraktion) und logische Operationen (z. B. Vergleiche, UND, ODER) aus – also die eigentlichen Berechnungen.</dd></div>
+                    <div class="gl-item"><dt>Register</dt><dd>Ultraschnelle Speicherplätze in der CPU. Beispiele: der <strong>Befehlszähler</strong> (Adresse des nächsten Befehls) und der <strong>Akkumulator</strong> (Zwischenergebnisse).</dd></div>
+                    <div class="gl-item"><dt>Cache-Speicher</dt><dd>Kleiner, sehr schneller Zwischenspeicher für häufig benötigte Daten und Befehle. Er verkürzt die Zugriffszeit auf den RAM. Stufen: <strong>L1</strong> (klein, am schnellsten), <strong>L2</strong>, <strong>L3</strong> (groß, langsamer, von allen Kernen gemeinsam genutzt).</dd></div>
+                    <div class="gl-item"><dt>Bus-System</dt><dd>Verbindet die CPU mit Arbeitsspeicher und Ein-/Ausgabegeräten: <strong>Datenbus</strong> (Daten), <strong>Adressbus</strong> (Speicheradressen), <strong>Steuerbus</strong> (Steuerbefehle).</dd></div>
+                  </dl>
+                  <p><strong>Memory-Spiel:</strong> Finde die passenden Pärchen aus Begriff und Erklärung.</p>
+                  <div id="cpu-quiz-memory"></div>
+                </section>
+
+                <!-- ---------- 4. Von Neumann ---------- -->
+                <section class="lesson-section" id="cpu-s4">
+                  <h3><span class="sec-num">4</span> Von-Neumann-Architektur</h3>
+                  <p>Die <strong>Von-Neumann-Architektur</strong> wurde in den 1940er-Jahren vom Mathematiker und Physiker John von Neumann entwickelt. Sie beschreibt den Aufbau eines Computers, bei dem <strong>Programm und Daten im selben Speicher</strong> liegen. Bis heute ist sie die Grundlage der meisten Computer.</p>
+                  <div class="box info">
+                    <span class="box-title">Wesentliche Merkmale</span>
+                    <ul>
+                      <li><strong>Gemeinsamer Speicher</strong> für Befehle (Programm) und Daten. Der RAM besteht aus gleich großen, fortlaufend nummerierten Speicherzellen.</li>
+                      <li><strong>Zentrale Verarbeitungseinheit</strong> (CPU) aus Steuerwerk und Rechenwerk (ALU)</li>
+                      <li><strong>Sequenzielle Verarbeitung:</strong> Befehle werden nacheinander aus dem Speicher gelesen und ausgeführt (außer bei Sprungbefehlen).</li>
+                    </ul>
+                  </div>
+                  <figure class="figure" style="max-width:640px">
+                    <svg viewBox="0 0 600 230" role="img" aria-label="Vergleich Von-Neumann- und Harvard-Architektur">
+                      <text x="150" y="20" class="svg-text" font-size="15" font-weight="700" text-anchor="middle">Von-Neumann</text>
+                      <text x="450" y="20" class="svg-text" font-size="15" font-weight="700" text-anchor="middle">Harvard</text>
+                      <path d="M300 30 V220" stroke="#2a323d" stroke-dasharray="4 4"/>
+                      <g class="bd-line"><path d="M150 95 V145 M400 95 V145 M500 95 V145"/></g>
+                      <path d="M140 108 L160 108 L153 120 L160 132 L140 132 L147 120 Z" fill="#f85149"/>
+                      <text x="168" y="124" fill="#f85149" font-size="11" font-weight="700">Flaschenhals</text>
+                      <g class="bd-box cpu"><rect x="60" y="35" width="180" height="60" rx="6"/><text x="150" y="56">CPU</text><text x="150" y="78" font-size="11">Steuerwerk · Rechenwerk</text></g>
+                      <g class="bd-box pch"><rect x="60" y="145" width="180" height="60" rx="6"/><text x="150" y="166">Speicher</text><text x="150" y="187" font-size="11">Programm + Daten</text></g>
+                      <g class="bd-box cpu"><rect x="360" y="35" width="180" height="60" rx="6"/><text x="450" y="56">CPU</text><text x="450" y="78" font-size="11">Steuerwerk · Rechenwerk</text></g>
+                      <g class="bd-box pch"><rect x="320" y="145" width="125" height="60" rx="6"/><text x="382" y="166" font-size="12">Programm-</text><text x="382" y="186" font-size="12">speicher</text></g>
+                      <g class="bd-box pch"><rect x="458" y="145" width="125" height="60" rx="6"/><text x="520" y="166" font-size="12">Daten-</text><text x="520" y="186" font-size="12">speicher</text></g>
+                    </svg>
+                    <figcaption>Von-Neumann: ein gemeinsamer Bus. Harvard: getrennte Speicher mit eigenen Bussen.</figcaption>
+                  </figure>
+                  <div class="box merke">
+                    <span class="box-title">Von-Neumann-Flaschenhals</span>
+                    Programm und Daten nutzen denselben Speicherbus. Der Speicherzugriff kann das System deshalb ausbremsen. Bei der <strong>Harvard-Architektur</strong> sind Befehls- und Datenspeicher physisch getrennt und haben jeweils eigene Busse zur CPU.
+                  </div>
+                  <div id="cpu-quiz-vn1"></div>
+                  <div id="cpu-quiz-vn2"></div>
+                </section>
+
+                <!-- ---------- 5. Bus-System ---------- -->
+                <section class="lesson-section" id="cpu-s5">
+                  <h3><span class="sec-num">5</span> Das Bus-System</h3>
+                  <p>Das <strong>Bus-System</strong> besteht aus drei Teilbussen:</p>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>Datenbus</dt><dd>Überträgt die eigentlichen Daten zwischen Prozessor, Arbeitsspeicher und Peripherie, und zwar <strong>in beide Richtungen</strong> (bidirektional). Seine Breite bestimmt, wie viele Bits pro Takt übertragen werden (z. B. 64 Bit).</dd></div>
+                    <div class="gl-item"><dt>Adressbus</dt><dd>Der Prozessor legt hier die Adresse („Hausnummer“) der Speicherzelle oder Baugruppe an. Er arbeitet in eine Richtung, von der CPU weg. Seine Breite bestimmt, wie viele Speicherzellen adressiert werden können: <strong>n Leitungen → 2<sup>n</sup> Adressen</strong>.</dd></div>
+                    <div class="gl-item"><dt>Steuerbus</dt><dd>Überträgt Steuersignale, z. B. ob Daten <strong>gelesen oder geschrieben</strong> werden sollen, dazu Takt- und Interrupt-Signale.</dd></div>
+                  </dl>
+                  <p>Überlege, welcher Teilbus in <strong>beiden Richtungen</strong> funktionieren muss, und setze die Teilbusse an die richtigen Positionen.</p>
+                  <div id="cpu-quiz-bus"></div>
+
+                  <div class="quiz">
+                    <p class="quiz-q">Adressbus-Rechner</p>
+                    <label class="range-row">
+                      <span>Breite des Adressbusses: <strong id="addr-n">32</strong> Leitungen</span>
+                      <input type="range" id="addr-range" min="8" max="64" value="32">
+                    </label>
+                    <div class="formula" id="addr-out"></div>
+                  </div>
+
+                  <p>Welcher Teilbus ist gemeint?</p>
+                  <div id="cpu-quiz-busq"></div>
+                </section>
+
+                <!-- ---------- 6. Tools & Benchmarks ---------- -->
+                <section class="lesson-section" id="cpu-s6">
+                  <h3><span class="sec-num">6</span> Systeminformationen &amp; Benchmarks</h3>
+                  <p>Um Hardware zu prüfen oder zu vergleichen, braucht man Werkzeuge. <strong>Benchmarktools</strong> messen die Leistung von CPU, Grafikkarte oder Speicher mit standardisierten Tests. Windows bringt außerdem eigene Programme mit, die über <em>Ausführen</em> (Win + R) gestartet werden können.</p>
+                  <div id="cpu-quiz-bench"></div>
+                  <div id="cpu-quiz-tools"></div>
+                </section>
+
+                <!-- ---------- 7. Leistungsdaten ---------- -->
+                <section class="lesson-section" id="cpu-s7">
+                  <h3><span class="sec-num">7</span> Leistungsdaten eines Prozessors</h3>
+                  <p>Diese Begriffe findest du in jedem CPU-Datenblatt:</p>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>CPU-Kern</dt><dd>Grundlegende Verarbeitungseinheit, die Befehle ausführt (Steuerwerk) und Berechnungen durchführt (Rechenwerk). Mehr Kerne können mehr Aufgaben gleichzeitig bearbeiten. Mit SMT/Hyper-Threading bearbeitet ein Kern 2 <strong>Threads</strong>.</dd></div>
+                    <div class="gl-item"><dt>Basistakt</dt><dd>Taktfrequenz, mit der der Prozessor im Normalbetrieb arbeitet, in GHz (Milliarden Takte pro Sekunde).</dd></div>
+                    <div class="gl-item"><dt>Boost-Takt</dt><dd>Maximale Taktfrequenz, die ein Prozessor unter bestimmten Bedingungen kurzzeitig erreichen kann, um die Leistung zu steigern.</dd></div>
+                    <div class="gl-item"><dt>L1-Cache</dt><dd>Kleinster und schnellster Cache, direkt am Kern. Hält Daten und Befehle für den sofortigen Zugriff bereit.</dd></div>
+                    <div class="gl-item"><dt>L2-Cache</dt><dd>Größer und etwas langsamer als L1. Jeder Kern hat meist seinen eigenen L2-Cache.</dd></div>
+                    <div class="gl-item"><dt>L3-Cache</dt><dd>Größte und langsamste Cache-Stufe. Alle Kerne nutzen ihn gemeinsam für Daten, die nicht in L1 oder L2 gefunden wurden.</dd></div>
+                    <div class="gl-item"><dt>TDP (Thermal Design Power)</dt><dd>Maximale Wärmeleistung in Watt, die ein Prozessor unter typischer Last abgibt. Danach wird der Kühler ausgelegt.</dd></div>
+                    <div class="gl-item"><dt>Typ des Arbeitsspeichers</dt><dd>Generation und Technologie des unterstützten RAM (z. B. DDR4, DDR5). Bestimmt Geschwindigkeit, Bandbreite und Kompatibilität mit dem Mainboard.</dd></div>
+                    <div class="gl-item"><dt>Speicherchannels</dt><dd>Anzahl der parallelen Kanäle zwischen CPU und Arbeitsspeicher. Jeder Kanal ist 64 Bit breit; durch DDR (Double Data Rate) werden pro Takt 2 × 64 Bit übertragen. Zwei Kanäle = <strong>Dual Channel</strong>.</dd></div>
+                    <div class="gl-item"><dt>Datenbusbreite</dt><dd>Wie viele Bits die CPU gleichzeitig verarbeiten bzw. übertragen kann (heute 64 Bit). Beispiel: Gleitkommazahlen mit 32 Bit haben ca. 7 Stellen Genauigkeit, mit 64 Bit ca. 15–16 Stellen.</dd></div>
+                    <div class="gl-item"><dt>CPU-Sockel</dt><dd>Fassung auf dem Mainboard, in die die CPU passt (z. B. AM5, LGA 1700). CPU und Mainboard müssen denselben Sockel haben.</dd></div>
+                    <div class="gl-item"><dt>Form Factor (im CPU-Datenblatt)</dt><dd>Lieferform der CPU: <strong>Boxed</strong> = einzeln verpackt, ggf. mit Kühler. <strong>Tray</strong> = ohne Verpackung, für PC-Hersteller. Bei Mainboards meint Formfaktor dagegen die genormten Abmessungen.</dd></div>
+                  </dl>
+                </section>
+
+                <!-- ---------- 8. Datenblatt ---------- -->
+                <section class="lesson-section" id="cpu-s8">
+                  <h3><span class="sec-num">8</span> Datenblatt einer AMD Ryzen 7 7700X CPU</h3>
+                  <p>Ordne den markierten Angaben im (vereinfachten) Datenblatt die passenden deutschen Begriffe zu. Zwei Begriffe bleiben übrig.</p>
+                  <div id="cpu-quiz-sheet"></div>
+                </section>
+              </div>
             </article>
 
             <article class="module-panel" data-module="ram" role="tabpanel" hidden>
@@ -1340,10 +1575,12 @@
       });
     }
 
+    /* Lücken: {{Antwort}} – mit {{Antwort#g}} sind alle Lücken der Gruppe g untereinander vertauschbar. */
     function clozeQuiz(el, { mod, id, text, distractors = [] }) {
-      const answers = [];
-      const body = text.replace(/\{\{(.+?)\}\}/g, (_, a) => {
-        answers.push(a);
+      const answers = [], groups = [];
+      const body = text.replace(/\{\{(.+?)\}\}/g, (_, raw) => {
+        const [a, grp] = raw.split('#');
+        answers.push(a); groups.push(grp || null);
         return `<button type="button" class="gap" aria-label="Lücke ${answers.length}"></button>`;
       });
       const words = shuffle([...answers, ...distractors]);
@@ -1375,7 +1612,14 @@
         else if (act === 'check') {
           if (gaps.some(g => !g.dataset.w)) return setFeedback(fb, false, 'Bitte fülle zuerst alle Lücken aus.');
           let right = 0;
-          gaps.forEach((g, i) => { const ok = g.textContent === answers[i]; g.classList.toggle('ok', ok); g.classList.toggle('bad', !ok); right += ok; });
+          const pool = {};
+          answers.forEach((a, i) => { if (groups[i]) (pool[groups[i]] = pool[groups[i]] || []).push(a); });
+          gaps.forEach((g, i) => {
+            let ok;
+            if (groups[i]) { const p = pool[groups[i]], k = p.indexOf(g.textContent); ok = k >= 0; if (ok) p.splice(k, 1); }
+            else ok = g.textContent === answers[i];
+            g.classList.toggle('ok', ok); g.classList.toggle('bad', !ok); right += ok;
+          });
           if (right === answers.length) { setFeedback(fb, true, 'Super – alles richtig!'); Progress.done(mod, id); }
           else setFeedback(fb, false, `${right} von ${answers.length} richtig. Tippe rote Lücken an, um die Wörter zurückzulegen.`);
         } else if (act === 'solve') {
@@ -1481,6 +1725,273 @@
         } else if (act === 'reset') {
           $$('select', el).forEach(s => (s.value = '')); $$('.io-info', el).forEach(i => (i.hidden = true)); unmark();
         }
+      });
+    }
+
+    /* assignQuiz(el, {mod, id, choices:[...], items:[{text, answer}]})
+       Jede Aussage bekommt genau eine der Antwortmöglichkeiten. */
+    function assignQuiz(el, { mod, id, choices, items }) {
+      setupQuiz(el, mod, id);
+      el.innerHTML = `
+        <div class="assign">${items.map(it => `
+          <div class="assign-row">
+            <div class="assign-text">${it.text}</div>
+            <div class="assign-opts" role="group">${choices.map(c => `<button type="button" class="assign-opt" aria-pressed="false">${c}</button>`).join('')}</div>
+          </div>`).join('')}
+        </div>
+        ${actionsHTML()}`;
+      const rows = $$('.assign-row', el), fb = $('.feedback', el);
+      const chosen = row => $('.assign-opt[aria-pressed="true"]', row)?.textContent;
+      const press = (row, text) => $$('.assign-opt', row).forEach(o => o.setAttribute('aria-pressed', o.textContent === text));
+      el.addEventListener('click', (e) => {
+        const opt = e.target.closest('.assign-opt');
+        const act = e.target.closest('[data-act]')?.dataset.act;
+        if (opt) {
+          const row = opt.closest('.assign-row');
+          press(row, opt.textContent); row.classList.remove('ok', 'bad'); setFeedback(fb, null, '');
+        } else if (act === 'check') {
+          if (rows.some(r => !chosen(r))) return setFeedback(fb, false, 'Bitte triff zuerst bei jeder Aussage eine Auswahl.');
+          let right = 0;
+          rows.forEach((r, i) => { const ok = chosen(r) === items[i].answer; r.classList.toggle('ok', ok); r.classList.toggle('bad', !ok); right += ok; });
+          if (right === items.length) { setFeedback(fb, true, 'Super – alles richtig!'); Progress.done(mod, id); }
+          else setFeedback(fb, false, `${right} von ${items.length} richtig.`);
+        } else if (act === 'solve') {
+          rows.forEach((r, i) => { press(r, items[i].answer); r.classList.remove('bad'); r.classList.add('ok'); });
+          setFeedback(fb, null, 'Lösung eingeblendet.');
+        } else if (act === 'reset') {
+          rows.forEach(r => { press(r, null); r.classList.remove('ok', 'bad'); }); setFeedback(fb, null, '');
+        }
+      });
+    }
+
+    /* memoryQuiz(el, {mod, id, pairs:[[Begriff, Erklärung], ...]}) */
+    function memoryQuiz(el, { mod, id, pairs }) {
+      setupQuiz(el, mod, id);
+      let open = [], lock = false, moves = 0, found = 0;
+      const render = () => {
+        open = []; lock = false; moves = 0; found = 0;
+        const cards = shuffle(pairs.flatMap((p, i) => [{ i, kind: 'term', text: p[0] }, { i, kind: 'def', text: p[1] }]));
+        el.innerHTML = `
+          <div class="mem-legend"><span class="l-term">Begriff</span><span class="l-def">Erklärung</span></div>
+          <div class="memory">${cards.map(c => `
+            <button type="button" class="mem-card ${c.kind}" data-pair="${c.i}" aria-label="Verdeckte Karte (${c.kind === 'term' ? 'Begriff' : 'Erklärung'})">
+              <span class="mem-front">${c.text}</span>
+            </button>`).join('')}
+          </div>
+          <div class="quiz-actions"><button type="button" class="btn" data-act="reset">Neu mischen</button></div>
+          <div class="feedback" aria-live="polite"></div>`;
+        stats();
+      };
+      const stats = () => setFeedback($('.feedback', el), found === pairs.length ? true : null,
+        found === pairs.length ? `🎉 Alle ${pairs.length} Pärchen gefunden – in ${moves} Zügen!` : `Züge: ${moves} · Gefunden: ${found} / ${pairs.length}`);
+      el.addEventListener('click', (e) => {
+        if (e.target.closest('[data-act="reset"]')) return render();
+        const card = e.target.closest('.mem-card');
+        if (!card || lock || card.classList.contains('open') || card.classList.contains('matched')) return;
+        card.classList.add('open'); card.setAttribute('aria-label', card.textContent.trim());
+        open.push(card);
+        if (open.length < 2) return;
+        moves++;
+        const [a, b] = open;
+        if (a.dataset.pair === b.dataset.pair) {
+          a.classList.replace('open', 'matched'); b.classList.replace('open', 'matched');
+          open = []; found++;
+          if (found === pairs.length) Progress.done(mod, id);
+          stats();
+        } else {
+          lock = true; stats();
+          setTimeout(() => {
+            open.forEach(c => { c.classList.remove('open'); c.setAttribute('aria-label', 'Verdeckte Karte'); });
+            open = []; lock = false;
+          }, 1300);
+        }
+      });
+      render();
+    }
+
+    /* =========================================================
+       MODUL: CPU
+       ========================================================= */
+    function initCpu() {
+      const MOD = 'cpu';
+      Progress.register(MOD, ['cpu-eva', 'cpu-io', 'cpu-memory', 'cpu-vn1', 'cpu-vn2', 'cpu-bus', 'cpu-busq', 'cpu-bench', 'cpu-tools', 'cpu-sheet']);
+
+      // 1. EVA-Schaubild
+      clozeQuiz($('#cpu-quiz-eva'), {
+        mod: MOD, id: 'cpu-eva', distractors: ['Netzteil', 'Grafikkarte'],
+        text: `
+          <div class="eva">
+            <div class="eva-col"><div class="eva-title">Eingabe</div><div class="eva-box">{{Eingabewerk}}</div></div>
+            <div class="eva-arrow" aria-hidden="true">➜</div>
+            <div class="eva-col"><div class="eva-title">Verarbeitung</div>
+              <div class="eva-box">{{Rechner}}
+                <div class="eva-box cpu">{{CPU}}<div class="eva-pair">{{Steuerwerk#cu}}{{Rechenwerk#cu}}</div></div>
+                <div class="eva-bus"><span aria-hidden="true">⇅</span>{{Speicherbus}}</div>
+                <div class="eva-box mem">{{Speicherwerk}}</div>
+              </div>
+            </div>
+            <div class="eva-arrow" aria-hidden="true">➜</div>
+            <div class="eva-col"><div class="eva-title">Ausgabe</div><div class="eva-box">{{Ausgabewerk}}</div></div>
+          </div>`
+      });
+
+      // 2. Geräte zuordnen
+      assignQuiz($('#cpu-quiz-io'), {
+        mod: MOD, id: 'cpu-io',
+        choices: ['Eingabe', 'Verarbeitung', 'Speicher', 'Ausgabe', 'nichts davon'],
+        items: [
+          { text: 'Tastatur', answer: 'Eingabe' }, { text: 'Prozessor', answer: 'Verarbeitung' },
+          { text: 'SSD', answer: 'Speicher' }, { text: 'Drucker', answer: 'Ausgabe' },
+          { text: 'Maus', answer: 'Eingabe' }, { text: 'Netzteil', answer: 'nichts davon' },
+          { text: 'Monitor', answer: 'Ausgabe' }, { text: 'Motherboard', answer: 'nichts davon' },
+          { text: 'Mikrofon', answer: 'Eingabe' }, { text: 'Kopfhörer', answer: 'Ausgabe' }
+        ]
+      });
+
+      // 3. Memory
+      memoryQuiz($('#cpu-quiz-memory'), {
+        mod: MOD, id: 'cpu-memory',
+        pairs: [
+          ['Steuerwerk (CU)', 'Liest Befehle aus dem Speicher, interpretiert sie und steuert den Ablauf in der CPU.'],
+          ['Rechenwerk (ALU)', 'Führt arithmetische (+, −) und logische Operationen (UND, ODER, Vergleiche) aus.'],
+          ['Register', 'Ultraschnelle Speicherplätze direkt in der CPU.'],
+          ['Befehlszähler', 'Register mit der Adresse des nächsten auszuführenden Befehls.'],
+          ['Akkumulator', 'Register, das Zwischenergebnisse speichert.'],
+          ['Cache', 'Kleiner, sehr schneller Zwischenspeicher für häufig benötigte Daten und Befehle.'],
+          ['Datenbus', 'Überträgt die eigentlichen Daten.'],
+          ['Adressbus', 'Überträgt Speicheradressen.'],
+          ['Steuerbus', 'Überträgt Steuerbefehle, z. B. „Lesen“ oder „Schreiben“.']
+        ]
+      });
+
+      // 4. Von Neumann
+      choiceQuiz($('#cpu-quiz-vn1'), {
+        mod: MOD, id: 'cpu-vn1', question: 'Welche Merkmale gehören zur Von-Neumann-Architektur?',
+        options: [
+          'Programm und Daten liegen im selben Speicher',
+          'Die CPU besteht aus Steuerwerk und Rechenwerk',
+          'Befehle werden nacheinander (sequenziell) abgearbeitet',
+          'Befehls- und Datenspeicher sind physisch getrennt',
+          'Alle Befehle eines Programms werden gleichzeitig ausgeführt'
+        ],
+        correct: [0, 1, 2],
+        explain: 'Getrennte Speicher sind das Kennzeichen der Harvard-Architektur.'
+      });
+      choiceQuiz($('#cpu-quiz-vn2'), {
+        mod: MOD, id: 'cpu-vn2', question: 'Was versteht man unter dem Von-Neumann-Flaschenhals?',
+        options: [
+          'Programm und Daten teilen sich einen Speicherbus – der Speicherzugriff bremst das System',
+          'Der Prozessor überhitzt, weil der Kühler zu klein ist',
+          'Der Arbeitsspeicher ist zu klein für große Programme',
+          'Die Festplatte ist langsamer als eine SSD'
+        ],
+        correct: 0,
+        explain: 'Weil Befehle und Daten über denselben Bus müssen, wartet die CPU oft auf den Speicher.'
+      });
+
+      // 5. Bus-System – Schaubild
+      clozeQuiz($('#cpu-quiz-bus'), {
+        mod: MOD, id: 'cpu-bus', distractors: ['Speicherbus'],
+        text: `
+          <div class="overlay-fig">
+            <svg viewBox="0 0 600 330" role="img" aria-label="Bus-System mit drei Teilbussen zwischen Prozessor, Peripherie und Speicher">
+              <defs>
+                <marker id="bus-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8b949e"/></marker>
+              </defs>
+              <g stroke="#8b949e" stroke-width="2.5">
+                <path d="M150 67 V263 M400 67 V263" marker-start="url(#bus-arr)" marker-end="url(#bus-arr)"/>
+                <path d="M195 142 V263 M240 217 V263 M445 142 V263 M490 217 V263" marker-end="url(#bus-arr)"/>
+              </g>
+              <g fill="#16263f" stroke="#3b82f6" stroke-width="2">
+                <polygon points="70,25 540,25 540,13 588,45 540,77 540,65 70,65"/>
+                <polygon points="70,100 540,100 540,88 588,120 540,152 540,140 70,140"/>
+                <polygon points="70,175 540,175 540,163 588,195 540,227 540,215 70,215"/>
+              </g>
+              <rect x="10" y="12" width="60" height="215" rx="4" fill="#1f2630" stroke="#8b949e" stroke-width="2"/>
+              <text x="40" y="120" class="svg-text" font-size="16" font-weight="700" text-anchor="middle" transform="rotate(-90 40 120)">Prozessor</text>
+              <rect x="110" y="265" width="170" height="55" rx="4" fill="#1f2630" stroke="#8b949e" stroke-width="2"/>
+              <text x="195" y="288" class="svg-text" font-size="13" text-anchor="middle">Peripherie</text>
+              <text x="195" y="306" class="svg-muted" font-size="11" text-anchor="middle">(Ein-/Ausgabe)</text>
+              <rect x="360" y="265" width="170" height="55" rx="4" fill="#1f2630" stroke="#8b949e" stroke-width="2"/>
+              <text x="445" y="297" class="svg-text" font-size="13" text-anchor="middle">Speicher</text>
+            </svg>
+            <div class="ov" style="left:53%; top:13.6%">{{Datenbus}}</div>
+            <div class="ov" style="left:53%; top:36.4%">{{Adressbus#ab}}</div>
+            <div class="ov" style="left:53%; top:59.1%">{{Steuerbus#ab}}</div>
+          </div>`
+      });
+
+      // Adressbus-Rechner
+      const range = $('#addr-range');
+      const units = ['Byte', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB'];
+      const updAddr = () => {
+        const n = +range.value;
+        $('#addr-n').textContent = n;
+        $('#addr-out').innerHTML = `2<sup>${n}</sup> = ${(2n ** BigInt(n)).toLocaleString('de-DE')} Speicherzellen (à 1 Byte) = <strong>${2 ** (n % 10)} ${units[Math.floor(n / 10)]}</strong>`;
+      };
+      range.addEventListener('input', updAddr); updAddr();
+
+      // Bus-Aussagen
+      assignQuiz($('#cpu-quiz-busq'), {
+        mod: MOD, id: 'cpu-busq', choices: ['Adressbus', 'Datenbus', 'Steuerbus'],
+        items: [
+          { text: 'Die Anzahl der Busleitungen bestimmt die Anzahl der Speicherzellen, die angesprochen werden können.', answer: 'Adressbus' },
+          { text: 'Hier wird die Adresse der Baugruppe angelegt, von der Daten gelesen oder wohin sie geschrieben werden sollen.', answer: 'Adressbus' },
+          { text: 'Zur gegenseitigen Übertragung von Daten zwischen Prozessor, Arbeitsspeicher und Peripherie.', answer: 'Datenbus' },
+          { text: 'Hierüber erfährt die Baugruppe, ob Daten hineingeschrieben oder ausgegeben werden sollen.', answer: 'Steuerbus' },
+          { text: 'Da immer nur eine Einheit senden oder empfangen darf, braucht jede Baugruppe eine „Hausnummer“.', answer: 'Adressbus' },
+          { text: 'Die Anzahl der Busleitungen bestimmt die Anzahl der Bits, die pro Takt übertragen werden (z. B. 64 Bit).', answer: 'Datenbus' }
+        ]
+      });
+
+      // 6. Tools & Benchmarks
+      choiceQuiz($('#cpu-quiz-bench'), {
+        mod: MOD, id: 'cpu-bench', question: 'Welchem Zweck dient der Einsatz von Benchmarktools?',
+        options: [
+          'Sie werden von Marketingabteilungen entwickelt, um Produkteigenschaften zu übertreiben',
+          'Zur Überwachung der Internetnutzung und Bandbreite',
+          'Zur Messung der Leistungsfähigkeit von Hardwarekomponenten',
+          'Zur Beurteilung der rechtlichen Konformität von Software mit Datenschutzbestimmungen'
+        ],
+        correct: 2,
+        explain: 'Mit standardisierten Tests lassen sich verschiedene Komponenten objektiv vergleichen.'
+      });
+      choiceQuiz($('#cpu-quiz-tools'), {
+        mod: MOD, id: 'cpu-tools',
+        question: 'Mit welchen zwei Tools erfährst du in einem laufenden Windows-System etwas über die PC-Komponenten und deren Status?',
+        options: [
+          'Befehl „msinfo32“ (Systeminformationen)', 'Befehl „ping“', 'Befehl „eventvwr“ (Ereignisanzeige)',
+          'Befehl „ipconfig“', 'Befehl „taskmgr“ (Task-Manager)', 'Befehl „diskmgmt.msc“ (Datenträgerverwaltung)'
+        ],
+        correct: [0, 4],
+        explain: 'msinfo32 listet Hardware und System auf. Der Task-Manager zeigt im Reiter „Leistung“ live die Auslastung von CPU, RAM, Datenträgern und GPU.'
+      });
+
+      // 8. Datenblatt
+      clozeQuiz($('#cpu-quiz-sheet'), {
+        mod: MOD, id: 'cpu-sheet', distractors: ['Grafikspeicher', 'Lüfterdrehzahl'],
+        text: `
+          <div class="sheet">
+            <div class="sheet-title">AMD Ryzen™ 7 7700X</div>
+            <div class="sheet-grid">
+              <div class="spec"><span class="spec-k"># of CPU Cores</span><span class="spec-v">8</span>{{Anzahl Kerne}}</div>
+              <div class="spec"><span class="spec-k"># of Threads</span><span class="spec-v">16</span></div>
+              <div class="spec"><span class="spec-k">Base Clock</span><span class="spec-v">4,5 GHz</span>{{Takte/s}}</div>
+              <div class="spec"><span class="spec-k">Max. Boost Clock</span><span class="spec-v">bis zu 5,4 GHz</span>{{Kurzzeitiger Maximaltakt}}</div>
+              <div class="spec"><span class="spec-k">L1 Cache</span><span class="spec-v">512 KB</span></div>
+              <div class="spec"><span class="spec-k">L2 Cache</span><span class="spec-v">8 MB (1 MB je Kern)</span>{{Pufferspeicher/Kern}}</div>
+              <div class="spec"><span class="spec-k">L3 Cache</span><span class="spec-v">32 MB</span>{{Pufferspeicher aller Kerne}}</div>
+              <div class="spec"><span class="spec-k">Default TDP</span><span class="spec-v">105 W</span>{{Thermal Design Power}}</div>
+              <div class="spec"><span class="spec-k">CPU Socket</span><span class="spec-v">AM5</span>{{CPU-Fassung}}</div>
+              <div class="spec"><span class="spec-k">OS Support</span><span class="spec-v">Windows 11 – 64-Bit Edition, Ubuntu x86 64-Bit</span>{{Datenbusbreite}}</div>
+              <div class="spec"><span class="spec-k">System Memory Type</span><span class="spec-v">DDR5</span>{{Speichertyp}}</div>
+              <div class="spec"><span class="spec-k">Memory Channels</span><span class="spec-v">2</span>{{Dual Channel}}</div>
+              <div class="spec"><span class="spec-k">Processor Technology</span><span class="spec-v">TSMC 5 nm FinFET</span></div>
+              <div class="spec"><span class="spec-k">PCI Express Version</span><span class="spec-v">PCIe 5.0</span></div>
+              <div class="spec"><span class="spec-k">Max. Operating Temp.</span><span class="spec-v">95 °C</span></div>
+              <div class="spec"><span class="spec-k">Unlocked for Overclocking</span><span class="spec-v">Ja</span></div>
+            </div>
+          </div>`
       });
     }
 
@@ -1753,6 +2264,7 @@
     /* ---------- Start ---------- */
     renderCourseGrid();
     initMainboard();
+    initCpu();
     updateProgressUI();
     isLoggedIn() ? showApp() : showLogin();
   })();
