@@ -489,11 +489,59 @@
     .spec-k { font-size: .72rem; letter-spacing: .03em; text-transform: uppercase; color: var(--text-muted); }
     .spec-v { font-weight: 700; }
     .spec .gap { display: block; width: 100%; margin: .35rem 0 0; }
+    /* ---------- Zuordnung Begriff ↔ Beschreibung (Lückentext als Raster) ---------- */
+    .match-grid { display: grid; grid-template-columns: minmax(150px, 1fr) 2fr; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .match-grid > div { padding: .5rem .75rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+    .match-grid > div:nth-last-child(-n+2) { border-bottom: 0; }
+    .match-grid .mg-term { font-weight: 700; background: var(--bg-elev-2); }
+    .match-grid .gap { width: 100%; margin: 0; white-space: normal; text-align: left; }
+
+    /* ---------- RAM-Etikett ---------- */
+    .ram-label {
+      max-width: 520px; margin: 0 auto 1rem; padding: 1rem 1.25rem;
+      font: 700 1.05rem/2.3 ui-monospace, SFMono-Regular, Consolas, monospace;
+      color: #1f2328; background: linear-gradient(135deg, #e5e7eb, #cbd5e1); border-radius: 6px;
+      box-shadow: 0 0 0 6px #14532d, 0 0 0 7px #3fb950;
+      overflow-wrap: anywhere;
+    }
+    .ram-label .rl-top { font-size: 1.35rem; line-height: 1.5; }
+    .ram-label .rl-small { line-height: 1.5; font-size: .8rem; font-weight: 400; color: #4b5563; }
+    .ram-label mark { position: relative; padding: 0 .15rem; color: inherit; background: rgba(59,130,246,.25); border-bottom: 2px solid #2563eb; border-radius: 2px; }
+    .ram-label mark::after {
+      content: attr(data-n); position: absolute; top: -1.05rem; left: 50%; transform: translateX(-50%);
+      width: 1.1rem; height: 1.1rem; display: grid; place-items: center;
+      font: 700 .7rem var(--font); color: #fff; background: #2563eb; border-radius: 50%;
+    }
+
+    /* ---------- RAM-Steckplätze ---------- */
+    .slot-tasks { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .75rem; }
+    .slot-tasks button { padding: .35rem .8rem; font-size: .85rem; color: var(--text-muted); background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 999px; }
+    .slot-tasks button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .slot-tasks button.done::after { content: " ✓"; color: var(--success); font-weight: 700; }
+    .slot-tasks button[aria-pressed="true"].done::after { color: #fff; }
+    .dimm-board { display: grid; gap: .35rem; padding: 1rem .75rem; background: #132219; border: 1px solid #24402f; border-radius: var(--radius-sm); }
+    .dimm { display: flex; align-items: center; gap: .75rem; padding: .45rem .5rem; text-align: left; background: transparent; border: 2px solid transparent; border-radius: 6px; }
+    .dimm:hover { background: rgba(255,255,255,.04); }
+    .dimm-label { flex: 0 0 8.5rem; font-size: .85rem; font-weight: 600; color: #d1d5db; }
+    .dimm-slot { position: relative; flex: 1; height: 18px; background: #0b0f14; border: 1px solid #4b5563; border-radius: 3px; }
+    .dimm.blue .dimm-slot { background: #1e3a8a; border-color: #3b82f6; }
+    .dimm-slot::before { content: ""; position: absolute; left: 62%; top: 2px; bottom: 2px; width: 3px; background: #132219; }
+    .dimm[aria-pressed="true"] .dimm-slot::after {
+      content: ""; position: absolute; inset: -9px 4px;
+      background: repeating-linear-gradient(90deg, #14532d 0 6px, #111827 6px 26px, #14532d 26px 32px);
+      border: 1px solid #3fb950; border-radius: 3px; box-shadow: 0 2px 6px rgba(0,0,0,.5);
+    }
+    .dimm.ok  { border-color: var(--success); }
+    .dimm.bad { border-color: var(--danger); }
+
     .range-row { display: grid; gap: .4rem; }
     #addr-out { white-space: normal; }
     .range-row input { width: 100%; accent-color: var(--accent); }
 
     @media (max-width: 760px) {
+      .match-grid { grid-template-columns: 1fr; }
+      .match-grid > div.mg-term { border-bottom: 0; padding-bottom: .2rem; }
+      .dimm-label { flex-basis: 6.5rem; font-size: .78rem; }
       .eva { grid-template-columns: 1fr; }
       .eva-arrow { justify-self: center; transform: rotate(90deg); }
       .assign-row { grid-template-columns: 1fr; }
@@ -1212,7 +1260,158 @@
 
             <article class="module-panel" data-module="ram" role="tabpanel" hidden>
               <h2>3. Arbeitsspeicher (RAM)</h2>
-              <div id="module-ram" class="placeholder">Platzhalter für RAM-Modul</div>
+              <!-- ============ MODUL ARBEITSSPEICHER ============ -->
+              <div id="module-ram" class="lesson">
+
+                <div class="lesson-head">
+                  <p class="lesson-intro">Der <strong>Arbeitsspeicher</strong> (RAM) speichert Programme und Daten, solange der Computer läuft. Die CPU greift darauf viel schneller zu als auf eine SSD oder Festplatte. In diesem Kapitel geht es um Speicherarten, die Technik hinter DDR-RAM, die Beschriftung von Modulen und die richtige Bestückung für Dual Channel.</p>
+                  <div class="progress" data-progress="ram">
+                    <div class="progress-bar"><span></span></div>
+                    <span class="progress-text"></span>
+                    <button type="button" class="link-btn" data-reset-progress="ram">Fortschritt zurücksetzen</button>
+                  </div>
+                  <nav class="lesson-toc" aria-label="Abschnitte">
+                    <button type="button" data-scroll="ram-s1">1 · Flüchtig / nicht-flüchtig</button>
+                    <button type="button" data-scroll="ram-s2">2 · Grundlagen &amp; DDR</button>
+                    <button type="button" data-scroll="ram-s3">3 · Beschriftung</button>
+                    <button type="button" data-scroll="ram-s4">4 · Bestückung</button>
+                  </nav>
+                </div>
+
+                <!-- ---------- 1. Flüchtig / nicht-flüchtig ---------- -->
+                <section class="lesson-section" id="ram-s1">
+                  <h3><span class="sec-num">1</span> Flüchtige und nicht-flüchtige Speicher</h3>
+                  <div class="two-col">
+                    <div class="box info"><span class="box-title">Flüchtig (volatil)</span>Der Speicherinhalt geht verloren, sobald der Strom weg ist. Dafür sind diese Speicher sehr schnell. <span class="muted">Beispiele: Register, Cache, RAM, VRAM (Grafikspeicher)</span></div>
+                    <div class="box info"><span class="box-title">Nicht-flüchtig</span>Die Daten bleiben auch ohne Strom erhalten. <span class="muted">Beispiele: ROM, EEPROM (z. B. für die UEFI-Firmware), Flashspeicher (SSD, USB-Stick, SD-Karte)</span></div>
+                  </div>
+                  <p>Ordne die elektronischen Speicher richtig zu.</p>
+                  <div id="ram-quiz-volatile"></div>
+                  <div id="ram-quiz-q1"></div>
+                </section>
+
+                <!-- ---------- 2. Grundlagen ---------- -->
+                <section class="lesson-section" id="ram-s2">
+                  <h3><span class="sec-num">2</span> Grundlagen des Arbeitsspeichers</h3>
+                  <dl class="glossary">
+                    <div class="gl-item"><dt>RAM (Random Access Memory)</dt><dd>Flüchtiger Speicher, der Daten und Programme während der Laufzeit zwischenspeichert. Der Prozessor kommt so viel schneller an die Daten, als wenn sie jedes Mal von der SSD/Festplatte geladen werden müssten.</dd></div>
+                    <div class="gl-item"><dt>Random Access = wahlfreier Zugriff</dt><dd>Jede Speicherzelle kann direkt adressiert werden, und zwar in etwa gleich schnell. Bei sequenziellen Speichern wie Magnetbändern muss man dagegen erst „hinspulen“.</dd></div>
+                    <div class="gl-item"><dt>Aufgabe des RAM</dt><dd>Daten <strong>temporär bereitstellen</strong>, die laufende Programme und das Betriebssystem gerade brauchen, damit der Prozessor schnell darauf zugreifen kann.</dd></div>
+                    <div class="gl-item"><dt>SDRAM (Synchronous Dynamic RAM)</dt><dd>RAM, der <strong>synchron zum Systemtakt</strong> arbeitet. Dadurch arbeitet er effizienter mit dem Prozessor zusammen als ältere, asynchrone RAM-Typen.</dd></div>
+                    <div class="gl-item"><dt>DDR (Double Data Rate)</dt><dd>Überträgt Daten bei der <strong>steigenden und der fallenden Taktflanke</strong>, also zweimal pro Taktzyklus. Das ist doppelt so schnell wie SDR-RAM (Single Data Rate).</dd></div>
+                    <div class="gl-item"><dt>Dual-Channel-Betrieb</dt><dd>Zwei RAM-Module werden gleichzeitig und parallel über zwei Speicherkanäle angesprochen. Das erhöht den <strong>Datendurchsatz</strong> spürbar, wenn beide Module gleich groß sind und mit derselben Taktrate laufen.</dd></div>
+                  </dl>
+
+                  <figure class="figure" style="max-width:600px">
+                    <svg viewBox="0 0 560 220" role="img" aria-label="Taktdiagramm: SDR überträgt einmal pro Zyklus, DDR zweimal">
+                      <path d="M140 18 H260" stroke="#e6edf3" stroke-width="1.5" marker-start="url(#ddr-arr)" marker-end="url(#ddr-arr)"/>
+                      <defs><marker id="ddr-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e6edf3"/></marker></defs>
+                      <text x="200" y="12" class="svg-text" font-size="12" text-anchor="middle" font-weight="700">1 Zyklus</text>
+                      <g class="svg-text" font-size="13" font-weight="700">
+                        <text x="10" y="60">Speichertakt</text>
+                        <text x="10" y="128">SDR</text><text x="10" y="144" font-size="11" font-weight="400" class="svg-muted">1× pro Zyklus</text>
+                        <text x="10" y="186">DDR</text><text x="10" y="202" font-size="11" font-weight="400" class="svg-muted">2× pro Zyklus</text>
+                      </g>
+                      <g stroke="#2a323d" stroke-dasharray="3 4">
+                        <path d="M140 30 V210 M260 30 V210 M380 30 V210"/>
+                        <path d="M200 30 V210 M320 30 V210 M440 30 V210" stroke="#3a2f2f"/>
+                      </g>
+                      <path d="M100 80 H140 V30 H200 V80 H260 V30 H320 V80 H380 V30 H440 V80 H500" fill="none" stroke="#3b82f6" stroke-width="3"/>
+                      <g font-size="10" font-weight="700" text-anchor="middle">
+                        <g fill="rgba(63,185,80,.18)" stroke="#3fb950" stroke-width="1.5">
+                          <rect x="121" y="116" width="38" height="28" rx="4"/><rect x="241" y="116" width="38" height="28" rx="4"/><rect x="361" y="116" width="38" height="28" rx="4"/>
+                          <rect x="121" y="174" width="38" height="28" rx="4"/><rect x="181" y="174" width="38" height="28" rx="4"/><rect x="241" y="174" width="38" height="28" rx="4"/>
+                          <rect x="301" y="174" width="38" height="28" rx="4"/><rect x="361" y="174" width="38" height="28" rx="4"/><rect x="421" y="174" width="38" height="28" rx="4"/>
+                        </g>
+                        <g class="svg-text">
+                          <text x="140" y="134">64 bit</text><text x="260" y="134">64 bit</text><text x="380" y="134">64 bit</text>
+                          <text x="140" y="192">64 bit</text><text x="200" y="192">64 bit</text><text x="260" y="192">64 bit</text>
+                          <text x="320" y="192">64 bit</text><text x="380" y="192">64 bit</text><text x="440" y="192">64 bit</text>
+                        </g>
+                      </g>
+                    </svg>
+                    <figcaption>SDR überträgt nur bei steigender Flanke, DDR bei steigender <em>und</em> fallender Flanke.</figcaption>
+                  </figure>
+
+                  <p><strong>Begriffe zum Arbeitsspeicher:</strong> Ordne jedem Begriff die passende Beschreibung zu.</p>
+                  <div id="ram-quiz-terms"></div>
+                </section>
+
+                <!-- ---------- 3. Beschriftung ---------- -->
+                <section class="lesson-section" id="ram-s3">
+                  <h3><span class="sec-num">3</span> Beschriftung eines RAM-Moduls</h3>
+                  <p>Auf jedem RAM-Modul klebt ein Etikett mit den wichtigsten technischen Daten. Ordne den markierten Angaben ihre Bedeutung zu.</p>
+
+                  <div class="ram-label" role="img" aria-label="Etikett eines RAM-Moduls: F4-2133C15D-8GNT, DDR4-2133 CL15-15-15-35 1.20V, 4Gx2 Plug and play">
+                    <div class="rl-top">F4-2133C15D-8GNT</div>
+                    <div><mark data-n="1">DDR4</mark>-<mark data-n="2">2133</mark> <mark data-n="3">CL15</mark>-15-15-35 <mark data-n="4">1.20V</mark></div>
+                    <div><mark data-n="5">4G</mark>x2 Plug and play</div>
+                    <div class="rl-small">64240H4833C · 3080488276</div>
+                  </div>
+
+                  <div id="ram-quiz-label"></div>
+
+                  <div class="box info">
+                    <span class="box-title">Was bedeuten die Angaben genau?</span>
+                    <ul>
+                      <li><strong>DDR4:</strong> Speichertyp – Double Data Rate der 4. Generation. DDR4 und DDR5 sind nicht kompatibel (Kerbe an anderer Stelle).</li>
+                      <li><strong>2133:</strong> Datenrate in MT/s (Megatransfers pro Sekunde), oft als „MHz“ angegeben. Der reale Takt ist halb so hoch (≈ 1066 MHz), weil DDR zweimal pro Takt überträgt.</li>
+                      <li><strong>CL15:</strong> CAS-Latenz, die Wartezeit zwischen Speicheranfrage der CPU und Datenlieferung, angegeben in <strong>Takten</strong>. 15 Takte bei 1066 MHz ≈ <strong>14 ns</strong>. Die weiteren Zahlen (15-15-35) sind weitere Timings.</li>
+                      <li><strong>1.20V:</strong> Betriebsspannung des Moduls</li>
+                      <li><strong>4G x2:</strong> Kit aus 2 Modulen mit je 4 GiB Speicherkapazität (zusammen 8 GiB)</li>
+                    </ul>
+                  </div>
+
+                  <div class="quiz">
+                    <p class="quiz-q">RAM-Rechner</p>
+                    <div class="calc">
+                      <label>Modul<select id="ramc-type">
+                        <option value="2133">DDR4-2133</option><option value="2666">DDR4-2666</option><option value="3200" selected>DDR4-3200</option>
+                        <option value="4800">DDR5-4800</option><option value="6000">DDR5-6000</option>
+                      </select></label>
+                      <label>CAS-Latenz (CL)<input type="number" class="num-input" id="ramc-cl" min="8" max="60" value="16"></label>
+                      <label>Kanäle<select id="ramc-ch"><option value="1">1 (Single Channel)</option><option value="2" selected>2 (Dual Channel)</option></select></label>
+                    </div>
+                    <div id="ramc-out"></div>
+                  </div>
+                </section>
+
+                <!-- ---------- 4. Bestückung ---------- -->
+                <section class="lesson-section" id="ram-s4">
+                  <h3><span class="sec-num">4</span> Bestückung der RAM-Steckplätze</h3>
+                  <p>Sollen in einem Dual-Channel-System mehrere RAM-Module verbaut werden, schaut man am besten im <strong>Handbuch des Mainboards</strong> nach der empfohlenen Anordnung. Sonst wird Dual Channel unter Umständen nicht aktiviert, und die mögliche Leistung bleibt ungenutzt. Bei zwei Modulen werden diese auf die beiden Speicherkanäle verteilt.</p>
+
+                  <div class="table-scroll">
+                    <table class="data">
+                      <thead>
+                        <tr><th rowspan="2">Zu verwendender Steckplatz</th><th colspan="4">Anzahl der gesteckten Speichermodule</th></tr>
+                        <tr><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Channel A, Slot 1</td><td>✕</td><td>✕</td><td>✕</td><td>✕</td></tr>
+                        <tr><td>Channel B, Slot 2</td><td></td><td>✕</td><td>✕</td><td>✕</td></tr>
+                        <tr><td>Channel A, Slot 3</td><td></td><td></td><td>✕</td><td>✕</td></tr>
+                        <tr><td>Channel B, Slot 4</td><td></td><td></td><td></td><td>✕</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="muted" style="font-size:.85rem">Auszug aus einem Mainboard-Handbuch. Die Reihenfolge ist je nach Hersteller verschieden, deshalb immer im eigenen Handbuch nachsehen!</p>
+
+                  <p>Bestücke die Steckplätze laut Tabelle. Achtung: Auf dem Board liegen die Slots <strong>nicht</strong> in der Reihenfolge der Tabelle!</p>
+                  <div class="quiz" id="ram-quiz-slots">
+                    <div class="slot-tasks" role="group" aria-label="Szenario wählen"></div>
+                    <p class="quiz-q" id="slot-prompt"></p>
+                    <div class="dimm-board">
+                      <button type="button" class="dimm" data-slot="B2" aria-pressed="false"><span class="dimm-label">Kanal B – Slot 2</span><span class="dimm-slot"></span></button>
+                      <button type="button" class="dimm blue" data-slot="B4" aria-pressed="false"><span class="dimm-label">Kanal B – Slot 4</span><span class="dimm-slot"></span></button>
+                      <button type="button" class="dimm" data-slot="A1" aria-pressed="false"><span class="dimm-label">Kanal A – Slot 1</span><span class="dimm-slot"></span></button>
+                      <button type="button" class="dimm blue" data-slot="A3" aria-pressed="false"><span class="dimm-label">Kanal A – Slot 3</span><span class="dimm-slot"></span></button>
+                    </div>
+                  </div>
+
+                  <div id="ram-quiz-q3"></div>
+                </section>
+              </div>
             </article>
 
             <article class="module-panel" data-module="massenspeicher" role="tabpanel" hidden>
@@ -1996,6 +2195,139 @@
     }
 
     /* =========================================================
+       MODUL: ARBEITSSPEICHER (RAM)
+       ========================================================= */
+    function initRam() {
+      const MOD = 'ram';
+      Progress.register(MOD, ['ram-volatile', 'ram-q1', 'ram-terms', 'ram-label', 'ram-slots', 'ram-q3']);
+
+      // 1. Flüchtig / nicht-flüchtig
+      sortQuiz($('#ram-quiz-volatile'), {
+        mod: MOD, id: 'ram-volatile',
+        buckets: [{ id: 'v', label: 'Flüchtige Speicher' }, { id: 'nv', label: 'Nicht-flüchtige Speicher' }],
+        items: [
+          { text: 'RAM', bucket: 'v' }, { text: 'L1-Cache', bucket: 'v' }, { text: 'L3-Cache', bucket: 'v' },
+          { text: 'VRAM', bucket: 'v' }, { text: 'Register', bucket: 'v' },
+          { text: 'EEPROM', bucket: 'nv' }, { text: 'Flashspeicher', bucket: 'nv' }, { text: 'ROM', bucket: 'nv' }
+        ]
+      });
+      choiceQuiz($('#ram-quiz-q1'), {
+        mod: MOD, id: 'ram-q1', question: 'Was bedeutet „flüchtiger Speicher“?',
+        options: [
+          'Die Daten gehen verloren, sobald die Stromversorgung unterbrochen wird',
+          'Der Speicher ist besonders schnell',
+          'Die Daten werden automatisch in die Cloud übertragen',
+          'Der Speicher kann nur gelesen, aber nicht beschrieben werden'
+        ],
+        correct: 0,
+        explain: 'Deshalb müssen Daten aus dem RAM vor dem Ausschalten gespeichert werden, z. B. auf der SSD.'
+      });
+
+      // 2. Begriffe
+      clozeQuiz($('#ram-quiz-terms'), {
+        mod: MOD, id: 'ram-terms',
+        distractors: ['1 Datentransfer je Taktzyklus', 'Daten bleiben ohne Strom erhalten'],
+        text: `
+          <div class="match-grid">
+            <div class="mg-term">RAM ausgeschrieben</div><div>{{Random Access Memory}}</div>
+            <div class="mg-term">DDR</div><div>{{2 Datentransfers je Taktzyklus}}</div>
+            <div class="mg-term">Aufgabe des RAM</div><div>{{Speicherung von Daten für schnelleren Zugriff}}</div>
+            <div class="mg-term">Random Access Memory</div><div>{{Speicher mit „wahlfreiem“ Zugriff}}</div>
+            <div class="mg-term">SDRAM (Synchronous Dynamic RAM)</div><div>{{Schreib- und Lesezyklen synchron zum Systemtakt}}</div>
+            <div class="mg-term">Dual-Channel-Betrieb</div><div>{{2. Speicherschnittstelle verdoppelt den Datendurchsatz}}</div>
+          </div>`
+      });
+
+      // 3. Beschriftung
+      assignQuiz($('#ram-quiz-label'), {
+        mod: MOD, id: 'ram-label',
+        choices: ['Speichertyp', 'Datenrate (Takt)', 'CAS-Latenz', 'Spannung', 'Kapazität'],
+        items: [
+          { text: '<strong>①</strong> DDR4', answer: 'Speichertyp' },
+          { text: '<strong>②</strong> 2133', answer: 'Datenrate (Takt)' },
+          { text: '<strong>③</strong> CL15', answer: 'CAS-Latenz' },
+          { text: '<strong>④</strong> 1.20V', answer: 'Spannung' },
+          { text: '<strong>⑤</strong> 4G (x2)', answer: 'Kapazität' }
+        ]
+      });
+
+      // RAM-Rechner
+      const fmt = (n, d = 1) => n.toLocaleString('de-DE', { maximumFractionDigits: d });
+      const calc = () => {
+        const mts = +$('#ramc-type').value, cl = Math.max(1, +$('#ramc-cl').value || 1), ch = +$('#ramc-ch').value;
+        const clock = mts / 2, bw = mts * 8 * ch / 1000, lat = cl * 2000 / mts;
+        $('#ramc-out').innerHTML = `
+          <div class="formula">Realer Takt = ${mts} MT/s ÷ 2 = <strong>${fmt(clock)} MHz</strong></div>
+          <div class="formula">Bandbreite = ${mts} MT/s × 8 Byte × ${ch} ${ch > 1 ? 'Kanäle' : 'Kanal'} = <strong>${fmt(bw)} GB/s</strong></div>
+          <div class="formula">Latenz = ${cl} Takte ÷ ${fmt(clock)} MHz = <strong>${fmt(lat, 2)} ns</strong></div>`;
+      };
+      ['#ramc-type', '#ramc-cl', '#ramc-ch'].forEach(s => $(s).addEventListener('input', calc));
+      calc();
+
+      // 4. Bestückung der Steckplätze
+      const el = $('#ram-quiz-slots');
+      setupQuiz(el, MOD, 'ram-slots');
+      el.insertAdjacentHTML('beforeend', actionsHTML());
+      const SOLUTION = { 1: ['A1'], 2: ['A1', 'B2'], 3: ['A1', 'B2', 'A3'], 4: ['A1', 'B2', 'A3', 'B4'] };
+      const tasks = $('.slot-tasks', el), dimms = $$('.dimm', el), fb = $('.feedback', el);
+      let n = 2;
+      tasks.innerHTML = [1, 2, 3, 4].map(k => `<button type="button" data-n="${k}">${k} Modul${k > 1 ? 'e' : ''}</button>`).join('');
+      const refreshTasks = () => $$('button', tasks).forEach(b => {
+        b.setAttribute('aria-pressed', +b.dataset.n === n);
+        b.classList.toggle('done', Progress.isDone(MOD, 'ram-slots-' + b.dataset.n));
+      });
+      const clearMarks = () => { dimms.forEach(d => d.classList.remove('ok', 'bad')); setFeedback(fb, null, ''); };
+      const setTask = k => {
+        n = k; refreshTasks(); clearMarks();
+        dimms.forEach(d => d.setAttribute('aria-pressed', 'false'));
+        $('#slot-prompt').textContent = `Setze ${k} RAM-Modul${k > 1 ? 'e' : ''} laut Handbuch ein. Tippe auf einen Steckplatz, um ein Modul einzusetzen oder zu entfernen.`;
+      };
+      el.addEventListener('click', (e) => {
+        const t = e.target.closest('.slot-tasks button');
+        const d = e.target.closest('.dimm');
+        const act = e.target.closest('[data-act]')?.dataset.act;
+        if (t) return setTask(+t.dataset.n);
+        if (d) { d.setAttribute('aria-pressed', d.getAttribute('aria-pressed') !== 'true'); return clearMarks(); }
+        const placed = dimms.filter(x => x.getAttribute('aria-pressed') === 'true').map(x => x.dataset.slot);
+        if (act === 'check') {
+          if (placed.length !== n) return setFeedback(fb, false, `Du hast ${placed.length} Modul${placed.length === 1 ? '' : 'e'} eingesetzt – gefordert sind ${n}.`);
+          let right = true;
+          dimms.forEach(x => {
+            const should = SOLUTION[n].includes(x.dataset.slot), is = x.getAttribute('aria-pressed') === 'true';
+            if (is) { x.classList.toggle('ok', should); x.classList.toggle('bad', !should); }
+            if (is !== should) right = false;
+          });
+          if (right) {
+            Progress.done(MOD, 'ram-slots-' + n);
+            const all = [1, 2, 3, 4].every(k => Progress.isDone(MOD, 'ram-slots-' + k));
+            if (all) Progress.done(MOD, 'ram-slots');
+            refreshTasks();
+            setFeedback(fb, true, n === 2
+              ? 'Richtig! Je ein Modul pro Kanal (A1 + B2) – so läuft Dual Channel.'
+              : `Richtig!${all ? ' Alle Szenarien gelöst.' : ' Probiere auch die anderen Szenarien.'}`);
+          } else setFeedback(fb, false, 'Noch nicht richtig. Schau in die Tabelle aus dem Handbuch.');
+        } else if (act === 'solve') {
+          dimms.forEach(x => { const s = SOLUTION[n].includes(x.dataset.slot); x.setAttribute('aria-pressed', s); x.classList.toggle('ok', s); x.classList.remove('bad'); });
+          setFeedback(fb, null, 'Lösung eingeblendet.');
+        } else if (act === 'reset') setTask(n);
+      });
+      setTask(2);
+
+      choiceQuiz($('#ram-quiz-q3'), {
+        mod: MOD, id: 'ram-q3', question: 'Worauf solltest du achten, damit Dual Channel optimal funktioniert?',
+        options: [
+          'Beide Module haben die gleiche Speichergröße',
+          'Beide Module laufen mit derselben Taktrate',
+          'Die Module stecken laut Handbuch in unterschiedlichen Kanälen (A und B)',
+          'Beide Module stecken im selben Kanal',
+          'Die Module müssen von unterschiedlichen Herstellern sein'
+        ],
+        correct: [0, 1, 2],
+        explain: 'Am besten nimmt man ein Kit aus zwei identischen Modulen.'
+      });
+    }
+
+    /* =========================================================
        MODUL: MAINBOARD
        ========================================================= */
     const MB_PARTS = [
@@ -2265,6 +2597,7 @@
     renderCourseGrid();
     initMainboard();
     initCpu();
+    initRam();
     updateProgressUI();
     isLoggedIn() ? showApp() : showLogin();
   })();
