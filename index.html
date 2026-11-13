@@ -605,6 +605,33 @@
     .var-box .vb-type { font: 700 .75rem ui-monospace, monospace; color: var(--accent-2); }
     .var-box .vb-val { font: 700 1.3rem ui-monospace, monospace; }
     .var-box .vb-name { font: .85rem ui-monospace, monospace; color: var(--text-muted); border-top: 1px dashed var(--border); padding-top: .25rem; }
+    /* ---------- Code-Spielwiese ---------- */
+    .jp { margin: 1rem 0; overflow: hidden; background: #0b0f14; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .jp-bar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; padding: .6rem; background: var(--bg-elev-2); border-bottom: 1px solid var(--border); }
+    .jp-ex { flex: 1 1 220px; }
+    .jp-ex select { width: 100%; padding: .5rem; font: inherit; font-size: 16px; color: var(--text); background: var(--bg-elev); border: 1px solid var(--border); border-radius: 6px; }
+    .jp-editor { display: flex; max-height: 65vh; overflow-y: auto; }
+    .jp-gutter, .jp-hl, .jp-ta { font: .88rem/1.6 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; tab-size: 4; }
+    .jp-gutter { flex: 0 0 auto; min-width: 3em; padding: 12px .6rem 12px .5rem; text-align: right; color: #484f58; user-select: none; background: #0b0f14; border-right: 1px solid #1f2630; }
+    .jp-gutter span { display: block; }
+    .jp-gutter span.err { color: #fff; background: var(--danger); border-radius: 3px; }
+    .jp-code { position: relative; flex: 1; min-width: 0; overflow: hidden; }
+    .jp-hl, .jp-ta { margin: 0; padding: 12px; white-space: pre; border: 0; }
+    .jp-hl { position: absolute; top: 0; left: 0; min-width: 100%; pointer-events: none; color: #e6edf3; }
+    .jp-ta { position: relative; display: block; width: 100%; resize: none; overflow-x: auto; overflow-y: hidden; color: transparent; caret-color: #e6edf3; background: transparent; outline: none; }
+    .jp-ta::selection { color: transparent; background: rgba(59,130,246,.45); }
+    .jp.running .jp-ta { cursor: progress; }
+    .jp-console { position: relative; background: #000; border-top: 1px solid var(--border); }
+    .jp-console::before { content: "Konsole"; position: absolute; top: .35rem; right: .8rem; font: 600 .7rem var(--font); letter-spacing: .05em; text-transform: uppercase; color: #4b5563; }
+    .jp-out { min-height: 4.5rem; max-height: 340px; overflow: auto; padding: .75rem 1rem; font: .85rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; color: #d1d5db; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .jp-err { color: #ff7b72; } .jp-ok { color: #3fb950; } .jp-info { color: #6b7280; } .jp-input { color: #22d3ee; }
+    .jp-link { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+    .jp-inrow { display: flex; gap: .5rem; align-items: center; padding: .5rem 1rem .75rem; border-top: 1px dashed #1f2630; }
+    .jp-inrow > span { color: #22d3ee; font-weight: 700; }
+    .jp-inrow input { flex: 1; min-width: 0; padding: .45rem .6rem; font: 16px ui-monospace, monospace; color: #e6edf3; background: #0b0f14; border: 1px solid var(--accent-2); border-radius: 6px; outline: none; }
+    .jp-try { margin: -.25rem 0 .75rem; padding: .4rem .8rem; font-size: .85rem; }
+    @media (pointer: coarse) { .jp-gutter, .jp-hl, .jp-ta { font-size: 16px; } }
+    @media (max-width: 520px) { .jp-bar .btn { flex: 1 1 auto; justify-content: center; padding: .55rem .7rem; } }
     .range-row { display: grid; gap: .4rem; }
     #addr-out { white-space: normal; }
     .range-row input { width: 100%; accent-color: var(--accent); }
@@ -2060,7 +2087,7 @@
                   <div class="two-col">
                     <div>
                       <div class="box info" style="margin-bottom:0"><span class="box-title">Sequenz</span>Anweisungen werden der Reihe nach ausgeführt.</div>
-                      <pre class="code">
+                      <pre class="code" data-run>
 System.out.println("Motor an");
 System.out.println("Fahre 1 Meter");
 System.out.println("Motor aus");</pre>
@@ -2076,7 +2103,7 @@ if (abstand &lt; 20) {
                     </div>
                     <div>
                       <div class="box info" style="margin-bottom:0"><span class="box-title">Schleife (for / while)</span>Anweisungen werden wiederholt.</div>
-                      <pre class="code">
+                      <pre class="code" data-run>
 for (int runde = 1; runde &lt;= 3; runde++) {
     System.out.println("Runde " + runde);
 }</pre>
@@ -2176,7 +2203,7 @@ robbi.fahreVorwaerts();   // Ausgabe: Robbi fährt mit 50 %</pre>
                 <section class="lesson-section" id="aph-s1">
                   <h3><span class="sec-num">1</span> Aufbau eines Java-Programms</h3>
                   <p>In Java existiert nichts ohne <strong>Klassen</strong>, auch lauffähige Programme stecken in einer Klasse. Damit eine Klasse ausführbar wird, bekommt sie die <strong>main-Methode</strong>.</p>
-                  <pre class="code" data-lines>
+                  <pre class="code" data-run data-lines>
 public class HelloWorld {
 
     public static void main(String[] args) {
@@ -2237,7 +2264,7 @@ public class HelloWorld {
                   <h3><span class="sec-num">4</span> Escape-Sequenzen</h3>
                   <p>Zur Formatierung der Ausgabe gibt es Sonderzeichen, die mit einem Backslash <code>\</code> beginnen. <strong>Aufgabe:</strong> Ordne jeder Escape-Sequenz ihre Bedeutung zu.</p>
                   <div id="aph-quiz-escape"></div>
-                  <pre class="code">System.out.println("Name:\tLena\nAlter:\t17");
+                  <pre class="code" data-run>System.out.println("Name:\tLena\nAlter:\t17");
 System.out.println("Sie sagte: \"Hallo!\"");
 System.out.println("Pfad: C:\\Java");</pre>
                   <pre class="console">Name:   Lena
@@ -2362,7 +2389,7 @@ Pfad: C:\Java</pre>
                   <p>Ergänze die fehlenden Datentypen. Achtung, zwei Begriffe sind falsch geschrieben!</p>
                   <div id="apv-quiz-steckbrief"></div>
                   <p>So sieht das fertige Programm mit Ausgabe aus:</p>
-                  <pre class="code">
+                  <pre class="code" data-run>
 package beispiel;
 
 public class Steckbrief {
@@ -2472,7 +2499,7 @@ Führerschein: false</pre>
                 <section class="lesson-section" id="apo-s3">
                   <h3><span class="sec-num">3</span> Zeichenketten verbinden</h3>
                   <p>Bei Zeichenketten bedeutet <code>+</code> <strong>anhängen</strong> (Verkettung) und nicht addieren. Java rechnet von <strong>links nach rechts</strong>: Sobald ein String beteiligt ist, wird alles Weitere angehängt.</p>
-                  <pre class="code">
+                  <pre class="code" data-run>
 System.out.println(2 + 3 + " Äpfel");     // erst 2 + 3 = 5, dann anhängen
 System.out.println("Äpfel: " + 2 + 3);    // "Äpfel: 2", dann "3" anhängen
 System.out.println("Äpfel: " + (2 + 3));  // Klammer zuerst</pre>
@@ -2551,7 +2578,7 @@ result = number1 / (double) number2;   // 3.5  ✓ Cast vor der Division</pre>
 
                 <section class="lesson-section" id="apn-s1">
                   <h3><span class="sec-num">1</span> Warum stimmt der Durchschnitt nicht?</h3>
-                  <pre class="code" data-lines>
+                  <pre class="code" data-run data-lines>
 public class Notenberechnung {
     public static void main(String[] args) {
         //Noteninformationen wurden wie folgt eingelesen
@@ -2637,7 +2664,7 @@ System.out.println("Ihre Zeugnisnote: " + zeugnisnote);</pre>
                 <section class="lesson-section" id="apn-s4">
                   <h3><span class="sec-num">4</span> Benutzereingaben mit dem Scanner</h3>
                   <p>Für Eingaben über die Tastatur gibt es die Klasse <code>Scanner</code>:</p>
-                  <pre class="code" data-lines>
+                  <pre class="code" data-run data-lines>
 import java.util.Scanner; // Ganz oben im Java-File, VOR der Klasse
 
 public class Benutzereingaben {
@@ -2695,7 +2722,7 @@ String name = scanner.nextLine();</pre>
                     <div class="quiz-actions"><button type="button" class="btn" data-act="sample">Musterlösung anzeigen</button></div>
                     <div class="sample" hidden>
                       <div class="box merke" style="margin-bottom:0">Mögliche Lösung. Die <code>for</code>-Schleife wiederholt die Eingabe so oft wie gewünscht. Schleifen kommen im Unterricht noch ausführlich dran.</div>
-                      <pre class="code">
+                      <pre class="code" data-run>
 import java.util.Scanner;
 
 public class Notenberechnung {
@@ -2727,9 +2754,41 @@ public class Notenberechnung {
               </div>
             </article>
 
-            <!-- ============ AP 6: TEST-VORBEREITUNG ============ -->
+            <!-- ============ AP 6: CODE-SPIELWIESE ============ -->
+            <article class="module-panel" data-module="ap-spielwiese" role="tabpanel" hidden>
+              <h2>6. Code-Spielwiese</h2>
+              <div id="module-ap-spielwiese" class="lesson">
+                <div class="lesson-head">
+                  <p class="lesson-intro">Hier kannst du eigenen Java-Code schreiben und <strong>direkt im Browser ausführen</strong>, ohne Installation. Wähle ein Beispiel aus den Unterlagen oder schreib dein eigenes Programm. Fehlermeldungen kommen auf Deutsch und mit Tipp.</p>
+                </div>
+                <section class="lesson-section">
+                  <div id="ap-playground"></div>
+                  <div class="two-col">
+                    <div class="box info">
+                      <span class="box-title">So funktioniert’s</span>
+                      <ul>
+                        <li>Beispiel auswählen oder eigenen Code schreiben</li>
+                        <li><strong>▶ Ausführen</strong> (oder Strg + Enter) startet das Programm.</li>
+                        <li>Liest das Programm mit dem <code>Scanner</code> ein, erscheint unten in der Konsole ein Eingabefeld.</li>
+                        <li>Fehlermeldung anklicken, dann springt der Editor zur betroffenen Zeile.</li>
+                        <li>Ohne Klasse geht es auch: Der Code wird dann wie der Inhalt von <code>main</code> ausgeführt.</li>
+                        <li>Dein Code wird automatisch in diesem Browser gespeichert.</li>
+                      </ul>
+                    </div>
+                    <div class="box merke">
+                      <span class="box-title">Was die Spielwiese kann – und was nicht</span>
+                      <strong>Kann:</strong> alle primitiven Datentypen, <code>String</code>, Operatoren und Casts, <code>if</code>/<code>else</code>, <code>switch</code>, Schleifen, Arrays, eigene <code>static</code>-Methoden, <code>Math</code>, <code>Scanner</code>, <code>printf</code>.<br>
+                      <strong>Noch nicht:</strong> eigene Klassen und Objekte (<code>new Roboter()</code>), Vererbung, <code>ArrayList</code> &amp; Co., <code>try</code>/<code>catch</code> und die LEGO-Befehle von leJOS.<br>
+                      <span class="muted">Die Spielwiese simuliert Java 8 und wurde mit echtem Java getestet. In seltenen Sonderfällen kann es trotzdem Unterschiede geben – im Zweifel zählt die IDE im Unterricht. <code>printf</code> schreibt Kommazahlen wie ein deutsch eingestellter PC mit Komma (2,83).</span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </article>
+
+            <!-- ============ AP 7: TEST-VORBEREITUNG ============ -->
             <article class="module-panel" data-module="ap-quiz" role="tabpanel" hidden>
-              <h2>6. Test-Vorbereitung</h2>
+              <h2>7. Test-Vorbereitung</h2>
               <div id="module-ap-quiz" class="lesson">
                 <div class="lesson-head">
                   <p class="lesson-intro">Bereite dich auf den 1. Test vor. Die Fragen werden zufällig aus allen AP-Kapiteln gezogen: Theorie, „Was gibt der Code aus?“ und kleine Rechenaufgaben. Am Ende bekommst du eine Note und siehst, welche Kapitel du wiederholen solltest.</p>
@@ -2808,7 +2867,7 @@ public class Notenberechnung {
         id: 'ap',
         code: 'AP',
         title: 'Programmierung',
-        description: 'Programmieren mit Java: Grundbegriffe, Hello World, Variablen und Datentypen, Operatoren sowie eine erste Programmierübung.',
+        description: 'Programmieren mit Java: Grundbegriffe, Hello World, Variablen und Datentypen, Operatoren, eine erste Programmierübung und eine Code-Spielwiese zum Ausprobieren.',
         icon: 'code',
         status: 'active',
         modules: [
@@ -2817,6 +2876,7 @@ public class Notenberechnung {
           { id: 'ap-variablen',  title: 'Variablen & Datentypen' },
           { id: 'ap-operatoren', title: 'Operatoren & Typumwandlung' },
           { id: 'ap-noten',      title: 'Übung: Notenberechnung' },
+          { id: 'ap-spielwiese', title: 'Code-Spielwiese' },
           { id: 'ap-quiz',       title: 'Test-Vorbereitung' }
         ]
       },
@@ -3578,6 +3638,7 @@ public class Notenberechnung {
     function highlightAll(root = document) {
       $$('pre.code:not([data-hl])', root).forEach(p => {
         if (!p.textContent.trim()) return;
+        p.dataset.src = dedent(p.textContent).join('\n');
         p.innerHTML = codeHTML(p.textContent, p.hasAttribute('data-lines'));
         p.setAttribute('data-hl', '');
       });
@@ -3957,6 +4018,1947 @@ public class Notenberechnung {
       finalQuiz($('#fq-itt1'), {
         mod: 'quiz', bank: QUIZ_BANK, course: 'itt1', bestKey: 'bs-quiz-best',
         topics: { mainboard: 'Mainboard', cpu: 'CPU', ram: 'Arbeitsspeicher (RAM)', massenspeicher: 'Massenspeicher', gpu: 'Grafikkarte (GPU)' }
+      });
+    }
+
+    /* MINIJAVA-START */
+    /* =========================================================
+       MINI-JAVA – kleiner Java-Interpreter für die Code-Spielwiese
+       ---------------------------------------------------------
+       Unterstützt (Java-8-Teilmenge): eine Klasse mit main-Methode
+       und statischen Methoden/Feldern, primitive Datentypen, String,
+       Arrays, alle Operatoren inkl. Ganzzahldivision & Casts,
+       if/else, switch, while, do-while, for, for-each,
+       System.out.print/println/printf, Math, Integer/Double.parse…,
+       String-Methoden und Scanner (Eingabe über die Konsole).
+       Ohne Klasse wird der Code wie der Inhalt von main ausgeführt.
+       ========================================================= */
+    const MiniJava = (() => {
+      class CompileError extends Error {
+        constructor(line, col, msg) { super(msg); this.line = line; this.col = col; }
+      }
+      class JavaThrow {
+        constructor(name, msg, line, hint) { this.name = name; this.msg = msg; this.line = line; this.hint = hint; }
+      }
+      class LimitError { constructor(msg) { this.msg = msg; } }
+      class ExitSignal {}
+      class BreakSignal {}
+      class ContinueSignal {}
+      class ReturnSignal { constructor(v) { this.v = v; } }
+      const BRK = new BreakSignal(), CONT = new ContinueSignal();
+
+      /* ---------- Typen ---------- */
+      const PRIMS = new Set(['byte', 'short', 'char', 'int', 'long', 'float', 'double', 'boolean']);
+      const NUMERIC = new Set(['byte', 'short', 'char', 'int', 'long', 'float', 'double']);
+      const INTEGRAL = new Set(['byte', 'short', 'char', 'int', 'long']);
+      const KNOWN_TYPES = new Set([...PRIMS, 'String', 'Scanner']);
+      const isArr = t => typeof t === 'string' && t.endsWith('[]');
+      const elemOf = t => t.slice(0, -2);
+      const promote1 = t => (t === 'byte' || t === 'short' || t === 'char') ? 'int' : t;
+      const promote2 = (a, b) => (a === 'double' || b === 'double') ? 'double' : (a === 'float' || b === 'float') ? 'float'
+        : (a === 'long' || b === 'long') ? 'long' : 'int';
+      const WIDEN = {
+        byte: ['short', 'int', 'long', 'float', 'double'], short: ['int', 'long', 'float', 'double'],
+        char: ['int', 'long', 'float', 'double'], int: ['long', 'float', 'double'], long: ['float', 'double'], float: ['double']
+      };
+      const widens = (f, t) => f === t || (WIDEN[f] || []).includes(t);
+      const isRefType = t => t === 'String' || t === 'Scanner' || isArr(t);
+      const RANGE = { byte: [-128, 127], short: [-32768, 32767], char: [0, 65535] };
+
+      function assignable(from, to, constVal) {
+        if (from === to || from === 'error' || to === 'error') return true;
+        if (NUMERIC.has(from) && NUMERIC.has(to)) {
+          if (widens(from, to)) return true;
+          if (constVal !== undefined && ['byte', 'short', 'char', 'int'].includes(from) && RANGE[to]) {
+            const v = Number(constVal); return v >= RANGE[to][0] && v <= RANGE[to][1];
+          }
+          return false;
+        }
+        if (from === 'null' && isRefType(to)) return true;
+        return false;
+      }
+      function mismatchMsg(from, to, expr) {
+        if (from === 'void') return 'Diese Methode liefert keinen Wert (void) – man kann ihr Ergebnis nicht verwenden.';
+        if (NUMERIC.has(from) && NUMERIC.has(to)) {
+          let m = `Datentyp passt nicht: Von ${from} nach ${to} können Informationen verloren gehen.`;
+          if (to === 'float' && from === 'double' && expr && expr.k === 'lit') m += ' Tipp: Bei float muss hinter der Zahl ein f stehen, z. B. 9.99f.';
+          else m += ` Tipp: Mit einem Cast umwandeln, z. B. (${to}) …`;
+          return m;
+        }
+        if (from === 'String' && to === 'char') return 'Datentyp passt nicht: "…" ist ein String, kein char. Ein einzelnes Zeichen steht in einfachen Anführungszeichen, z. B. \'B\'.';
+        if (from === 'char' && to === 'String') return 'Datentyp passt nicht: \'…\' ist ein char, kein String. Text steht in doppelten Anführungszeichen, z. B. "Lena".';
+        if (from === 'String' && NUMERIC.has(to)) return `Datentyp passt nicht: Ein String kann nicht in ${to} umgewandelt werden. Tipp: Integer.parseInt(…) bzw. Double.parseDouble(…) verwenden.`;
+        if (NUMERIC.has(from) && to === 'String') return `Datentyp passt nicht: ${from} kann nicht direkt in einen String umgewandelt werden. Tipp: "" + wert oder String.valueOf(wert).`;
+        if (from === 'boolean' || to === 'boolean') return `Datentyp passt nicht: ${from} und ${to} sind nicht kompatibel – boolean kennt nur true und false.`;
+        return `Datentyp passt nicht: ${from} kann nicht in ${to} umgewandelt werden.`;
+      }
+
+      /* ---------- Werte umwandeln ---------- */
+      const INT_MIN = -2147483648, INT_MAX = 2147483647;
+      const LONG_MIN = -(2n ** 63n), LONG_MAX = 2n ** 63n - 1n;
+      function d2i(x) { if (Number.isNaN(x)) return 0; if (x >= INT_MAX) return INT_MAX; if (x <= INT_MIN) return INT_MIN; return Math.trunc(x) | 0; }
+      function d2l(x) { if (Number.isNaN(x)) return 0n; if (x >= 9.223372036854776e18) return LONG_MAX; if (x <= -9.223372036854776e18) return LONG_MIN; return BigInt(Math.trunc(x)); }
+      function convert(v, from, to) {
+        if (from === to || !NUMERIC.has(to) || !NUMERIC.has(from)) return v;
+        let i;
+        switch (to) {
+          case 'double': return from === 'long' ? Number(v) : v;
+          case 'float': return Math.fround(from === 'long' ? Number(v) : v);
+          case 'long':
+            if (from === 'double' || from === 'float') return d2l(v);
+            return BigInt(v);
+          default:
+            if (from === 'long') i = Number(BigInt.asIntN(32, v));
+            else if (from === 'double' || from === 'float') i = d2i(v);
+            else i = v;
+            if (to === 'int') return i | 0;
+            if (to === 'short') return (i << 16) >> 16;
+            if (to === 'byte') return (i << 24) >> 24;
+            if (to === 'char') return i & 0xFFFF;
+            return i;
+        }
+      }
+      function arith(op, a, b, t, line) {
+        if (t === 'long') {
+          if ((op === '/' || op === '%') && b === 0n) throw new JavaThrow('java.lang.ArithmeticException', '/ by zero', line, 'Division durch 0 ist bei ganzen Zahlen nicht erlaubt.');
+          let r;
+          switch (op) {
+            case '+': r = a + b; break; case '-': r = a - b; break; case '*': r = a * b; break;
+            case '/': r = a / b; break; case '%': r = a % b; break;
+            case '&': r = a & b; break; case '|': r = a | b; break; case '^': r = a ^ b; break;
+          }
+          return BigInt.asIntN(64, r);
+        }
+        if (t === 'int') {
+          if ((op === '/' || op === '%') && b === 0) throw new JavaThrow('java.lang.ArithmeticException', '/ by zero', line, 'Division durch 0 ist bei ganzen Zahlen nicht erlaubt.');
+          switch (op) {
+            case '+': return (a + b) | 0; case '-': return (a - b) | 0; case '*': return Math.imul(a, b);
+            case '/': return (a / b) | 0; case '%': return (a % b) | 0;
+            case '&': return a & b; case '|': return a | b; case '^': return a ^ b;
+          }
+        }
+        let r;
+        switch (op) { case '+': r = a + b; break; case '-': r = a - b; break; case '*': r = a * b; break; case '/': r = a / b; break; case '%': r = a % b; break; }
+        return t === 'float' ? Math.fround(r) : r;
+      }
+      function shift(op, a, b, t) {
+        if (t === 'long') {
+          const n = BigInt(Number(b) & 63);
+          if (op === '<<') return BigInt.asIntN(64, a << n);
+          if (op === '>>') return a >> n;
+          return BigInt.asIntN(64, BigInt.asUintN(64, a) >> n);
+        }
+        const n = Number(b) & 31;
+        if (op === '<<') return a << n; if (op === '>>') return a >> n; return (a >>> n) | 0;
+      }
+
+      /* ---------- Ausgabe wie in Java ---------- */
+      function fmtSci(num) {
+        let [m, e] = num.toExponential().split('e');
+        if (!m.includes('.')) m += '.0';
+        return m + 'E' + (e[0] === '+' ? e.slice(1) : e);
+      }
+      function javaDouble(x) {
+        if (Number.isNaN(x)) return 'NaN';
+        if (x === Infinity) return 'Infinity'; if (x === -Infinity) return '-Infinity';
+        if (x === 0) return Object.is(x, -0) ? '-0.0' : '0.0';
+        const a = Math.abs(x);
+        if (a >= 1e-3 && a < 1e7) { const s = String(x); return s.includes('.') ? s : s + '.0'; }
+        return fmtSci(x);
+      }
+      function javaFloat(x) {
+        if (!Number.isFinite(x) || x === 0) return javaDouble(x);
+        let s = x;
+        for (let p = 1; p <= 9; p++) { const c = Number(x.toPrecision(p)); if (Math.fround(c) === x) { s = c; break; } }
+        return javaDouble(s);
+      }
+      const ARR_CODE = { int: 'I', long: 'J', double: 'D', float: 'F', boolean: 'Z', char: 'C', byte: 'B', short: 'S', String: 'Ljava.lang.String;' };
+      function str(v, t) {
+        if (v === null || v === undefined) return 'null';
+        switch (t) {
+          case 'char': return String.fromCharCode(v);
+          case 'double': return javaDouble(v);
+          case 'float': return javaFloat(v);
+          case 'long': return v.toString();
+          case 'String': return String(v);
+          case 'Scanner': return 'java.util.Scanner';
+          default:
+            if (isArr(t)) { let code = '', et = t; while (isArr(et)) { code += '['; et = elemOf(et); } return code + (ARR_CODE[et] || 'L' + et + ';') + '@' + v.hash; }
+            return String(v);
+        }
+      }
+
+      /* ---------- Lexer ---------- */
+      const KEYWORDS = new Set(['abstract', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float', 'for', 'if', 'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'new', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'super', 'switch', 'this', 'throw', 'throws', 'try', 'void', 'while', 'true', 'false', 'null']);
+      const OPS = ['>>>=', '<<=', '>>=', '>>>', '...', '->', '::', '++', '--', '&&', '||', '==', '!=', '<=', '>=', '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', '<<', '>>',
+        '+', '-', '*', '/', '%', '=', '<', '>', '!', '~', '?', ':', ';', ',', '.', '(', ')', '{', '}', '[', ']', '&', '|', '^', '@'];
+      const ESC = { t: '\t', n: '\n', b: '\b', r: '\r', f: '\f', '"': '"', "'": "'", '\\': '\\' };
+
+      function lex(src) {
+        const toks = []; let i = 0, line = 1, col = 1; const n = src.length;
+        const err = (msg, l = line, c = col) => { throw new CompileError(l, c, msg); };
+        const adv = k => { for (let j = 0; j < k; j++) { if (src[i] === '\n') { line++; col = 1; } else col++; i++; } };
+        const readEsc = (j, l, c) => {
+          const e = src[j + 1];
+          if (e in ESC) return { ch: ESC[e], j: j + 2 };
+          if (e === 'u') { let k = j + 1; while (src[k] === 'u') k++; const hex = src.slice(k, k + 4); if (!/^[0-9a-fA-F]{4}$/.test(hex)) err('Ungültige Unicode-Escape-Sequenz.', l, c); return { ch: String.fromCharCode(parseInt(hex, 16)), j: k + 4 }; }
+          if (/[0-7]/.test(e || '')) { let k = j + 1, s = ''; while (s.length < 3 && /[0-7]/.test(src[k] || '')) s += src[k++]; return { ch: String.fromCharCode(parseInt(s, 8)), j: k }; }
+          err(`Ungültige Escape-Sequenz \\${e || ''} – erlaubt sind z. B. \\n, \\t, \\", \\', \\\\.`, l, c);
+        };
+        while (i < n) {
+          const c = src[i];
+          if (c === '\n' || c === ' ' || c === '\t' || c === '\r' || c === '\f' || c === ' ') { adv(1); continue; }
+          if (c === '/' && src[i + 1] === '/') { while (i < n && src[i] !== '\n') adv(1); continue; }
+          if (c === '/' && src[i + 1] === '*') {
+            const l0 = line, c0 = col; adv(2);
+            while (i < n && !(src[i] === '*' && src[i + 1] === '/')) adv(1);
+            if (i >= n) err('Der Kommentar /* … wurde nicht mit */ geschlossen.', l0, c0);
+            adv(2); continue;
+          }
+          const sl = line, sc = col;
+          if ('“”„‟«»'.includes(c)) err(`Typografisches Anführungszeichen ${c} – in Java nur das normale " verwenden (z. B. aus Word kopiert?).`);
+          if ('‘’‚'.includes(c)) err(`Typografisches Anführungszeichen ${c} – in Java nur das normale ' verwenden.`);
+          if (/[\p{L}_$]/u.test(c)) {
+            let j = i; while (j < n && /[\p{L}\p{N}_$]/u.test(src[j])) j++;
+            const w = src.slice(i, j); adv(j - i);
+            toks.push({ t: KEYWORDS.has(w) ? 'kw' : 'id', v: w, line: sl, col: sc });
+            continue;
+          }
+          if (/[0-9]/.test(c) || (c === '.' && /[0-9]/.test(src[i + 1] || ''))) {
+            let j = i, isFloat = false, hex = false;
+            if (c === '0' && /[xX]/.test(src[i + 1] || '')) { hex = true; j += 2; while (/[0-9a-fA-F_]/.test(src[j] || '')) j++; }
+            else {
+              while (/[0-9_]/.test(src[j] || '')) j++;
+              if (src[j] === '.' && /[0-9]/.test(src[j + 1] || '')) { isFloat = true; j++; while (/[0-9_]/.test(src[j] || '')) j++; }
+              else if (src[j] === '.' && !/[\p{L}_$.]/u.test(src[j + 1] || '')) { isFloat = true; j++; }
+              if (/[eE]/.test(src[j] || '')) { isFloat = true; j++; if (/[+-]/.test(src[j] || '')) j++; while (/[0-9]/.test(src[j] || '')) j++; }
+            }
+            const text = src.slice(i, j).replace(/_/g, '');
+            let type = isFloat ? 'double' : 'int';
+            const suf = src[j] || '';
+            if (/[lL]/.test(suf) && !isFloat) { type = 'long'; j++; }
+            else if (/[fF]/.test(suf) && !hex) { type = 'float'; j++; }
+            else if (/[dD]/.test(suf) && !hex) { type = 'double'; j++; }
+            if (/[\p{L}\p{N}_$]/u.test(src[j] || '')) {
+              let k = j; while (/[\p{L}\p{N}_$]/u.test(src[k] || '')) k++;
+              err(`„${src.slice(i, k)}“ ist kein gültiger Name: Bezeichner dürfen nicht mit einer Ziffer beginnen.`);
+            }
+            let value;
+            if (type === 'int' || type === 'long') value = hex ? BigInt('0x' + text.slice(2)) : BigInt(text);
+            else value = type === 'float' ? Math.fround(Number(text)) : Number(text);
+            const rawText = src.slice(i, j);
+            adv(j - i);
+            toks.push({ t: 'num', type, v: value, text: rawText, line: sl, col: sc });
+            continue;
+          }
+          if (c === '"') {
+            if (src.startsWith('"""', i)) err('Textblöcke mit """ gibt es erst ab Java 15 – in eurer Java-Version nicht.');
+            let j = i + 1, s = '';
+            for (;;) {
+              if (j >= n || src[j] === '\n') err('Der Text (String) wurde nicht mit " geschlossen.', sl, sc);
+              const ch = src[j];
+              if (ch === '"') break;
+              if (ch === '\\') { const r = readEsc(j, sl, sc); s += r.ch; j = r.j; } else { s += ch; j++; }
+            }
+            adv(j + 1 - i);
+            toks.push({ t: 'str', v: s, line: sl, col: sc });
+            continue;
+          }
+          if (c === "'") {
+            let j = i + 1, s = '';
+            while (j < n && src[j] !== "'" && src[j] !== '\n') { if (src[j] === '\\') { const r = readEsc(j, sl, sc); s += r.ch; j = r.j; } else { s += src[j]; j++; } }
+            if (src[j] !== "'") err("Das Zeichen (char) wurde nicht mit ' geschlossen.", sl, sc);
+            if (s.length === 0) err("Leeres Zeichen '' – ein char muss genau ein Zeichen enthalten.", sl, sc);
+            if (s.length > 1) err(`'${s}' hat mehrere Zeichen – ein char enthält genau ein Zeichen. Für Text doppelte Anführungszeichen verwenden: "${s}"`, sl, sc);
+            adv(j + 1 - i);
+            toks.push({ t: 'chr', v: s.charCodeAt(0), line: sl, col: sc });
+            continue;
+          }
+          const op = OPS.find(o => src.startsWith(o, i));
+          if (op) { adv(op.length); toks.push({ t: 'op', v: op, line: sl, col: sc }); continue; }
+          if (c === '#') err('# ist in Java kein Kommentarzeichen – Kommentare beginnen mit //.');
+          if (c === '\\') err('Ein Backslash \\ ist nur innerhalb von Text erlaubt (z. B. "\\n"). Für die Division / verwenden.');
+          err(`Unerlaubtes Zeichen „${c}“.`);
+        }
+        toks.push({ t: 'eof', v: '<Dateiende>', line, col });
+        return toks;
+      }
+
+      /* ---------- Parser ---------- */
+      const ASSIGN_OPS = new Set(['=', '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', '<<=', '>>=', '>>>=']);
+      function parse(src) {
+        const toks = lex(src);
+        let p = 0;
+        const peek = (k = 0) => toks[Math.min(p + k, toks.length - 1)];
+        const next = () => toks[p++];
+        const is = (v, k = 0) => { const t = peek(k); return (t.t === 'op' || t.t === 'kw') && t.v === v; };
+        const accept = v => { if (is(v)) { p++; return true; } return false; };
+        const err = (msg, t = peek()) => {
+          if (t.t === 'eof' && toks.length > 1) { const last = toks[toks.length - 2]; throw new CompileError(last.line, last.col, msg); }
+          throw new CompileError(t.line, t.col, msg);
+        };
+        const desc = t => t.t === 'eof' ? 'das Dateiende' : `„${t.t === 'str' ? '"' + t.v + '"' : t.t === 'chr' ? "'" + String.fromCharCode(t.v) + "'" : t.v}“`;
+        const expect = (v, what) => {
+          if (accept(v)) return;
+          const t = peek();
+          if (v === ';') { const prev = toks[p - 1] || t; err('Hier fehlt ein Semikolon ; am Ende der Anweisung.', { line: prev.line, col: prev.col }); }
+          if (t.t === 'eof') err(`Unerwartetes Dateiende – es fehlt noch ${v === '}' ? 'eine schließende Klammer }' : '„' + v + '“'}.`);
+          err(`„${v}“ erwartet${what ? ' ' + what : ''}, gefunden: ${desc(t)}.`);
+        };
+        const ident = what => {
+          const t = peek();
+          if (t.t === 'id') { p++; return t.v; }
+          if (t.t === 'kw') err(`„${t.v}“ ist ein reserviertes Schlüsselwort und kann nicht als Name verwendet werden.`);
+          err(`Name ${what || ''} erwartet, gefunden: ${desc(t)}.`);
+        };
+        const imports = [];
+        const isPrimKw = t => t.t === 'kw' && PRIMS.has(t.v);
+
+        function parseType() {
+          const t = peek(); let base;
+          if (isPrimKw(t) || t.t === 'id') { p++; base = t.v; }
+          else if (is('void')) err('void ist nur als Rückgabetyp von Methoden erlaubt.');
+          else err(`Datentyp erwartet, gefunden: ${desc(t)}.`);
+          if (is('<')) err(`Generische Typen wie ${base}<…> werden in der Spielwiese noch nicht unterstützt.`);
+          while (is('[') && is(']', 1)) { p += 2; base += '[]'; }
+          return { type: base, line: t.line, col: t.col };
+        }
+        function looksLikeDecl() {
+          const t = peek();
+          if (is('final')) return true;
+          if (isPrimKw(t)) return true;
+          if (t.t === 'id') {
+            const t1 = peek(1);
+            if (t1.t === 'id') return true;
+            if (t1.t === 'op' && t1.v === '[' && is(']', 2)) return true;
+            if (t1.t === 'op' && t1.v === '<' && peek(2).t === 'id' && (is('>', 3) || is(',', 3))) return true;
+          }
+          return false;
+        }
+        function parseVarDecl(needSemi = true) {
+          const line = peek().line;
+          let fin = false;
+          while (is('final')) { p++; fin = true; }
+          if (peek().t === 'id' && peek().v === 'var' && peek(1).t === 'id') err('var gibt es erst ab Java 10 – in eurer Java-Version muss der Datentyp angegeben werden (z. B. int).');
+          const tt = parseType();
+          const decls = [];
+          do {
+            const nt = peek();
+            const name = ident('für die Variable');
+            let type = tt.type;
+            while (is('[') && is(']', 1)) { p += 2; type += '[]'; }
+            let init = null;
+            if (accept('=')) {
+              init = is('{') ? parseArrayInit() : parseExpr();
+              if (is(',') && peek(1).t === 'num' && init.k === 'lit' && NUMERIC.has(init.type) && peek(2).t === 'op' && peek(2).v === ';')
+                err(`Kommazahlen schreibt man in Java mit Punkt statt Komma: ${init.raw ?? ''}.${peek(1).text ?? ''}`, peek());
+            }
+            decls.push({ name, type, init, line: nt.line, col: nt.col });
+          } while (accept(','));
+          if (needSemi) expect(';');
+          return { k: 'var', fin, decls, line, typeTok: tt };
+        }
+        function parseArrayInit() {
+          const t = peek(); expect('{');
+          const elems = [];
+          if (!is('}')) { do { if (is('}')) break; elems.push(is('{') ? parseArrayInit() : parseExpr()); } while (accept(',')); }
+          expect('}', 'am Ende der Array-Initialisierung');
+          return { k: 'arrInit', elems, line: t.line, col: t.col };
+        }
+        function parseBlock() {
+          const t = peek(); expect('{');
+          const body = [];
+          while (!is('}')) {
+            if (peek().t === 'eof') err('Unerwartetes Dateiende – es fehlt mindestens eine schließende Klammer }.');
+            body.push(parseStatement());
+          }
+          p++;
+          return { k: 'block', body, line: t.line };
+        }
+        function parseStatement() {
+          const t = peek();
+          if (is('{')) return parseBlock();
+          if (is(';')) { p++; return { k: 'empty', line: t.line }; }
+          if (t.t === 'kw') {
+            switch (t.v) {
+              case 'if': {
+                p++; expect('(', 'nach if'); const cond = parseExpr(); expect(')', 'nach der Bedingung');
+                if (is(';')) { const s = peek(); p++; return { k: 'if', cond, then: { k: 'empty', line: s.line, warn: true }, els: accept('else') ? parseStatement() : null, line: t.line }; }
+                const then = parseStatement();
+                const els = accept('else') ? parseStatement() : null;
+                return { k: 'if', cond, then, els, line: t.line };
+              }
+              case 'while': { p++; expect('(', 'nach while'); const cond = parseExpr(); expect(')', 'nach der Bedingung'); return { k: 'while', cond, body: parseStatement(), line: t.line }; }
+              case 'do': {
+                p++; const body = parseStatement();
+                if (!is('while')) err('Nach dem do-Block fehlt while (…);');
+                p++; expect('('); const cond = parseExpr(); expect(')'); expect(';');
+                return { k: 'do', body, cond, line: t.line };
+              }
+              case 'for': {
+                p++; expect('(', 'nach for');
+                let init = [];
+                if (looksLikeDecl()) {
+                  const save = p;
+                  let fin = false; while (is('final')) { p++; fin = true; }
+                  const tt = parseType();
+                  if (peek().t === 'id' && is(':', 1)) {
+                    const name = ident(); p++;
+                    const iter = parseExpr(); expect(')');
+                    return { k: 'foreach', type: tt.type, name, iter, body: parseStatement(), line: t.line };
+                  }
+                  p = save;
+                  init = [parseVarDecl(false)];
+                } else if (!is(';')) {
+                  do { const e = parseExpr(); init.push({ k: 'expr', e, line: e.line }); } while (accept(','));
+                }
+                expect(';');
+                const cond = is(';') ? null : parseExpr();
+                expect(';');
+                const update = [];
+                if (!is(')')) { do { update.push(parseExpr()); } while (accept(',')); }
+                expect(')', 'am Ende des for-Kopfes');
+                return { k: 'for', init, cond, update, body: parseStatement(), line: t.line };
+              }
+              case 'switch': {
+                p++; expect('('); const e = parseExpr(); expect(')'); expect('{');
+                const cases = [];
+                while (!is('}')) {
+                  if (is('case') || is('default')) {
+                    const ct = next();
+                    const label = ct.v === 'case' ? parseExpr() : null;
+                    if (is('->')) err('switch mit -> gibt es erst ab Java 14 – in eurer Version: case …: … break;');
+                    expect(':', 'nach dem case-Wert');
+                    cases.push({ label, isDefault: ct.v === 'default', body: [], line: ct.line });
+                  } else {
+                    if (!cases.length) err('Im switch muss zuerst ein case oder default stehen.');
+                    if (peek().t === 'eof') err('Unerwartetes Dateiende im switch – es fehlt }.');
+                    cases[cases.length - 1].body.push(parseStatement());
+                  }
+                }
+                p++;
+                return { k: 'switch', e, cases, line: t.line };
+              }
+              case 'break': p++; expect(';'); return { k: 'break', line: t.line };
+              case 'continue': p++; expect(';'); return { k: 'continue', line: t.line };
+              case 'return': { p++; const e = is(';') ? null : parseExpr(); expect(';'); return { k: 'return', e, line: t.line }; }
+              case 'else': err('else ohne passendes if – steht vielleicht ein ; direkt hinter if (…)?');
+              case 'case': case 'default': err(`${t.v} ist nur innerhalb eines switch erlaubt.`);
+              case 'public': case 'private': case 'static': case 'class': case 'void': case 'protected':
+                err(`„${t.v}“ ist hier nicht erlaubt – fehlt vorher eine schließende Klammer } ?`);
+              case 'try': case 'throw': err('try/catch und throw werden in der Spielwiese noch nicht unterstützt.');
+              case 'final': return parseVarDecl();
+            }
+          }
+          if (looksLikeDecl()) return parseVarDecl();
+          const e = parseExpr();
+          if (!['assign', 'pre', 'post', 'call', 'newObj'].includes(e.k)) {
+            if (e.k === 'bin' && e.op === '==' ) err('Das ist keine Anweisung – meintest du = (Zuweisung) statt == (Vergleich)?', { line: e.line, col: e.col });
+            err('Das ist keine vollständige Anweisung (z. B. fehlt eine Zuweisung mit = oder ein Methodenaufruf).', { line: e.line, col: e.col });
+          }
+          expect(';');
+          return { k: 'expr', e, line: t.line };
+        }
+
+        /* Ausdrücke */
+        const node = (k, t, o) => Object.assign({ k, line: t.line, col: t.col }, o);
+        function parseExpr() { return parseAssign(); }
+        function parseAssign() {
+          const lhs = parseCond();
+          const t = peek();
+          if (t.t === 'op' && ASSIGN_OPS.has(t.v)) {
+            p++;
+            if (!['name', 'index', 'field'].includes(lhs.k)) err('Links vom = muss eine Variable stehen.', t);
+            const rhs = (t.v === '=' && is('{')) ? err('Eine Array-Initialisierung mit { … } ist nur bei der Deklaration erlaubt – sonst new int[]{ … } verwenden.') : parseAssign();
+            return node('assign', t, { op: t.v, l: lhs, r: rhs });
+          }
+          return lhs;
+        }
+        function parseCond() {
+          const c = parseBin(0);
+          if (is('?')) { const t = next(); const a = parseExpr(); expect(':', 'im Bedingungsoperator ? :'); const b = parseCond(); return node('cond', t, { c, a, b }); }
+          return c;
+        }
+        const LEVELS = [['||'], ['&&'], ['|'], ['^'], ['&'], ['==', '!='], ['<', '>', '<=', '>=', 'instanceof'], ['<<', '>>', '>>>'], ['+', '-'], ['*', '/', '%']];
+        function parseBin(level) {
+          if (level >= LEVELS.length) return parseUnary();
+          let l = parseBin(level + 1);
+          for (;;) {
+            const t = peek();
+            if ((t.t === 'op' || t.t === 'kw') && LEVELS[level].includes(t.v)) {
+              if (t.v === 'instanceof') err('instanceof wird in der Spielwiese nicht unterstützt.');
+              p++;
+              const r = parseBin(level + 1);
+              l = node('bin', t, { op: t.v, l, r });
+            } else return l;
+          }
+        }
+        function parseUnary() {
+          const t = peek();
+          if (t.t === 'op' && (t.v === '++' || t.v === '--')) { p++; const e = parseUnary(); return node('pre', t, { op: t.v, e }); }
+          if (t.t === 'op' && (t.v === '+' || t.v === '-' || t.v === '!' || t.v === '~')) {
+            p++;
+            if (t.v === '-' && peek().t === 'num' && (peek().type === 'int' || peek().type === 'long')) {
+              const nt = next(); const lit = litNode(nt, true);
+              return parsePostfix(lit);
+            }
+            const e = parseUnary(); return node('unary', t, { op: t.v, e });
+          }
+          if (t.t === 'op' && t.v === '(') {
+            const t1 = peek(1);
+            let k = 1;
+            if (isPrimKw(t1) || (t1.t === 'id' && t1.v === 'String')) {
+              k = 2; while (is('[', k) && is(']', k + 1)) k += 2;
+              if (is(')', k)) {
+                const after = peek(k + 1);
+                const prim = isPrimKw(t1);
+                const startsOperand = after.t === 'id' || after.t === 'num' || after.t === 'str' || after.t === 'chr' || (after.t === 'kw' && ['true', 'false', 'null', 'new'].includes(after.v)) || (after.t === 'op' && ['(', '!', '~'].includes(after.v)) || (prim && after.t === 'op' && ['+', '-', '++', '--'].includes(after.v));
+                if (startsOperand) {
+                  p++; const tt = parseType(); expect(')');
+                  const e = parseUnary();
+                  return node('cast', t, { type: tt.type, e });
+                }
+              }
+            }
+          }
+          return parsePostfix(parsePrimary());
+        }
+        function litNode(t, neg) {
+          if (t.type === 'int' || t.type === 'long') {
+            const v = neg ? -t.v : t.v;
+            const lim = t.type === 'int' ? [-(2n ** 31n), 2n ** 31n - 1n] : [LONG_MIN, LONG_MAX];
+            if (v < lim[0] || v > lim[1]) {
+              if (t.type === 'int') err(`Die Zahl ${t.v} ist zu groß für int (max. 2.147.483.647). Für große Zahlen long verwenden und ein L anhängen, z. B. ${t.v}L.`, t);
+              err('Die Zahl ist zu groß für long.', t);
+            }
+            return node('lit', t, { type: t.type, value: t.type === 'int' ? Number(v) : v, raw: (neg ? '-' : '') + String(t.v) });
+          }
+          return node('lit', t, { type: t.type, value: neg ? -t.v : t.v, raw: String(t.v) });
+        }
+        function parseArgs() {
+          expect('(');
+          const args = [];
+          if (!is(')')) { do { args.push(parseExpr()); } while (accept(',')); }
+          expect(')', 'am Ende der Argumentliste');
+          return args;
+        }
+        function parsePrimary() {
+          const t = peek();
+          switch (t.t) {
+            case 'num': p++; return litNode(t, false);
+            case 'str': p++; return node('lit', t, { type: 'String', value: t.v });
+            case 'chr': p++; return node('lit', t, { type: 'char', value: t.v });
+            case 'id': {
+              p++;
+              if (is('(')) return node('call', t, { obj: null, name: t.v, args: parseArgs() });
+              return node('name', t, { name: t.v });
+            }
+            case 'kw':
+              if (t.v === 'true' || t.v === 'false') { p++; return node('lit', t, { type: 'boolean', value: t.v === 'true' }); }
+              if (t.v === 'null') { p++; return node('lit', t, { type: 'null', value: null }); }
+              if (t.v === 'new') {
+                p++;
+                const bt = peek();
+                if (!(isPrimKw(bt) || bt.t === 'id')) err('Nach new muss ein Datentyp stehen.');
+                p++;
+                let base = bt.v;
+                if (is('[')) {
+                  const dims = [];
+                  while (is('[')) {
+                    p++;
+                    if (is(']')) { p++; dims.push(null); }
+                    else { dims.push(parseExpr()); expect(']'); }
+                  }
+                  const type = base + '[]'.repeat(dims.length);
+                  if (dims[0] === null) {
+                    if (!is('{')) err('Bei new typ[] ohne Größe muss eine Initialisierung { … } folgen.');
+                    const init = parseArrayInit();
+                    return node('newArr', t, { type, dims: [], init });
+                  }
+                  return node('newArr', t, { type, dims: dims.filter(d => d), init: null, emptyDims: dims.filter(d => !d).length });
+                }
+                if (is('<')) err('Generische Typen werden in der Spielwiese nicht unterstützt.');
+                return node('newObj', t, { cls: base, args: parseArgs() });
+              }
+              if (t.v === 'this' || t.v === 'super') err(`${t.v} wird in der Spielwiese nicht unterstützt (keine Objekte).`);
+              if (PRIMS.has(t.v)) err(`Hier wird ein Wert erwartet, aber „${t.v}“ ist ein Datentyp. Fehlt vielleicht eine Klammer beim Cast, z. B. (${t.v}) x?`);
+              err(`Unerwartetes Schlüsselwort „${t.v}“.`);
+            case 'op':
+              if (t.v === '(') { p++; const e = parseExpr(); expect(')', 'zur geöffneten Klammer ('); return e; }
+              if (t.v === ')') err('Unerwartete Klammer ) – zu viele schließende Klammern oder fehlt ein Wert?');
+              if (t.v === ';') err('Unerwartetes ; – hier fehlt noch ein Wert.');
+              err(`Unerwartetes Zeichen „${t.v}“ – hier wird ein Wert erwartet.`);
+            case 'eof': err('Unerwartetes Dateiende – der Ausdruck ist unvollständig.');
+          }
+        }
+        function parsePostfix(e) {
+          for (;;) {
+            const t = peek();
+            if (is('.')) {
+              p++;
+              const nt = peek();
+              if (nt.t !== 'id') err('Nach dem Punkt wird ein Name erwartet.');
+              p++;
+              if (is('(')) e = node('call', nt, { obj: e, name: nt.v, args: parseArgs() });
+              else e = node('field', nt, { obj: e, name: nt.v });
+            } else if (is('[')) {
+              p++; const idx = parseExpr(); expect(']');
+              e = node('index', t, { arr: e, idx });
+            } else if (is('++') || is('--')) {
+              p++; e = node('post', t, { op: t.v, e });
+            } else return e;
+          }
+        }
+
+        /* Programm */
+        const hasClass = toks.some(t => t.t === 'kw' && t.v === 'class');
+        if (is('package')) { p++; while (!is(';') && peek().t !== 'eof') p++; expect(';'); }
+        while (is('import')) {
+          const t = next(); let name = '';
+          if (accept('static')) name = 'static ';
+          while (!is(';') && peek().t !== 'eof') name += next().v;
+          expect(';');
+          imports.push({ name, line: t.line });
+        }
+        if (!hasClass) {
+          const body = [];
+          while (peek().t !== 'eof') {
+            if (is('}')) err('Unerwartete Klammer } – zu viele schließende Klammern?');
+            body.push(parseStatement());
+          }
+          return { mode: 'snippet', className: 'Main', imports, fields: [], methods: [{ name: 'main', ret: 'void', params: [{ name: 'args', type: 'String[]' }], body: { k: 'block', body, line: 1 }, line: 1, isMain: true }] };
+        }
+        const mods = () => { const m = new Set(); while (peek().t === 'kw' && ['public', 'private', 'protected', 'static', 'final', 'abstract'].includes(peek().v)) m.add(next().v); return m; };
+        mods();
+        if (!is('class')) err(is('interface') || is('enum') ? 'Interfaces und Enums werden in der Spielwiese nicht unterstützt.' : '„class“ erwartet.');
+        p++;
+        const className = ident('für die Klasse');
+        if (is('extends') || is('implements')) err('Vererbung (extends/implements) wird in der Spielwiese noch nicht unterstützt.');
+        expect('{', 'nach dem Klassennamen');
+        const fields = [], methods = [];
+        while (!is('}')) {
+          if (peek().t === 'eof') err('Unerwartetes Dateiende – es fehlt die schließende Klammer } der Klasse.');
+          if (accept(';')) continue;
+          const mt = peek();
+          const m = mods();
+          if (is('class')) err('Weitere Klassen innerhalb der Klasse werden nicht unterstützt.');
+          let ret;
+          if (is('void')) { p++; ret = 'void'; }
+          else {
+            if (peek().t === 'id' && peek().v === className && is('(', 1)) err('Konstruktoren (Objekte) werden in der Spielwiese noch nicht unterstützt.');
+            ret = parseType().type;
+          }
+          const nt = peek();
+          const name = ident(ret === 'void' ? 'für die Methode' : '');
+          if (is('(')) {
+            p++;
+            const params = [];
+            if (!is(')')) {
+              do {
+                while (is('final')) p++;
+                const pt = parseType();
+                let ptype = pt.type;
+                if (accept('...')) ptype += '[]';
+                const pn = ident('für den Parameter');
+                while (is('[') && is(']', 1)) { p += 2; ptype += '[]'; }
+                params.push({ name: pn, type: ptype, line: pt.line });
+              } while (accept(','));
+            }
+            expect(')', 'am Ende der Parameterliste');
+            if (is('throws')) { p++; do { ident(); } while (accept(',')); }
+            if (is(';')) err('Methoden ohne Rumpf { … } werden nicht unterstützt.');
+            const body = parseBlock();
+            if (!m.has('static')) err(`Die Methode ${name} ist nicht static. Objektmethoden werden in der Spielwiese noch nicht unterstützt – schreibe „static“ davor.`, mt);
+            methods.push({ name, ret, params, body, line: nt.line, isMain: name === 'main' });
+          } else {
+            p = toks.indexOf(nt);
+            const decl = parseVarDeclRest(ret, m.has('final'), nt.line);
+            if (!m.has('static')) err(`Die Variable ${decl.decls[0].name} ist nicht static. Instanzvariablen (Objekte) werden in der Spielwiese noch nicht unterstützt – schreibe „static“ davor.`, mt);
+            fields.push(decl);
+          }
+        }
+        p++;
+        if (peek().t !== 'eof') err(is('}') ? 'Unerwartete Klammer } nach dem Ende der Klasse – zu viele schließende Klammern?' : 'Nach dem Ende der Klasse darf nichts mehr stehen (nur eine Klasse pro Programm).');
+        function parseVarDeclRest(type, fin, line) {
+          const decls = [];
+          do {
+            const nt = peek(); const name = ident();
+            let t = type; while (is('[') && is(']', 1)) { p += 2; t += '[]'; }
+            let init = null;
+            if (accept('=')) init = is('{') ? parseArrayInit() : parseExpr();
+            decls.push({ name, type: t, init, line: nt.line, col: nt.col });
+          } while (accept(','));
+          expect(';');
+          return { k: 'var', fin, decls, line, isField: true };
+        }
+        return { mode: 'class', className, imports, fields, methods };
+      }
+
+      /* ---------- Semantische Prüfung (wie der Compiler) ---------- */
+      const CLASSES = new Set(['System', 'Math', 'Integer', 'Double', 'Long', 'String', 'Character', 'Boolean', 'Scanner']);
+      function suggest(name, candidates) {
+        const lower = name.toLowerCase();
+        return candidates.find(c => c.toLowerCase() === lower && c !== name);
+      }
+
+      /* Eingebaute Methoden: Typprüfung (check) und Ausführung (run) */
+      const anyArg = t => t !== 'void';
+      const numArg = t => NUMERIC.has(t);
+      const strLike = t => t === 'String' || t === 'null';
+      function jstr(s, keep) { return keep ? s : new String(s); }
+      const STATIC = {
+        Math: {
+          abs: { arity: [1], check: a => numArg(a[0]) && promote1(a[0]), run: ([x], [t]) => { const r = promote1(t); x = convert(x, t, r); return r === 'long' ? (x < 0n ? BigInt.asIntN(64, -x) : x) : r === 'int' ? (x < 0 ? (-x) | 0 : x) : Math.abs(x); } },
+          max: { arity: [2], check: a => numArg(a[0]) && numArg(a[1]) && promote2(a[0], a[1]), run: ([x, y], [tx, ty]) => { const r = promote2(tx, ty); x = convert(x, tx, r); y = convert(y, ty, r); return x >= y ? x : y; } },
+          min: { arity: [2], check: a => numArg(a[0]) && numArg(a[1]) && promote2(a[0], a[1]), run: ([x, y], [tx, ty]) => { const r = promote2(tx, ty); x = convert(x, tx, r); y = convert(y, ty, r); return x <= y ? x : y; } },
+          pow: { arity: [2], check: a => numArg(a[0]) && numArg(a[1]) && 'double', run: ([x, y], [tx, ty]) => Math.pow(convert(x, tx, 'double'), convert(y, ty, 'double')) },
+          sqrt: { arity: [1], check: a => numArg(a[0]) && 'double', run: ([x], [t]) => Math.sqrt(convert(x, t, 'double')) },
+          cbrt: { arity: [1], check: a => numArg(a[0]) && 'double', run: ([x], [t]) => Math.cbrt(convert(x, t, 'double')) },
+          ceil: { arity: [1], check: a => numArg(a[0]) && 'double', run: ([x], [t]) => Math.ceil(convert(x, t, 'double')) },
+          floor: { arity: [1], check: a => numArg(a[0]) && 'double', run: ([x], [t]) => Math.floor(convert(x, t, 'double')) },
+          round: { arity: [1], check: a => numArg(a[0]) && (a[0] === 'double' ? 'long' : 'int'), run: ([x], [t]) => { if (t === 'double') { return Number.isNaN(x) ? 0n : d2l(Math.round(x)); } const f = convert(x, t, 'float'); return Number.isNaN(f) ? 0 : d2i(Math.round(f)); } },
+          random: { arity: [0], check: () => 'double', run: () => Math.random() },
+          sin: { arity: [1], check: a => numArg(a[0]) && 'double', run: ([x], [t]) => Math.sin(convert(x, t, 'double')) },
+          cos: { arity: [1], check: a => numArg(a[0]) && 'double', run: ([x], [t]) => Math.cos(convert(x, t, 'double')) }
+        },
+        Integer: {
+          parseInt: { arity: [1], check: a => strLike(a[0]) && 'int', run: ([s], _, line) => { s = String(s); if (!/^[+-]?\d+$/.test(s) || Number(s) > INT_MAX || Number(s) < INT_MIN) throw new JavaThrow('java.lang.NumberFormatException', `For input string: "${s}"`, line, `„${s}“ ist keine gültige ganze Zahl.`); return Number(s) | 0; } },
+          toString: { arity: [1], check: a => (widens(a[0], 'int')) && 'String', run: ([x]) => new String(String(x)) },
+          valueOf: { arity: [1], check: a => (strLike(a[0]) || widens(a[0], 'int')) && 'int', run: ([x], [t], line) => t === 'int' ? x : STATIC.Integer.parseInt.run([x], [t], line) }
+        },
+        Double: {
+          parseDouble: { arity: [1], check: a => strLike(a[0]) && 'double', run: ([s], _, line) => { const v = String(s).trim(); if (!/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?[fFdD]?$/.test(v)) throw new JavaThrow('java.lang.NumberFormatException', String(s).trim() === '' ? 'empty String' : `For input string: "${s}"`, line, `„${s}“ ist keine gültige Kommazahl (Dezimaltrenner ist der Punkt).`); return Number(v.replace(/[fFdD]$/, '')); } },
+          toString: { arity: [1], check: a => numArg(a[0]) && 'String', run: ([x], [t]) => new String(javaDouble(convert(x, t, 'double'))) }
+        },
+        Long: {
+          parseLong: { arity: [1], check: a => strLike(a[0]) && 'long', run: ([s], _, line) => { s = String(s); if (!/^[+-]?\d+$/.test(s)) throw new JavaThrow('java.lang.NumberFormatException', `For input string: "${s}"`, line); const v = BigInt(s); if (v > LONG_MAX || v < LONG_MIN) throw new JavaThrow('java.lang.NumberFormatException', `For input string: "${s}"`, line); return v; } }
+        },
+        String: {
+          valueOf: { arity: [1], check: a => anyArg(a[0]) && 'String', run: ([x], [t]) => new String(str(x, t)) },
+          format: { arity: 'var', check: a => strLike(a[0]) && 'String', run: (args, types, line) => new String(jformat(args, types, line)) }
+        },
+        Character: {
+          isDigit: { arity: [1], check: a => widens(a[0], 'int') && 'boolean', run: ([c]) => /\p{Nd}/u.test(String.fromCharCode(c)) },
+          isLetter: { arity: [1], check: a => widens(a[0], 'int') && 'boolean', run: ([c]) => /\p{L}/u.test(String.fromCharCode(c)) },
+          isUpperCase: { arity: [1], check: a => widens(a[0], 'int') && 'boolean', run: ([c]) => /\p{Lu}/u.test(String.fromCharCode(c)) },
+          isLowerCase: { arity: [1], check: a => widens(a[0], 'int') && 'boolean', run: ([c]) => /\p{Ll}/u.test(String.fromCharCode(c)) },
+          toUpperCase: { arity: [1], check: a => a[0] === 'char' && 'char', run: ([c]) => String.fromCharCode(c).toUpperCase().charCodeAt(0) },
+          toLowerCase: { arity: [1], check: a => a[0] === 'char' && 'char', run: ([c]) => String.fromCharCode(c).toLowerCase().charCodeAt(0) }
+        },
+        Boolean: {
+          parseBoolean: { arity: [1], check: a => strLike(a[0]) && 'boolean', run: ([s]) => s !== null && String(s).toLowerCase() === 'true' }
+        }
+      };
+      const STATIC_FIELDS = {
+        'Math.PI': ['double', Math.PI], 'Math.E': ['double', Math.E],
+        'Integer.MAX_VALUE': ['int', INT_MAX], 'Integer.MIN_VALUE': ['int', INT_MIN],
+        'Long.MAX_VALUE': ['long', LONG_MAX], 'Long.MIN_VALUE': ['long', LONG_MIN],
+        'Double.MAX_VALUE': ['double', Number.MAX_VALUE], 'Double.MIN_VALUE': ['double', Number.MIN_VALUE]
+      };
+      function strIndexErr(i, line) { return new JavaThrow('java.lang.StringIndexOutOfBoundsException', `String index out of range: ${i}`, line, `Position ${i} gibt es in diesem Text nicht (erlaubt: 0 bis length() - 1).`); }
+      const STRING_METHODS = {
+        length: { arity: [0], check: () => 'int', run: s => s.length },
+        charAt: { arity: [1], check: a => widens(a[0], 'int') && 'char', run: (s, [i], _, line) => { if (i < 0 || i >= s.length) throw strIndexErr(i, line); return s.charCodeAt(i); } },
+        equals: { arity: [1], check: a => anyArg(a[0]) && 'boolean', run: (s, [o], [t]) => (t === 'String') && o !== null && String(o) === s },
+        equalsIgnoreCase: { arity: [1], check: a => strLike(a[0]) && 'boolean', run: (s, [o]) => o !== null && String(o).toLowerCase() === s.toLowerCase() },
+        toUpperCase: { arity: [0], check: () => 'String', run: s => new String(s.toUpperCase()) },
+        toLowerCase: { arity: [0], check: () => 'String', run: s => new String(s.toLowerCase()) },
+        trim: { arity: [0], check: () => 'String', run: s => new String(s.replace(/^[\x00-\x20]+|[\x00-\x20]+$/g, '')) },
+        isEmpty: { arity: [0], check: () => 'boolean', run: s => s.length === 0 },
+        contains: { arity: [1], check: a => strLike(a[0]) && 'boolean', run: (s, [o], _, line) => { if (o === null) throw new JavaThrow('java.lang.NullPointerException', '', line); return s.includes(String(o)); } },
+        startsWith: { arity: [1], check: a => strLike(a[0]) && 'boolean', run: (s, [o]) => s.startsWith(String(o)) },
+        endsWith: { arity: [1], check: a => strLike(a[0]) && 'boolean', run: (s, [o]) => s.endsWith(String(o)) },
+        indexOf: { arity: [1, 2], check: a => (strLike(a[0]) || widens(a[0], 'int')) && (a.length < 2 || widens(a[1], 'int')) && 'int', run: (s, [o, from], [t]) => s.indexOf(t === 'String' ? String(o) : String.fromCharCode(o), from ?? 0) },
+        lastIndexOf: { arity: [1], check: a => (strLike(a[0]) || widens(a[0], 'int')) && 'int', run: (s, [o], [t]) => s.lastIndexOf(t === 'String' ? String(o) : String.fromCharCode(o)) },
+        substring: { arity: [1, 2], check: a => a.every(t => widens(t, 'int')) && 'String', run: (s, [b, e], _, line) => { e = e ?? s.length; if (b < 0 || e > s.length || b > e) throw new JavaThrow('java.lang.StringIndexOutOfBoundsException', `String index out of range: ${b < 0 ? b : e > s.length ? e : e - b}`, line, 'Start- oder Endposition liegt außerhalb des Textes.'); return new String(s.substring(b, e)); } },
+        replace: { arity: [2], check: a => ((a[0] === 'char' && a[1] === 'char') || (strLike(a[0]) && strLike(a[1]))) && 'String', run: (s, [x, y], [t]) => new String(t === 'char' ? s.split(String.fromCharCode(x)).join(String.fromCharCode(y)) : s.split(String(x)).join(String(y))) },
+        concat: { arity: [1], check: a => strLike(a[0]) && 'String', run: (s, [o]) => new String(s + String(o)) },
+        compareTo: { arity: [1], check: a => strLike(a[0]) && 'int', run: (s, [o]) => { o = String(o); const n = Math.min(s.length, o.length); for (let i = 0; i < n; i++) if (s.charCodeAt(i) !== o.charCodeAt(i)) return s.charCodeAt(i) - o.charCodeAt(i); return s.length - o.length; } },
+        split: { arity: [1], check: a => strLike(a[0]) && 'String[]', run: (s, [re]) => { const parts = s.split(new RegExp(String(re))); if (s.length > 0) while (parts.length > 1 && parts[parts.length - 1] === '') parts.pop(); if (parts.length > 1 && parts[0] === '' && s.length > 0 && new RegExp('^(?:' + String(re) + ')').exec(s)?.[0] === '') parts.shift(); return makeArr('String', parts.map(x => new String(x))); } }
+      };
+      let hashSeed = 0x1b6d3586;
+      function makeArr(elemType, data) { hashSeed = (hashSeed * 1103515245 + 12345) & 0x7fffffff; return { elemType, data, hash: hashSeed.toString(16) }; }
+      function defaultVal(t) { if (t === 'boolean') return false; if (t === 'long') return 0n; if (NUMERIC.has(t)) return 0; return null; }
+
+      /* printf / String.format (deutsches Gebietsschema: Komma als Dezimaltrenner) */
+      function roundHalfUp(x, prec) {
+        let s = Math.abs(x) < 1e21 ? String(Math.abs(x)) : Math.abs(x).toFixed(0);
+        if (s.includes('e')) s = Math.abs(x).toFixed(Math.min(100, prec + 20));
+        let [ip, fp = ''] = s.split('.');
+        if (fp.length <= prec) return (x < 0 && !/^0*\.?0*$/.test(ip + fp) ? '-' : '') + ip + (prec ? '.' + fp.padEnd(prec, '0') : '');
+        const keep = (ip + fp.slice(0, prec)).split('').map(Number);
+        if (Number(fp[prec]) >= 5) { let i = keep.length - 1; while (i >= 0) { if (keep[i] === 9) { keep[i] = 0; i--; } else { keep[i]++; break; } } if (i < 0) keep.unshift(1); }
+        const digits = keep.join(''); const il = digits.length - prec;
+        const res = digits.slice(0, il) + (prec ? '.' + digits.slice(il) : '');
+        return (x < 0 && /[1-9]/.test(res) ? '-' : '') + res;
+      }
+      function jformat(args, types, line) {
+        const fmt = String(args[0]);
+        let ai = 1, out = '';
+        const re = /%([-#+ 0,(]*)(\d+)?(?:\.(\d+))?([a-zA-Z%])/g;
+        let last = 0, m;
+        const bad = (conv, t) => new JavaThrow('java.util.IllegalFormatConversionException', `${conv} != ${t === 'String' ? 'java.lang.String' : 'java.lang.' + ({ int: 'Integer', double: 'Double', long: 'Long', char: 'Character', boolean: 'Boolean', float: 'Float' }[t] || t)}`, line, `%${conv} passt nicht zum Datentyp ${t}. %d ist für ganze Zahlen, %f für Kommazahlen, %s für Text.`);
+        while ((m = re.exec(fmt))) {
+          out += fmt.slice(last, m.index); last = re.lastIndex;
+          const [, flags, width, precS, conv] = m;
+          if (conv === 'n') { out += '\n'; continue; }
+          if (conv === '%') { out += '%'; continue; }
+          if (ai >= args.length) throw new JavaThrow('java.util.MissingFormatArgumentException', `Format specifier '%${conv}'`, line, 'Für diesen Platzhalter fehlt ein Wert.');
+          const v = args[ai], t = types[ai]; ai++;
+          let s;
+          switch (conv) {
+            case 'd':
+              if (!INTEGRAL.has(t) || t === 'char') throw bad(conv, t);
+              s = String(v); if (flags.includes(',')) s = s.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+              if (flags.includes('+') && !s.startsWith('-')) s = '+' + s;
+              break;
+            case 'f': case 'e': {
+              if (t !== 'double' && t !== 'float') throw bad(conv, t);
+              const prec = precS === undefined ? 6 : Number(precS);
+              if (conv === 'e') { s = Number(v).toExponential(prec).replace('.', ','); const [mm, ee] = s.split('e'); s = mm + 'e' + (ee[0] === '-' ? '-' : '+') + ee.replace(/^[+-]/, '').padStart(2, '0'); }
+              else if (!Number.isFinite(v)) s = Number.isNaN(v) ? 'NaN' : v > 0 ? 'Infinity' : '-Infinity';
+              else {
+                s = roundHalfUp(t === 'float' ? Number(javaFloat(v)) : v, prec);
+                let [ip, fp] = s.split('.');
+                if (flags.includes(',')) ip = ip.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                s = ip + (fp !== undefined ? ',' + fp : '');
+                if (flags.includes('+') && !s.startsWith('-')) s = '+' + s;
+              }
+              break;
+            }
+            case 's': case 'S': s = str(v, t); if (precS !== undefined) s = s.slice(0, Number(precS)); if (conv === 'S') s = s.toUpperCase(); break;
+            case 'c': if (t !== 'char' && !(INTEGRAL.has(t) && t !== 'long')) throw bad(conv, t); s = String.fromCharCode(v); break;
+            case 'b': s = t === 'boolean' ? String(v) : String(v !== null); break;
+            case 'x': if (!INTEGRAL.has(t)) throw bad(conv, t); s = (t === 'long' ? BigInt.asUintN(64, v) : v >>> 0).toString(16); break;
+            default: throw new JavaThrow('java.util.UnknownFormatConversionException', `Conversion = '${conv}'`, line);
+          }
+          if (width) s = flags.includes('-') ? s.padEnd(Number(width)) : (flags.includes('0') && /[df]/.test(conv) ? (s.startsWith('-') ? '-' + s.slice(1).padStart(Number(width) - 1, '0') : s.padStart(Number(width), '0')) : s.padStart(Number(width)));
+          out += s;
+        }
+        return out + fmt.slice(last);
+      }
+
+      function check(prog) {
+        const errors = [];
+        const E = (n, msg) => { errors.push({ line: n.line, col: n.col || 1, msg }); return 'error'; };
+        const usesScanner = prog.imports.some(i => /^java\.util\.(Scanner|\*)$/.test(i.name));
+        const methods = new Map();
+        for (const m of prog.methods) {
+          if (!methods.has(m.name)) methods.set(m.name, []);
+          const list = methods.get(m.name);
+          if (list.some(o => o.params.length === m.params.length && o.params.every((p, i) => p.type === m.params[i].type))) E(m, `Die Methode ${m.name} gibt es bereits mit denselben Parametern.`);
+          list.push(m);
+        }
+        const main = (methods.get('main') || []).find(m => m.params.length === 1 && m.params[0].type === 'String[]');
+        if (!main) {
+          const mm = methods.get('main');
+          errors.push({ line: mm ? mm[0].line : 1, col: 1, msg: mm ? 'Die main-Methode muss so aussehen: public static void main(String[] args)' : 'Es fehlt die main-Methode: public static void main(String[] args) { … } – dort startet das Programm.' });
+        } else if (main.ret !== 'void') E(main, 'Die main-Methode muss void als Rückgabetyp haben.');
+        prog.main = main;
+
+        const fieldScope = new Map();
+        function checkType(t, n) {
+          let base = t; while (isArr(base)) base = elemOf(base);
+          if (KNOWN_TYPES.has(base)) {
+            if (base === 'Scanner' && !usesScanner) E(n, 'Scanner ist nicht bekannt – es fehlt ganz oben: import java.util.Scanner;');
+            return true;
+          }
+          const s = suggest(base, [...KNOWN_TYPES]);
+          E(n, `Unbekannter Datentyp „${base}“.${s ? ` Meintest du ${s}? (Groß-/Kleinschreibung beachten)` : ['Integer', 'Double', 'Long', 'Boolean', 'Character'].includes(base) ? ' Wrapper-Klassen als Datentyp werden in der Spielwiese nicht unterstützt – nutze den primitiven Typ.' : ''}`);
+          return false;
+        }
+
+        let scopes = [], curMethod = null, loopDepth = 0, switchDepth = 0;
+        const lookup = name => { for (let i = scopes.length - 1; i >= 0; i--) if (scopes[i].has(name)) return scopes[i].get(name); return fieldScope.get(name); };
+        const declare = (d, info) => {
+          for (const s of scopes) if (s.has(d.name)) { E(d, `Die Variable ${d.name} ist hier bereits deklariert – jeder Name darf nur einmal vergeben werden.`); return; }
+          scopes[scopes.length - 1].set(d.name, info);
+        };
+        const allNames = () => { const out = [...fieldScope.keys()]; for (const s of scopes) out.push(...s.keys()); return out; };
+
+        function expr(e, expected) {
+          const t = expr0(e, expected);
+          e.type = t;
+          return t;
+        }
+        function constOf(e) { return e.cv; }
+        function expr0(e, expected) {
+          switch (e.k) {
+            case 'lit': e.cv = e.value; return e.type;
+            case 'name': {
+              const v = lookup(e.name);
+              if (v) {
+                e.ref = v; v.used = true;
+                if (v.cv !== undefined) e.cv = v.cv;
+                if (!e.isLhs && !v.isField && !v.assignedSomewhere && !v.hasInit && !v.param) E(e, `Die Variable ${e.name} hat noch keinen Wert. Weise ihr zuerst einen Wert zu (z. B. ${e.name} = …;).`);
+                return v.type;
+              }
+              if (CLASSES.has(e.name)) { if (e.name === 'Scanner' && !usesScanner) E(e, 'Scanner ist nicht bekannt – es fehlt ganz oben: import java.util.Scanner;'); return 'class:' + e.name; }
+              const s = suggest(e.name, [...allNames(), ...CLASSES]);
+              return E(e, `Unbekannter Name „${e.name}“ – diese Variable wurde nicht deklariert.${s ? ` Meintest du ${s}? (Groß-/Kleinschreibung beachten)` : ''}${/^[A-ZÄÖÜa-zäöü]+$/.test(e.name) && !s ? ' Falls das Text sein soll: in doppelte Anführungszeichen setzen.' : ''}`);
+            }
+            case 'field': {
+              const ot = expr(e.obj);
+              if (ot === 'error') return 'error';
+              if (ot.startsWith('class:')) {
+                const cls = ot.slice(6), key = cls + '.' + e.name;
+                if (cls === 'System' && e.name === 'out') return 'PrintStream';
+                if (cls === 'System' && e.name === 'in') return 'InputStream';
+                if (STATIC_FIELDS[key]) { e.cv = STATIC_FIELDS[key][1]; e.sval = e.cv; return STATIC_FIELDS[key][0]; }
+                const s = cls === 'System' ? suggest(e.name, ['out', 'in']) : suggest(e.name, Object.keys(STATIC_FIELDS).filter(k => k.startsWith(cls + '.')).map(k => k.split('.')[1]));
+                return E(e, `${cls}.${e.name} gibt es nicht.${s ? ` Meintest du ${cls}.${s}?` : ''}`);
+              }
+              if (isArr(ot) && e.name === 'length') return 'int';
+              if (ot === 'String' && e.name === 'length') return E(e, 'Bei Strings ist length eine Methode: name.length() – mit Klammern.');
+              return E(e, `${ot} hat kein Attribut „${e.name}“.`);
+            }
+            case 'index': {
+              const at = expr(e.arr), it = expr(e.idx);
+              if (at === 'error') return 'error';
+              if (!isArr(at)) return E(e, `${at === 'String' ? 'Auf einzelne Zeichen eines Strings greift man mit charAt(i) zu, nicht mit [i].' : `${at} ist kein Array – [ ] geht nur bei Arrays.`}`);
+              if (it !== 'error' && !widens(promote1(it), 'int') ) E(e.idx, `Der Index muss eine ganze Zahl (int) sein, nicht ${it}.`);
+              return elemOf(at);
+            }
+            case 'call': return callExpr(e);
+            case 'newObj': {
+              const argT = e.args.map(a => expr(a));
+              if (e.cls === 'Scanner') {
+                if (!usesScanner) E(e, 'Scanner ist nicht bekannt – es fehlt ganz oben: import java.util.Scanner;');
+                if (e.args.length !== 1 || e.args[0].k !== 'field' || e.args[0].name !== 'in') return E(e, 'Ein Scanner für Tastatureingaben wird so erzeugt: new Scanner(System.in)');
+                return 'Scanner';
+              }
+              if (e.cls === 'String') { if (argT.length > 1 || (argT.length === 1 && argT[0] !== 'String')) return E(e, 'new String(…) wird hier nur mit einem String unterstützt.'); return 'String'; }
+              const s = suggest(e.cls, ['Scanner', 'String']);
+              return E(e, `Die Klasse ${e.cls} wird in der Spielwiese nicht unterstützt.${s ? ` Meintest du ${s}?` : ''}`);
+            }
+            case 'newArr': {
+              checkType(e.type, e);
+              for (const d of e.dims) { const t = expr(d); if (t !== 'error' && !widens(promote1(t), 'int')) E(d, 'Die Array-Größe muss eine ganze Zahl sein.'); }
+              if (e.init) arrInit(e.init, e.type);
+              return e.type;
+            }
+            case 'arrInit': return E(e, 'Eine Array-Initialisierung { … } ist nur bei der Deklaration erlaubt.');
+            case 'unary': {
+              const t = expr(e.e);
+              if (t === 'error') return t;
+              if (e.op === '!') { if (t !== 'boolean') return E(e, `Der Operator ! funktioniert nur mit boolean, nicht mit ${t}.`); if (e.e.cv !== undefined) e.cv = !e.e.cv; return 'boolean'; }
+              if (e.op === '~') { if (!INTEGRAL.has(t)) return E(e, '~ funktioniert nur mit ganzen Zahlen.'); return promote1(t); }
+              if (!NUMERIC.has(t)) return E(e, `Der Operator ${e.op} funktioniert nur mit Zahlen, nicht mit ${t}.`);
+              const r = promote1(t);
+              if (e.e.cv !== undefined) { const v = convert(e.e.cv, t, r); e.cv = e.op === '-' ? (r === 'long' ? BigInt.asIntN(64, -v) : r === 'int' ? (-v) | 0 : r === 'float' ? Math.fround(-v) : -v) : v; }
+              return r;
+            }
+            case 'pre': case 'post': {
+              const t = expr(e.e);
+              if (t === 'error') return t;
+              lvalue(e.e, e.op);
+              if (!NUMERIC.has(t)) return E(e, `${e.op} funktioniert nur mit Zahlen-Variablen, nicht mit ${t}.`);
+              return t;
+            }
+            case 'cast': {
+              checkType(e.type, e);
+              const t = expr(e.e);
+              if (t === 'error') return 'error';
+              const to = e.type;
+              if (NUMERIC.has(to) && NUMERIC.has(t)) { if (e.e.cv !== undefined) e.cv = convert(e.e.cv, t, to); return to; }
+              if (to === t) { e.cv = e.e.cv; return to; }
+              if (t === 'String' && NUMERIC.has(to)) return E(e, `Ein String kann nicht mit (${to}) umgewandelt werden. Tipp: Integer.parseInt(…) oder Double.parseDouble(…).`);
+              if (NUMERIC.has(t) && to === 'String') return E(e, `Eine Zahl kann nicht mit (String) umgewandelt werden. Tipp: String.valueOf(…) oder "" + zahl.`);
+              if (to === 'String' && t === 'null') return 'String';
+              return E(e, `${t} kann nicht in ${to} umgewandelt werden.`);
+            }
+            case 'bin': return binExpr(e);
+            case 'cond': {
+              const ct = expr(e.c);
+              if (ct !== 'error' && ct !== 'boolean') E(e.c, `Die Bedingung vor ? muss ein boolean sein, nicht ${ct}.`);
+              const a = expr(e.a), b = expr(e.b);
+              if (a === 'error' || b === 'error') return 'error';
+              let r;
+              if (a === b) r = a;
+              else if (NUMERIC.has(a) && NUMERIC.has(b)) r = promote2(promote1(a), promote1(b));
+              else if (a === 'null' && isRefType(b)) r = b;
+              else if (b === 'null' && isRefType(a)) r = a;
+              else return E(e, `Die beiden Ergebnisse von ? : haben unterschiedliche Typen (${a} und ${b}).`);
+              return r;
+            }
+            case 'assign': {
+              if (e.op === '=' && e.l.k === 'name') e.l.isLhs = true;
+              const lt = expr(e.l);
+              const rt = expr(e.r, lt);
+              if (lt === 'error' || rt === 'error') return lt;
+              lvalue(e.l, e.op);
+              if (e.op === '=') {
+                if (!assignable(rt, lt, e.r.cv)) E(e.r, mismatchMsg(rt, lt, e.r));
+              } else if (e.op === '+=' && lt === 'String') {
+                if (rt === 'void') E(e.r, mismatchMsg(rt, lt));
+              } else {
+                const op = e.op.slice(0, -1);
+                if (['<<', '>>', '>>>'].includes(op)) { if (!INTEGRAL.has(lt) || !INTEGRAL.has(rt)) E(e, `${e.op} funktioniert nur mit ganzen Zahlen.`); }
+                else if (['&', '|', '^'].includes(op)) { if (!((lt === 'boolean' && rt === 'boolean') || (INTEGRAL.has(lt) && INTEGRAL.has(rt)))) E(e, `${e.op} passt nicht zu ${lt} und ${rt}.`); }
+                else if (!NUMERIC.has(lt) || !NUMERIC.has(rt)) E(e, `Der Operator ${e.op} funktioniert nur mit Zahlen${e.op === '+=' ? ' oder Strings' : ''}, nicht mit ${lt} und ${rt}.`);
+              }
+              return lt;
+            }
+          }
+          return E(e, 'Dieser Ausdruck wird nicht unterstützt.');
+        }
+        function lvalue(l, op) {
+          if (l.k === 'name' && l.ref) {
+            const v = l.ref;
+            if (v.fin && (v.hasInit || v.assignedOnce)) E(l, `${l.name} ist eine Konstante (final) und kann nicht verändert werden.`);
+            if (v.fin) v.assignedOnce = true;
+            if (op === '=') v.assignedSomewhere = true;
+          } else if (l.k === 'field' && l.obj && l.obj.type && l.obj.type.startsWith('class:')) E(l, `${l.obj.name}.${l.name} kann nicht verändert werden.`);
+          else if (l.k === 'field') E(l, `${l.name} kann nicht verändert werden.`);
+        }
+        function arrInit(init, type) {
+          init.type = type;
+          const et = elemOf(type);
+          for (const el of init.elems) {
+            if (el.k === 'arrInit') { if (!isArr(et)) E(el, 'Zu viele { } – das Array hat weniger Dimensionen.'); else arrInit(el, et); continue; }
+            const t = expr(el, et);
+            if (t !== 'error' && !assignable(t, et, el.cv)) E(el, mismatchMsg(t, et, el));
+          }
+        }
+        function binExpr(e) {
+          const op = e.op;
+          const lt = expr(e.l), rt = expr(e.r);
+          if (lt === 'error' || rt === 'error') return 'error';
+          const both = (lt === 'void' || rt === 'void') ? E(e, 'Eine void-Methode liefert keinen Wert, mit dem man rechnen kann.') : null;
+          if (both) return 'error';
+          const fold = r => { if (e.l.cv !== undefined && e.r.cv !== undefined) { try { e.cv = evalBinConst(e, lt, rt, r); } catch (x) { /* z. B. Division durch 0 */ } } return r; };
+          if (op === '+' && (lt === 'String' || rt === 'String')) return fold('String');
+          if (['+', '-', '*', '/', '%'].includes(op)) {
+            if (!NUMERIC.has(lt) || !NUMERIC.has(rt)) return E(e, `Der Operator ${op} passt nicht zu ${lt} und ${rt}.${op === '-' && (lt === 'String' || rt === 'String') ? ' Mit Text kann man nicht rechnen – nur + zum Verbinden.' : ''}`);
+            const r = promote2(promote1(lt), promote1(rt));
+            if (r !== 'double' && r !== 'float' && (op === '/' || op === '%') && e.r.cv !== undefined && Number(e.r.cv) === 0) { /* javac erlaubt das, Fehler erst zur Laufzeit */ }
+            return fold(r);
+          }
+          if (['<', '>', '<=', '>='].includes(op)) {
+            if (!NUMERIC.has(lt) || !NUMERIC.has(rt)) return E(e, `Mit ${op} kann man nur Zahlen vergleichen, nicht ${lt} und ${rt}.${lt === 'String' && rt === 'String' ? ' Für Texte gibt es compareTo().' : ''}`);
+            return fold('boolean');
+          }
+          if (op === '==' || op === '!=') {
+            const ok = (NUMERIC.has(lt) && NUMERIC.has(rt)) || (lt === 'boolean' && rt === 'boolean') || ((isRefType(lt) || lt === 'null') && (isRefType(rt) || rt === 'null') && (lt === rt || lt === 'null' || rt === 'null'));
+            if (!ok) return E(e, `${lt} und ${rt} kann man nicht mit ${op} vergleichen.`);
+            if (lt === 'String' && rt === 'String') e.strCmp = true;
+            return fold('boolean');
+          }
+          if (op === '&&' || op === '||') {
+            if (lt !== 'boolean' || rt !== 'boolean') return E(e, `${op} verknüpft nur Wahrheitswerte (boolean), nicht ${lt} und ${rt}.${(op === '&&' && lt !== 'boolean') ? ' Für Bereiche: x > 1 && x < 5 (Variable zweimal schreiben).' : ''}`);
+            return fold('boolean');
+          }
+          if (op === '&' || op === '|' || op === '^') {
+            if (lt === 'boolean' && rt === 'boolean') return fold('boolean');
+            if (INTEGRAL.has(lt) && INTEGRAL.has(rt)) return fold(promote2(promote1(lt), promote1(rt)));
+            return E(e, `${op} passt nicht zu ${lt} und ${rt}.`);
+          }
+          if (['<<', '>>', '>>>'].includes(op)) {
+            if (!INTEGRAL.has(lt) || !INTEGRAL.has(rt)) return E(e, `${op} funktioniert nur mit ganzen Zahlen.`);
+            return fold(promote1(lt));
+          }
+          return E(e, `Unbekannter Operator ${op}.`);
+        }
+        function callExpr(e) {
+          const argT = () => e.args.map(a => expr(a));
+          if (!e.obj) {
+            const cands = methods.get(e.name);
+            const ts = argT();
+            if (ts.includes('error')) return 'error';
+            if (!cands) {
+              const s = suggest(e.name, [...methods.keys()]);
+              return E(e, `Die Methode ${e.name}(…) gibt es nicht.${s ? ` Meintest du ${s}?` : ['println', 'print', 'printf'].includes(e.name) ? ` Ausgaben gehen mit System.out.${e.name}(…).` : ''}`);
+            }
+            const m = cands.find(c => c.params.length === ts.length && c.params.every((p, i) => assignable(ts[i], p.type)));
+            if (!m) {
+              const c0 = cands[0];
+              return E(e, `Die Methode ${e.name} erwartet ${c0.params.length ? '(' + c0.params.map(p => p.type).join(', ') + ')' : 'keine Parameter'}, übergeben wurde (${ts.join(', ')}).`);
+            }
+            e.method = m; e.argTypes = ts;
+            return m.ret;
+          }
+          const ot = expr(e.obj);
+          const ts = argT();
+          if (ot === 'error' || ts.includes('error')) return 'error';
+          e.argTypes = ts;
+          if (ts.includes('void')) return E(e, 'Eine void-Methode liefert keinen Wert, der übergeben werden kann.');
+          if (ot === 'PrintStream') {
+            e.builtin = 'print';
+            if (e.name === 'println') { if (ts.length > 1) return E(e, 'println(…) nimmt nur einen Wert – mehrere Teile mit + verbinden.'); return 'void'; }
+            if (e.name === 'print') { if (ts.length !== 1) return E(e, ts.length ? 'print(…) nimmt nur einen Wert – mehrere Teile mit + verbinden.' : 'print() braucht einen Wert in den Klammern.'); return 'void'; }
+            if (e.name === 'printf' || e.name === 'format') { if (!ts.length || !strLike(ts[0])) return E(e, 'printf braucht als erstes einen Format-Text, z. B. printf("%.2f%n", wert).'); return 'PrintStream'; }
+            const s = suggest(e.name, ['println', 'print', 'printf']);
+            return E(e, `System.out.${e.name} gibt es nicht.${s ? ` Meintest du ${s}?` : ' Meintest du println?'}`);
+          }
+          if (ot.startsWith('class:')) {
+            const cls = ot.slice(6);
+            if (cls === 'System' && e.name === 'exit') { e.builtin = 'exit'; return 'void'; }
+            if (cls === 'System' && (e.name === 'currentTimeMillis' || e.name === 'nanoTime')) { e.builtin = e.name; return 'long'; }
+            const tbl = STATIC[cls] || {};
+            const bm = tbl[e.name];
+            if (!bm) { const s = suggest(e.name, Object.keys(tbl)); return E(e, `${cls}.${e.name}(…) gibt es nicht${STATIC[cls] ? '' : ' bzw. wird nicht unterstützt'}.${s ? ` Meintest du ${cls}.${s}?` : ''}`); }
+            if (bm.arity !== 'var' && !bm.arity.includes(ts.length)) return E(e, `${cls}.${e.name} erwartet ${bm.arity.join(' oder ')} Wert(e), übergeben wurden ${ts.length}.`);
+            const r = bm.check(ts);
+            if (!r) return E(e, `${cls}.${e.name}(…) passt nicht zu den Datentypen (${ts.join(', ')}).`);
+            e.builtin = 'static'; e.bm = bm;
+            return r;
+          }
+          if (ot === 'String') {
+            const bm = STRING_METHODS[e.name];
+            if (!bm) { const s = suggest(e.name, Object.keys(STRING_METHODS)); return E(e, `Strings haben keine Methode ${e.name}(…).${s ? ` Meintest du ${s}?` : e.name === 'equal' ? ' Meintest du equals?' : ''}`); }
+            if (!bm.arity.includes(ts.length)) return E(e, `${e.name} erwartet ${bm.arity.join(' oder ')} Wert(e), übergeben wurden ${ts.length}.`);
+            const r = bm.check(ts);
+            if (!r) return E(e, `${e.name}(…) passt nicht zu den Datentypen (${ts.join(', ')}).`);
+            e.builtin = 'string'; e.bm = bm;
+            return r;
+          }
+          if (ot === 'Scanner') {
+            const SC = { nextInt: 'int', nextDouble: 'double', nextLong: 'long', nextBoolean: 'boolean', next: 'String', nextLine: 'String', hasNext: 'boolean', hasNextInt: 'boolean', hasNextDouble: 'boolean', hasNextLine: 'boolean', close: 'void' };
+            if (!SC[e.name]) { const s = suggest(e.name, Object.keys(SC)); return E(e, `Der Scanner hat keine Methode ${e.name}(…).${s ? ` Meintest du ${s}?` : e.name === 'nextString' ? ' Für Text: nextLine() oder next().' : ''}`); }
+            if (ts.length) return E(e, `${e.name}() braucht keine Werte in den Klammern.`);
+            e.builtin = 'scanner';
+            return SC[e.name];
+          }
+          if (isArr(ot)) return E(e, e.name === 'length' ? 'Bei Arrays ist length ein Attribut ohne Klammern: array.length' : `Arrays haben keine Methode ${e.name}(…).`);
+          return E(e, `${ot} hat keine Methode ${e.name}(…).`);
+        }
+
+        function stmt(s) {
+          switch (s.k) {
+            case 'block': scopes.push(new Map()); s.body.forEach(stmt); scopes.pop(); return;
+            case 'empty': return;
+            case 'var': varDecl(s); return;
+            case 'expr': expr(s.e); return;
+            case 'if': cond(s.cond, 'if'); scoped(s.then); if (s.els) scoped(s.els); return;
+            case 'while': cond(s.cond, 'while'); loopDepth++; scoped(s.body); loopDepth--; return;
+            case 'do': loopDepth++; scoped(s.body); loopDepth--; cond(s.cond, 'while'); return;
+            case 'for':
+              scopes.push(new Map());
+              s.init.forEach(stmt);
+              if (s.cond) cond(s.cond, 'for');
+              s.update.forEach(u => { expr(u); if (!['assign', 'pre', 'post', 'call'].includes(u.k)) E(u, 'Im for-Kopf muss hier eine Veränderung stehen, z. B. i++.'); });
+              loopDepth++; scoped(s.body); loopDepth--;
+              scopes.pop(); return;
+            case 'foreach': {
+              const it = expr(s.iter);
+              scopes.push(new Map());
+              checkType(s.type, s);
+              if (it !== 'error') { if (!isArr(it)) E(s.iter, 'Die for-each-Schleife (for (typ x : …)) funktioniert nur mit Arrays.'); else if (!assignable(elemOf(it), s.type)) E(s, mismatchMsg(elemOf(it), s.type)); }
+              declare(s, { type: s.type, hasInit: true, name: s.name });
+              s.varInfo = lookup(s.name);
+              loopDepth++; scoped(s.body); loopDepth--;
+              scopes.pop(); return;
+            }
+            case 'switch': {
+              const t = expr(s.e);
+              if (t !== 'error' && !['char', 'byte', 'short', 'int', 'String'].includes(t)) E(s.e, `switch funktioniert nur mit int, char, short, byte oder String – nicht mit ${t}.`);
+              const seen = new Set(); let def = false;
+              scopes.push(new Map()); switchDepth++;
+              for (const c of s.cases) {
+                if (c.isDefault) { if (def) E(c, 'Es darf nur ein default geben.'); def = true; }
+                else {
+                  const lt = expr(c.label);
+                  if (c.label.cv === undefined && lt !== 'error') E(c.label, 'Hinter case muss ein fester Wert stehen (z. B. case 1: oder case "A":).');
+                  else if (lt !== 'error' && t !== 'error' && !assignable(lt, t, c.label.cv)) E(c.label, `Der case-Wert (${lt}) passt nicht zum switch-Typ ${t}.`);
+                  const key = String(c.label.cv);
+                  if (seen.has(key)) E(c.label, `case ${key} kommt doppelt vor.`);
+                  seen.add(key);
+                }
+                c.body.forEach(stmt);
+              }
+              switchDepth--; scopes.pop(); return;
+            }
+            case 'break': if (!loopDepth && !switchDepth) E(s, 'break ist nur in Schleifen oder im switch erlaubt.'); return;
+            case 'continue': if (!loopDepth) E(s, 'continue ist nur in Schleifen erlaubt.'); return;
+            case 'return': {
+              const rt = curMethod.ret;
+              if (!s.e) { if (rt !== 'void') E(s, `Die Methode muss einen Wert vom Typ ${rt} zurückgeben: return …;`); return; }
+              const t = expr(s.e, rt);
+              if (rt === 'void') { E(s, 'Eine void-Methode darf keinen Wert zurückgeben.'); return; }
+              if (t !== 'error' && !assignable(t, rt, s.e.cv)) E(s.e, mismatchMsg(t, rt, s.e));
+              return;
+            }
+          }
+        }
+        function scoped(s) { scopes.push(new Map()); stmt(s); scopes.pop(); }
+        function cond(c, kw) {
+          const t = expr(c);
+          if (t === 'error' || t === 'boolean') return;
+          if (c.k === 'assign' && c.op === '=') E(c, `Die Bedingung bei ${kw} muss true oder false ergeben. Meintest du == (Vergleich) statt = (Zuweisung)?`);
+          else E(c, `Die Bedingung bei ${kw} muss true oder false ergeben (boolean), nicht ${t}.`);
+        }
+        function varDecl(s, isField) {
+          for (const d of s.decls) {
+            checkType(d.type, s.typeTok || d);
+            const info = { type: d.type, fin: s.fin, hasInit: !!d.init, name: d.name, isField: !!isField };
+            if (d.init) {
+              if (d.init.k === 'arrInit') { if (!isArr(d.type)) E(d.init, `{ … } ist nur bei Arrays erlaubt, ${d.name} ist aber ein ${d.type}.`); else arrInit(d.init, d.type); }
+              else {
+                const t = expr(d.init, d.type);
+                if (t !== 'error' && !assignable(t, d.type, d.init.cv)) E(d.init, mismatchMsg(t, d.type, d.init));
+                if (s.fin && d.init.cv !== undefined && (PRIMS.has(d.type) || d.type === 'String') && assignable(t, d.type, d.init.cv)) info.cv = convert(d.init.cv, t, d.type);
+              }
+            }
+            if (isField) { if (fieldScope.has(d.name)) E(d, `Die Variable ${d.name} gibt es bereits.`); fieldScope.set(d.name, info); }
+            else declare(d, info);
+            d.info = info;
+          }
+          if (!isField) {
+            // „wird irgendwo zugewiesen?“ – einfache Vorab-Prüfung für die Meldung „hat noch keinen Wert“
+            for (const d of s.decls) if (!d.init) d.info.assignedSomewhere = false;
+          }
+        }
+        function alwaysReturns(s) {
+          if (!s) return false;
+          switch (s.k) {
+            case 'return': return true;
+            case 'block': return s.body.some(alwaysReturns);
+            case 'if': return !!s.els && alwaysReturns(s.then) && alwaysReturns(s.els);
+            case 'while': return s.cond.k === 'lit' && s.cond.value === true && !hasBreak(s.body);
+            case 'for': return !s.cond && !hasBreak(s.body);
+            case 'do': return alwaysReturns(s.body);
+            case 'switch': return s.cases.some(c => c.isDefault) && s.cases.length > 0 && !s.cases.some(c => c.body.some(hasBreakDirect)) && alwaysReturns({ k: 'block', body: s.cases[s.cases.length - 1].body });
+            case 'expr': return s.e.k === 'call' && s.e.builtin === 'exit';
+          }
+          return false;
+        }
+        function hasBreakDirect(s) { if (!s) return false; if (s.k === 'break') return true; if (s.k === 'block') return s.body.some(hasBreakDirect); if (s.k === 'if') return hasBreakDirect(s.then) || hasBreakDirect(s.els); return false; }
+        function hasBreak(s) { return hasBreakDirect(s); }
+
+        // Vorab: Wird eine Variable vor ihrer Verwendung (im Quelltext) irgendwo zugewiesen?
+        function markAssignments(n, seen) {
+          if (!n || typeof n !== 'object') return;
+          if (Array.isArray(n)) { n.forEach(x => markAssignments(x, seen)); return; }
+          for (const key of Object.keys(n)) { if (key === 'ref' || key === 'info' || key === 'method' || key === 'varInfo' || key === 'bm') continue; const v = n[key]; if (v && typeof v === 'object') markAssignments(v, seen); }
+        }
+
+        for (const f of prog.fields) { scopes = []; curMethod = { ret: 'void' }; varDecl(f, true); }
+        for (const m of prog.methods) {
+          curMethod = m; scopes = [new Map()]; loopDepth = 0; switchDepth = 0;
+          checkType(m.ret === 'void' ? 'int' : m.ret, m);
+          for (const p of m.params) { checkType(p.type, p); declare(p, { type: p.type, hasInit: true, param: true, name: p.name }); }
+          m.paramInfos = m.params.map(p => lookup(p.name));
+          preAssign(m.body);
+          stmt(m.body);
+          if (m.ret !== 'void' && !alwaysReturns(m.body)) E({ line: m.body.line, col: 1 }, `Der Methode ${m.name} fehlt am Ende ein return – sie muss immer einen Wert vom Typ ${m.ret} zurückgeben.`);
+        }
+        // Variablen, die ohne Wert deklariert und erst später zugewiesen werden: oben als „assignedSomewhere“ erkannt
+        function preAssign() { }
+        errors.sort((a, b) => a.line - b.line || a.col - b.col);
+        return errors.filter((x, i) => !errors.slice(0, i).some(y => y.line === x.line && y.msg === x.msg));
+      }
+
+      function evalBinConst(e, lt, rt, r) {
+        const a = e.l.cv, b = e.r.cv, op = e.op;
+        if (r === 'String') return str(a, lt) + str(b, rt);
+        if (['+', '-', '*', '/', '%'].includes(op)) return arith(op, convert(a, lt, r), convert(b, rt, r), r, e.line);
+        if (['<', '>', '<=', '>='].includes(op) || ((op === '==' || op === '!=') && NUMERIC.has(lt))) {
+          const pt = promote2(promote1(lt), promote1(rt)); const x = convert(a, lt, pt), y = convert(b, rt, pt);
+          return op === '<' ? x < y : op === '>' ? x > y : op === '<=' ? x <= y : op === '>=' ? x >= y : op === '==' ? x === y : x !== y;
+        }
+        if (op === '==' || op === '!=') { if (lt === 'boolean') return op === '==' ? a === b : a !== b; throw 0; }
+        if (op === '&&') return a && b; if (op === '||') return a || b;
+        if (r === 'boolean') return op === '&' ? a && b : op === '|' ? a || b : a !== b;
+        if (['&', '|', '^'].includes(op)) return arith(op, convert(a, lt, r), convert(b, rt, r), r);
+        if (['<<', '>>', '>>>'].includes(op)) return shift(op, convert(a, lt, r), b, r);
+        throw 0;
+      }
+
+      /* ---------- Vorab-Analyse: Zuweisungen vor Verwendung (für „hat noch keinen Wert“) ---------- */
+      // Hinweis: Wird ohne Wert deklariert, prüft der Checker bei jeder Verwendung, ob die Variable
+      // bis dahin (in Quelltext-Reihenfolge) irgendwo per = zugewiesen wurde.
+
+      /* ---------- Interpreter ---------- */
+      const STEP_LIMIT = 10000000;
+      function createRunner(prog, out) {
+        const statics = new Map();
+        let steps = 0, sinceYield = 0;
+        const scanner = { buf: '', pos: 0, closed: false, created: false };
+        const step = function* (line) {
+          if (++steps > STEP_LIMIT) throw new LimitError(`Abbruch nach ${STEP_LIMIT.toLocaleString('de-DE')} Schritten – vermutlich eine Endlosschleife (Zeile ${line}).`);
+          if (++sinceYield >= 4000) { sinceYield = 0; yield { tick: true }; }
+        };
+
+        class Env {
+          constructor(parent) { this.vars = new Map(); this.parent = parent; }
+          get(name) { let e = this; while (e) { const v = e.vars.get(name); if (v) return v; e = e.parent; } return statics.get(name); }
+          def(name, slot) { this.vars.set(name, slot); }
+        }
+        const NULL_PTR = (line, what) => new JavaThrow('java.lang.NullPointerException', '', line, `${what || 'Der Wert'} ist null – damit kann man nichts machen.`);
+
+        /* Scanner */
+        function* ensureData() {
+          while (scanner.pos >= scanner.buf.length) {
+            const line = yield { input: true };
+            if (line === null) throw new JavaThrow('java.util.NoSuchElementException', '', null, 'Es gibt keine weitere Eingabe.');
+            scanner.buf += line + '\n';
+          }
+        }
+        function* scanToken(peekOnly) {
+          for (;;) {
+            while (scanner.pos < scanner.buf.length && /\s/.test(scanner.buf[scanner.pos])) scanner.pos++;
+            if (scanner.pos < scanner.buf.length) break;
+            yield* ensureData();
+          }
+          let j = scanner.pos;
+          while (j < scanner.buf.length && !/\s/.test(scanner.buf[j])) j++;
+          const tok = scanner.buf.slice(scanner.pos, j);
+          if (!peekOnly) scanner.pos = j;
+          return tok;
+        }
+        function* scannerCall(name, line) {
+          if (scanner.closed) throw new JavaThrow('java.lang.IllegalStateException', 'Scanner closed', line, 'Der Scanner wurde schon mit close() geschlossen.');
+          const mismatch = (tok, what) => new JavaThrow('java.util.InputMismatchException', '', line, `Die Eingabe „${tok}“ ist ${what}.`);
+          switch (name) {
+            case 'close': scanner.closed = true; return;
+            case 'nextLine': {
+              if (scanner.pos >= scanner.buf.length) yield* ensureData();
+              const nl = scanner.buf.indexOf('\n', scanner.pos);
+              const s = scanner.buf.slice(scanner.pos, nl);
+              scanner.pos = nl + 1;
+              return new String(s);
+            }
+            case 'next': return new String(yield* scanToken(false));
+            case 'nextInt': case 'nextLong': {
+              const tok = yield* scanToken(true);
+              if (!/^[+-]?\d+$/.test(tok)) throw mismatch(tok, 'keine ganze Zahl');
+              const v = BigInt(tok);
+              if (name === 'nextInt' ? (v > 2147483647n || v < -2147483648n) : (v > LONG_MAX || v < LONG_MIN)) throw mismatch(tok, `zu groß für ${name === 'nextInt' ? 'int' : 'long'}`);
+              yield* scanToken(false);
+              return name === 'nextInt' ? Number(v) : v;
+            }
+            case 'nextDouble': {
+              const tok = yield* scanToken(true);
+              const norm = tok.replace(',', '.');
+              if (!/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(norm)) throw mismatch(tok, 'keine Zahl');
+              yield* scanToken(false);
+              return Number(norm);
+            }
+            case 'nextBoolean': {
+              const tok = yield* scanToken(true);
+              if (!/^(true|false)$/i.test(tok)) throw mismatch(tok, 'nicht true oder false');
+              yield* scanToken(false);
+              return tok.toLowerCase() === 'true';
+            }
+            case 'hasNext': yield* scanToken(true); return true;
+            case 'hasNextLine': yield* ensureData(); return true;
+            case 'hasNextInt': return /^[+-]?\d+$/.test(yield* scanToken(true));
+            case 'hasNextDouble': return /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test((yield* scanToken(true)).replace(',', '.'));
+          }
+        }
+
+        function* ev(e, env) {
+          switch (e.k) {
+            case 'lit': return e.value;
+            case 'name': {
+              if (e.cv !== undefined && e.ref && e.ref.cv !== undefined) return e.cv;
+              const slot = env.get(e.name);
+              if (!slot.init) throw new JavaThrow('Compilerfehler', '', e.line, `Die Variable ${e.name} hat hier noch keinen Wert (in Java: „variable ${e.name} might not have been initialized“).`);
+              return slot.v;
+            }
+            case 'field': {
+              if (e.sval !== undefined) return e.sval;
+              const o = yield* ev(e.obj, env);
+              if (e.name === 'length') { if (o === null) throw NULL_PTR(e.line, 'Das Array'); return o.data.length; }
+              return null;
+            }
+            case 'index': {
+              const a = yield* ev(e.arr, env);
+              const i = convert(yield* ev(e.idx, env), e.idx.type, 'int');
+              if (a === null) throw NULL_PTR(e.line, 'Das Array');
+              if (i < 0 || i >= a.data.length) throw new JavaThrow('java.lang.ArrayIndexOutOfBoundsException', String(i), e.line, `Index ${i} gibt es nicht – erlaubt sind 0 bis ${a.data.length - 1} (length = ${a.data.length}).`);
+              return a.data[i];
+            }
+            case 'call': return yield* call(e, env);
+            case 'newObj':
+              if (e.cls === 'Scanner') { scanner.created = true; return { scanner: true }; }
+              if (e.cls === 'String') return new String(e.args.length ? String(yield* ev(e.args[0], env)) : '');
+              return null;
+            case 'newArr': {
+              if (e.init) return yield* buildInit(e.init, env);
+              const sizes = [];
+              for (const d of e.dims) {
+                const n = convert(yield* ev(d, env), d.type, 'int');
+                if (n < 0) throw new JavaThrow('java.lang.NegativeArraySizeException', String(n), e.line, 'Ein Array kann keine negative Größe haben.');
+                sizes.push(n);
+              }
+              const build = (type, k) => {
+                const et = elemOf(type);
+                const data = [];
+                for (let i = 0; i < sizes[k]; i++) data.push(k + 1 < sizes.length ? build(et, k + 1) : defaultVal(et));
+                return makeArr(et, data);
+              };
+              return build(e.type, 0);
+            }
+            case 'unary': {
+              const v = yield* ev(e.e, env);
+              if (e.op === '!') return !v;
+              const r = e.type, x = convert(v, e.e.type, r);
+              if (e.op === '+') return x;
+              if (e.op === '~') return r === 'long' ? ~x : ~x;
+              return r === 'long' ? BigInt.asIntN(64, -x) : r === 'int' ? (-x) | 0 : r === 'float' ? Math.fround(-x) : -x;
+            }
+            case 'pre': case 'post': {
+              const ref = yield* lref(e.e, env);
+              const t = e.e.type, pt = promote1(t);
+              const old = ref.get();
+              const one = pt === 'long' ? 1n : 1;
+              const nv = convert(arith(e.op === '++' ? '+' : '-', convert(old, t, pt), one, pt, e.line), pt, t);
+              ref.set(nv);
+              return e.k === 'pre' ? nv : old;
+            }
+            case 'cast': {
+              const v = yield* ev(e.e, env);
+              return convert(v, e.e.type, e.type);
+            }
+            case 'cond': {
+              const c = yield* ev(e.c, env);
+              const br = c ? e.a : e.b;
+              return convert(yield* ev(br, env), br.type, e.type);
+            }
+            case 'assign': {
+              const ref = yield* lref(e.l, env);
+              const lt = e.l.type;
+              if (e.op === '=') {
+                const v = convert(yield* ev(e.r, env), e.r.type, lt);
+                ref.set(v); return v;
+              }
+              const old = ref.get();
+              const rv = yield* ev(e.r, env);
+              const op = e.op.slice(0, -1);
+              let res;
+              if (lt === 'String') res = new String(str(old, lt) + str(rv, e.r.type));
+              else if (['<<', '>>', '>>>'].includes(op)) res = convert(shift(op, convert(old, lt, promote1(lt)), convert(rv, e.r.type, promote1(e.r.type)), promote1(lt)), promote1(lt), lt);
+              else if (lt === 'boolean') res = op === '&' ? old && rv : op === '|' ? old || rv : old !== rv;
+              else { const pt = promote2(promote1(lt), promote1(e.r.type)); res = convert(arith(op, convert(old, lt, pt), convert(rv, e.r.type, pt), pt, e.line), pt, lt); }
+              ref.set(res); return res;
+            }
+            case 'bin': return yield* bin(e, env);
+          }
+        }
+        function* buildInit(init, env) {
+          const et = elemOf(init.type);
+          const data = [];
+          for (const el of init.elems) data.push(el.k === 'arrInit' ? yield* buildInit(el, env) : convert(yield* ev(el, env), el.type, et));
+          return makeArr(et, data);
+        }
+        function* lref(l, env) {
+          if (l.k === 'name') {
+            const slot = env.get(l.name);
+            return { get: () => { if (!slot.init) throw new JavaThrow('Compilerfehler', '', l.line, `Die Variable ${l.name} hat hier noch keinen Wert.`); return slot.v; }, set: v => { slot.v = v; slot.init = true; } };
+          }
+          if (l.k === 'index') {
+            const a = yield* ev(l.arr, env);
+            const i = convert(yield* ev(l.idx, env), l.idx.type, 'int');
+            if (a === null) throw NULL_PTR(l.line, 'Das Array');
+            if (i < 0 || i >= a.data.length) throw new JavaThrow('java.lang.ArrayIndexOutOfBoundsException', String(i), l.line, `Index ${i} gibt es nicht – erlaubt sind 0 bis ${a.data.length - 1} (length = ${a.data.length}).`);
+            return { get: () => a.data[i], set: v => { a.data[i] = v; } };
+          }
+          throw new JavaThrow('Compilerfehler', '', l.line, 'Hier kann nichts zugewiesen werden.');
+        }
+        function* bin(e, env) {
+          const op = e.op;
+          if (e.cv !== undefined && e.type !== 'String') return e.cv;
+          if (op === '&&') return (yield* ev(e.l, env)) ? !!(yield* ev(e.r, env)) : false;
+          if (op === '||') return (yield* ev(e.l, env)) ? true : !!(yield* ev(e.r, env));
+          const a = yield* ev(e.l, env), b = yield* ev(e.r, env);
+          const lt = e.l.type, rt = e.r.type;
+          if (e.type === 'String') {
+            const s = str(a, lt) + str(b, rt);
+            return e.cv !== undefined ? s : new String(s);
+          }
+          if (['+', '-', '*', '/', '%'].includes(op)) return arith(op, convert(a, lt, e.type), convert(b, rt, e.type), e.type, e.line);
+          if (['<', '>', '<=', '>='].includes(op)) {
+            const pt = promote2(promote1(lt), promote1(rt)); const x = convert(a, lt, pt), y = convert(b, rt, pt);
+            return op === '<' ? x < y : op === '>' ? x > y : op === '<=' ? x <= y : x >= y;
+          }
+          if (op === '==' || op === '!=') {
+            let eq;
+            if (NUMERIC.has(lt) && NUMERIC.has(rt)) { const pt = promote2(promote1(lt), promote1(rt)); eq = convert(a, lt, pt) === convert(b, rt, pt); }
+            else eq = a === b;
+            return op === '==' ? eq : !eq;
+          }
+          if (e.type === 'boolean') return op === '&' ? a && b : op === '|' ? a || b : a !== b;
+          if (['&', '|', '^'].includes(op)) return arith(op, convert(a, lt, e.type), convert(b, rt, e.type), e.type);
+          return shift(op, convert(a, lt, e.type), convert(b, rt, promote1(rt)), e.type);
+        }
+        function* call(e, env) {
+          const args = [];
+          for (const a of e.args) args.push(yield* ev(a, env));
+          if (e.method) return yield* invoke(e.method, args, e.argTypes, e.line);
+          switch (e.builtin) {
+            case 'print': {
+              const t = e.argTypes;
+              if (e.name === 'println') out(args.length ? str(args[0], t[0]) + '\n' : '\n');
+              else if (e.name === 'print') out(str(args[0], t[0]));
+              else { if (args[0] === null) throw NULL_PTR(e.line, 'Der Format-Text'); out(jformat(args, t, e.line)); }
+              return null;
+            }
+            case 'exit': throw new ExitSignal();
+            case 'currentTimeMillis': return BigInt(Date.now());
+            case 'nanoTime': return BigInt(Math.round(performance.now() * 1e6));
+            case 'static': return e.bm.run(args, e.argTypes, e.line);
+            case 'string': {
+              const s = yield* ev(e.obj, env);
+              if (s === null) throw NULL_PTR(e.line, 'Der String');
+              return e.bm.run(String(s), args, e.argTypes, e.line);
+            }
+            case 'scanner': {
+              const sc = yield* ev(e.obj, env);
+              if (sc === null) throw NULL_PTR(e.line, 'Der Scanner');
+              return yield* scannerCall(e.name, e.line);
+            }
+          }
+          return null;
+        }
+        let depth = 0;
+        function* invoke(m, args, argTypes, line) {
+          if (++depth > 400) throw new JavaThrow('java.lang.StackOverflowError', '', line, 'Zu viele verschachtelte Methodenaufrufe – ruft sich eine Methode endlos selbst auf?');
+          const env = new Env(null);
+          m.params.forEach((p, i) => env.def(p.name, { v: convert(args[i], argTypes[i], p.type), init: true }));
+          try { yield* exec(m.body, env); }
+          catch (x) { if (x instanceof ReturnSignal) { depth--; return x.v; } depth--; throw x; }
+          depth--;
+          return undefined;
+        }
+        function* exec(s, env) {
+          yield* step(s.line);
+          switch (s.k) {
+            case 'block': { const inner = new Env(env); for (const st of s.body) yield* exec(st, inner); return; }
+            case 'empty': return;
+            case 'var':
+              for (const d of s.decls) {
+                let v, init = false;
+                if (d.init) { v = d.init.k === 'arrInit' ? yield* buildInit(d.init, env) : convert(yield* ev(d.init, env), d.init.type, d.type); init = true; }
+                env.def(d.name, { v, init });
+              }
+              return;
+            case 'expr': yield* ev(s.e, env); return;
+            case 'if': if (yield* ev(s.cond, env)) yield* exec(s.then, new Env(env)); else if (s.els) yield* exec(s.els, new Env(env)); return;
+            case 'while':
+              while (yield* ev(s.cond, env)) {
+                try { yield* exec(s.body, new Env(env)); } catch (x) { if (x === BRK) break; if (x !== CONT) throw x; }
+              }
+              return;
+            case 'do':
+              do {
+                try { yield* exec(s.body, new Env(env)); } catch (x) { if (x === BRK) break; if (x !== CONT) throw x; }
+              } while (yield* ev(s.cond, env));
+              return;
+            case 'for': {
+              const fenv = new Env(env);
+              for (const i of s.init) yield* exec(i, fenv);
+              while (!s.cond || (yield* ev(s.cond, fenv))) {
+                try { yield* exec(s.body, new Env(fenv)); } catch (x) { if (x === BRK) break; if (x !== CONT) throw x; }
+                for (const u of s.update) yield* ev(u, fenv);
+              }
+              return;
+            }
+            case 'foreach': {
+              const arr = yield* ev(s.iter, env);
+              if (arr === null) throw NULL_PTR(s.line, 'Das Array');
+              for (const item of arr.data) {
+                const fenv = new Env(env);
+                fenv.def(s.name, { v: convert(item, elemOf(s.iter.type), s.type), init: true });
+                try { yield* exec(s.body, fenv); } catch (x) { if (x === BRK) break; if (x !== CONT) throw x; }
+              }
+              return;
+            }
+            case 'switch': {
+              const v = yield* ev(s.e, env);
+              if (v === null) throw NULL_PTR(s.line, 'Der Wert im switch');
+              const t = s.e.type;
+              let idx = s.cases.findIndex(c => !c.isDefault && (t === 'String' ? String(c.label.cv) === String(v) : convert(c.label.cv, c.label.type, promote1(t)) === convert(v, t, promote1(t))));
+              if (idx < 0) idx = s.cases.findIndex(c => c.isDefault);
+              if (idx < 0) return;
+              const senv = new Env(env);
+              try { for (let i = idx; i < s.cases.length; i++) for (const st of s.cases[i].body) yield* exec(st, senv); }
+              catch (x) { if (x !== BRK) throw x; }
+              return;
+            }
+            case 'break': throw BRK;
+            case 'continue': throw CONT;
+            case 'return': throw new ReturnSignal(s.e ? convert(yield* ev(s.e, env), s.e.type, curRet(s)) : undefined);
+          }
+        }
+        const retOf = new Map();
+        for (const m of prog.methods) markRet(m.body, m.ret);
+        function markRet(n, ret) { if (!n || typeof n !== 'object') return; if (Array.isArray(n)) return n.forEach(x => markRet(x, ret)); if (n.k === 'return') retOf.set(n, ret); for (const k of ['body', 'then', 'els', 'cases', 'init']) if (n[k]) markRet(n[k], ret); }
+        function curRet(s) { return retOf.get(s); }
+
+        function* main() {
+          const genv = new Env(null);
+          for (const f of prog.fields) {
+            for (const d of f.decls) {
+              let v = defaultVal(d.type);
+              if (d.init) v = d.init.k === 'arrInit' ? yield* buildInit(d.init, genv) : convert(yield* ev(d.init, genv), d.init.type, d.type);
+              statics.set(d.name, { v, init: true });
+            }
+          }
+          yield* invoke(prog.main, [makeArr('String', [])], ['String[]'], prog.main.line);
+        }
+        return main();
+      }
+
+      /* ---------- Öffentliche Schnittstelle ---------- */
+      function compile(src) {
+        let prog;
+        try { prog = parse(src); }
+        catch (e) { if (e instanceof CompileError) return { errors: [{ line: e.line, col: e.col, msg: e.message }] }; throw e; }
+        const errors = check(prog);
+        return errors.length ? { errors: errors.slice(0, 8) } : { prog, errors: [] };
+      }
+      /* Wandelt interne Fehler (z. B. JS-Stacküberlauf) in Java-Fehler um */
+      function asJavaError(e) {
+        if (e instanceof RangeError) return new JavaThrow('java.lang.StackOverflowError', '', null, 'Zu viele verschachtelte Methodenaufrufe – ruft sich eine Methode endlos selbst auf?');
+        return e;
+      }
+      return { compile, createRunner, asJavaError, JavaThrow, LimitError, ExitSignal, javaDouble, javaFloat };
+    })();
+    /* MINIJAVA-END */
+
+    /* =========================================================
+       CODE-SPIELWIESE (Editor + Konsole für MiniJava)
+       createPlayground(container, {code, examples, storageKey})
+       ========================================================= */
+    const PLAYGROUND_EXAMPLES = [
+      { name: 'Hello World', code: `public class HelloWorld {
+
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}` },
+      { name: 'Steckbrief (Variablen)', code: `public class Steckbrief {
+
+    public static void main(String[] args) {
+        String name = "Lena";                // Text
+        int alter = 17;                      // ganze Jahre
+        double groesse = 1.72;               // Meter, Kommazahl
+        char gruppe = 'B';                   // ein Buchstabe
+        boolean hatFuehrerschein = false;    // ja oder nein
+
+        System.out.println("Name:         " + name);
+        System.out.println("Alter:        " + alter);
+        System.out.println("Größe:        " + groesse);
+        System.out.println("Gruppe:       " + gruppe);
+        System.out.println("Führerschein: " + hatFuehrerschein);
+    }
+}` },
+      { name: 'Rechnen & Ganzzahldivision', code: `// Ohne Klasse geht es auch: Der Code wird wie in main ausgeführt.
+int a = 7;
+int b = 2;
+
+System.out.println(a / b);            // Ganzzahldivision
+System.out.println(a / (double) b);   // mit Cast
+System.out.println(a % b);            // Rest
+System.out.println("Summe: " + a + b);
+System.out.println("Summe: " + (a + b));
+System.out.println((int) 3.99);       // abgeschnitten, nicht gerundet` },
+      { name: 'Notenberechnung (fehlerhaft)', code: `public class Notenberechnung {
+    public static void main(String[] args) {
+        //Noteninformationen wurden wie folgt eingelesen
+        int noteTest1 = 3, noteTest2 = 2;
+        int noteSA1 = 4, noteSA2 = 2;
+        int anzahl = 6;
+
+        int summeTest = noteTest1 + noteTest2;
+        int summeSA = noteSA1 + noteSA2;
+
+        double durchschnitt = (summeTest + summeSA*2)/anzahl;
+        System.out.println("Ihr Notendurchschnitt beträgt: " + durchschnitt);
+    }
+}` },
+      { name: 'Notenberechnung (korrigiert)', code: `public class Notenberechnung {
+    public static void main(String[] args) {
+        int noteTest1 = 3, noteTest2 = 2;
+        int noteSA1 = 4, noteSA2 = 2;
+        int anzahl = 6;
+
+        int summeTest = noteTest1 + noteTest2;
+        int summeSA = noteSA1 + noteSA2;
+
+        // Aufgabe 1: Cast vor der Division
+        double durchschnitt = (summeTest + summeSA * 2) / (double) anzahl;
+
+        // Aufgabe 2: auf zwei Nachkommastellen runden
+        double gerundet = Math.round(durchschnitt * 100) / 100.0;
+        System.out.println("Ihr Notendurchschnitt beträgt: " + gerundet);
+
+        // Aufgabe 3: Zeugnisnote (bei x,50 die bessere Note)
+        int zeugnisnote = (int) Math.ceil(gerundet - 0.5);
+        System.out.println("Ihre Zeugnisnote: " + zeugnisnote);
+    }
+}` },
+      { name: 'Eingabe mit dem Scanner', code: `import java.util.Scanner;
+
+public class Benutzereingaben {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Bitte geben Sie Ihren Namen ein:");
+        String name = scanner.nextLine();
+        System.out.println("Hallo, " + name + "!");
+
+        System.out.println("Bitte geben Sie Ihr Alter ein:");
+        int alter = scanner.nextInt();
+        System.out.println("Sie sind " + alter + " Jahre alt.");
+
+        scanner.close();
+    }
+}` },
+      { name: 'Das nextInt()/nextLine()-Problem', code: `import java.util.Scanner;
+
+public class Problem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Bitte geben Sie Ihr Alter ein:");
+        int alter = scanner.nextInt();
+        // scanner.nextLine();   // ← Kommentar entfernen, dann klappt es!
+
+        System.out.println("Bitte geben Sie Ihren Namen ein:");
+        String name = scanner.nextLine();
+        System.out.println("Name: [" + name + "], Alter: " + alter);
+
+        scanner.close();
+    }
+}` },
+      { name: 'Noten in einer Schleife eingeben', code: `import java.util.Scanner;
+
+public class Notenberechnung {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Wie viele Noten möchten Sie eingeben?");
+        int anzahl = scanner.nextInt();
+
+        int summe = 0;
+        for (int i = 1; i <= anzahl; i++) {
+            System.out.print("Note " + i + ": ");
+            int note = scanner.nextInt();
+            summe = summe + note;
+        }
+
+        double durchschnitt = summe / (double) anzahl;
+        double gerundet = Math.round(durchschnitt * 100) / 100.0;
+        int zeugnisnote = (int) Math.ceil(gerundet - 0.5);
+
+        System.out.println("Durchschnitt: " + gerundet);
+        System.out.println("Zeugnisnote:  " + zeugnisnote);
+        scanner.close();
+    }
+}` },
+      { name: 'Fehlersuche (enthält Fehler!)', code: `public class Fehlersuche {
+    public static void main(String[] args) {
+        int alter = 17
+        double groesse = 1,72;
+        system.out.println("Alter: " + alter);
+        System.out.println("Größe: " + Groesse);
+    }
+}` },
+      { name: 'Leere Vorlage', code: `public class MeinProgramm {
+
+    public static void main(String[] args) {
+        // Hier kommt dein Code hin
+
+    }
+}` }
+    ];
+
+    function createPlayground(container, { code = PLAYGROUND_EXAMPLES[0].code, examples = null, storageKey = null } = {}) {
+      container.classList.add('jp');
+      container.innerHTML = `
+        <div class="jp-bar">
+          ${examples ? `<label class="jp-ex"><span class="sr-only">Beispiel laden</span><select>${examples.map((ex, i) => `<option value="${i}">${escHTML(ex.name)}</option>`).join('')}</select></label>` : ''}
+          <button type="button" class="btn btn-primary jp-run">▶ Ausführen</button>
+          <button type="button" class="btn jp-stop" hidden>■ Stopp</button>
+          <button type="button" class="btn jp-reset" title="Code auf den Ausgangszustand zurücksetzen">↺ Zurücksetzen</button>
+        </div>
+        <div class="jp-editor">
+          <div class="jp-gutter" aria-hidden="true"></div>
+          <div class="jp-code">
+            <pre class="jp-hl" aria-hidden="true"></pre>
+            <textarea class="jp-ta" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Java-Code bearbeiten"></textarea>
+          </div>
+        </div>
+        <div class="jp-console">
+          <div class="jp-out" aria-live="polite"><span class="jp-info">Drücke „▶ Ausführen“, um das Programm zu starten.</span></div>
+          <form class="jp-inrow" hidden>
+            <span aria-hidden="true">›</span>
+            <input class="jp-in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Eingabe für das Programm (Scanner)" placeholder="Eingabe tippen und Enter drücken">
+            <button type="submit" class="btn">Enter</button>
+          </form>
+        </div>`;
+      const ta = $('.jp-ta', container), hl = $('.jp-hl', container), gutter = $('.jp-gutter', container);
+      const outEl = $('.jp-out', container), inRow = $('.jp-inrow', container), inEl = $('.jp-in', container);
+      const runBtn = $('.jp-run', container), stopBtn = $('.jp-stop', container), resetBtn = $('.jp-reset', container);
+      const select = $('.jp-ex select', container);
+      let initial = code, errLines = new Set(), gen = null, buffer = '', outLen = 0;
+
+      let saved = null;
+      if (storageKey) { try { saved = localStorage.getItem(storageKey); } catch {} }
+      ta.value = saved ?? code;
+
+      const render = () => {
+        const src = ta.value;
+        hl.innerHTML = highlightJava(src) + '\n';
+        const n = src.split('\n').length;
+        gutter.innerHTML = Array.from({ length: n }, (_, i) => `<span class="${errLines.has(i + 1) ? 'err' : ''}">${i + 1}</span>`).join('');
+        ta.style.height = `calc(${Math.max(n, 6) * 1.6}em + 24px)`;
+      };
+      const syncScroll = () => { hl.style.transform = `translateX(${-ta.scrollLeft}px)`; };
+      let saveTimer;
+      ta.addEventListener('input', () => {
+        if (errLines.size) { errLines = new Set(); }
+        render();
+        if (storageKey) { clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(storageKey, ta.value); } catch {} }, 300); }
+      });
+      ta.addEventListener('scroll', syncScroll);
+      const insert = text => {
+        ta.focus();
+        if (!document.execCommand || !document.execCommand('insertText', false, text)) {
+          ta.setRangeText(text, ta.selectionStart, ta.selectionEnd, 'end');
+          ta.dispatchEvent(new Event('input'));
+        }
+      };
+      ta.addEventListener('keydown', (e) => {
+        const v = ta.value, pos = ta.selectionStart;
+        const lineStart = v.lastIndexOf('\n', pos - 1) + 1;
+        const before = v.slice(lineStart, pos);
+        if (e.key === 'Tab' && !e.shiftKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); insert('    '); }
+        else if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey) {
+          e.preventDefault();
+          let indent = before.match(/^ */)[0];
+          if (/\{\s*$/.test(before)) indent += '    ';
+          insert('\n' + indent);
+        } else if (e.key === '}' && /^ +$/.test(before) && ta.selectionStart === ta.selectionEnd) {
+          e.preventDefault();
+          ta.setSelectionRange(pos - Math.min(4, before.length), pos);
+          insert('}');
+        } else if ((e.key === 'Enter' && e.ctrlKey) || (e.key === 'F5')) { e.preventDefault(); run(); }
+      });
+
+      const flush = () => {
+        if (!buffer) return;
+        outEl.appendChild(document.createTextNode(buffer));
+        buffer = '';
+        outEl.scrollTop = outEl.scrollHeight;
+      };
+      const line = (text, cls) => {
+        flush();
+        if (outEl.lastChild && outEl.lastChild.nodeType === 3 && !/\n$/.test(outEl.lastChild.nodeValue)) outEl.appendChild(document.createTextNode('\n'));
+        const s = document.createElement('span'); s.className = cls; s.textContent = text + '\n';
+        outEl.appendChild(s); outEl.scrollTop = outEl.scrollHeight;
+        return s;
+      };
+      const write = s => {
+        outLen += s.length;
+        if (outLen > 200000) throw new MiniJava.LimitError('Abbruch: Das Programm hat zu viel ausgegeben (Endlosschleife mit println?).');
+        buffer += s;
+      };
+      const setRunning = r => { runBtn.hidden = r; stopBtn.hidden = !r; ta.readOnly = r; container.classList.toggle('running', r); };
+      const finish = (msg, cls = 'jp-ok') => { flush(); if (msg) line(msg, cls); gen = null; inRow.hidden = true; setRunning(false); render(); };
+      const gotoLine = n => {
+        const lines = ta.value.split('\n');
+        const start = lines.slice(0, n - 1).reduce((a, l) => a + l.length + 1, 0);
+        ta.focus(); ta.setSelectionRange(start, start + (lines[n - 1] || '').length);
+      };
+      const errLine = (text, ln) => {
+        const s = line(text, 'jp-err');
+        if (ln) { s.classList.add('jp-link'); s.title = 'Zur Zeile springen'; s.addEventListener('click', () => gotoLine(ln)); errLines.add(ln); }
+      };
+
+      function pump(input) {
+        if (!gen) return;
+        const t0 = performance.now();
+        try {
+          let r = gen.next(input);
+          while (!r.done) {
+            if (r.value.input) {
+              flush();
+              inRow.hidden = false; inEl.value = '';
+              inEl.focus({ preventScroll: true });
+              inRow.scrollIntoView({ block: 'nearest' });
+              return;
+            }
+            if (performance.now() - t0 > 40) { flush(); setTimeout(() => pump(), 0); return; }
+            r = gen.next();
+          }
+          finish('✓ Programm beendet.');
+        } catch (e0) {
+          const e = MiniJava.asJavaError(e0);
+          flush();
+          if (e instanceof MiniJava.ExitSignal) return finish('✓ Programm mit System.exit() beendet.');
+          if (e instanceof MiniJava.LimitError) { line('✗ ' + e.msg, 'jp-err'); return finish(''); }
+          if (e instanceof MiniJava.JavaThrow) {
+            if (e.name === 'Compilerfehler') errLine(`✗ Zeile ${e.line}: ${e.hint}`, e.line);
+            else {
+              line(`Exception in thread "main" ${e.name}${e.msg ? ': ' + e.msg : ''}`, 'jp-err');
+              errLine(`→ Laufzeitfehler${e.line ? ' in Zeile ' + e.line : ''}${e.hint ? ': ' + e.hint : ''}`, e.line);
+            }
+            return finish('');
+          }
+          line('✗ Interner Fehler der Spielwiese: ' + (e0 && e0.message), 'jp-err');
+          finish('');
+          console.error(e0);
+        }
+      }
+      function run() {
+        if (gen) return;
+        outEl.textContent = ''; buffer = ''; outLen = 0; errLines = new Set();
+        const c = MiniJava.compile(ta.value);
+        if (c.errors.length) {
+          line(`✗ Das Programm lässt sich nicht kompilieren (${c.errors.length} Fehler${c.errors.length >= 8 ? ' oder mehr' : ''}):`, 'jp-err');
+          c.errors.forEach(er => errLine(`Zeile ${er.line}: ${er.msg}`, er.line));
+          render();
+          return;
+        }
+        render();
+        setRunning(true);
+        gen = MiniJava.createRunner(c.prog, write);
+        pump(undefined);
+      }
+      inRow.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!gen) return;
+        const v = inEl.value;
+        flush();
+        const s = document.createElement('span'); s.className = 'jp-input'; s.textContent = v + '\n';
+        outEl.appendChild(s);
+        inRow.hidden = true;
+        pump(v);
+      });
+      runBtn.addEventListener('click', run);
+      stopBtn.addEventListener('click', () => finish('■ Programm abgebrochen.', 'jp-info'));
+      resetBtn.addEventListener('click', () => {
+        if (ta.value !== initial && !confirm('Deine Änderungen am Code gehen verloren. Zurücksetzen?')) return;
+        ta.value = initial; ta.dispatchEvent(new Event('input'));
+      });
+      if (select) select.addEventListener('change', () => {
+        const ex = examples[+select.value];
+        if (ta.value !== initial && ta.value.trim() && !confirm(`Beispiel „${ex.name}“ laden? Dein aktueller Code wird ersetzt.`)) { select.value = String(examples.findIndex(x => x.code === initial)); return; }
+        initial = ex.code; ta.value = ex.code; ta.dispatchEvent(new Event('input'));
+        outEl.innerHTML = '<span class="jp-info">Drücke „▶ Ausführen“, um das Programm zu starten.</span>';
+      });
+      render();
+      if (document.fonts) document.fonts.ready.then(render);
+      return { run, setCode: c => { initial = c; ta.value = c; ta.dispatchEvent(new Event('input')); } };
+    }
+
+    /* „▶ Ausprobieren“-Knöpfe unter Code-Beispielen mit data-run */
+    function initRunButtons() {
+      $$('pre.code[data-run]').forEach(pre => {
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'btn jp-try'; btn.textContent = '▶ Im Editor ausprobieren';
+        pre.insertAdjacentElement('afterend', btn);
+        let pg = null;
+        btn.addEventListener('click', () => {
+          if (pg) { pg.hidden = !pg.hidden; btn.textContent = pg.hidden ? '▶ Im Editor ausprobieren' : '✕ Editor schließen'; return; }
+          pg = document.createElement('div');
+          btn.insertAdjacentElement('afterend', pg);
+          createPlayground(pg, { code: pre.dataset.src });
+          btn.textContent = '✕ Editor schließen';
+        });
       });
     }
 
@@ -5111,6 +7113,8 @@ public class Notenberechnung {
     initAp();
     initOpenTasks();
     highlightAll();
+    createPlayground($('#ap-playground'), { examples: PLAYGROUND_EXAMPLES, storageKey: 'bs-playground-code' });
+    initRunButtons();
     updateProgressUI();
     isLoggedIn() ? showApp() : showLogin();
   })();
